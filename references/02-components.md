@@ -134,7 +134,58 @@ requestAnimationFrame(()=>requestAnimationFrame(()=>{
 - 桌面端拖拽：pointerdown 后位移 >5px 才 setPointerCapture——**阈值门控**保证纯点击仍能进链接；拖拽结束吞掉 trailing click；
 - 用细进度条（scaleX）代替左右箭头按钮；移动端原生触摸滚动 + 明确的可滑动提示（双向箭头，首次拖拽后淡出）——不要用小圆点指示器。
 
-## 9. 其他小组件（速查）
+## 9. 案例详情页（Case Page）
+
+**何时用**：重点作品的独立页面（每站 3~8 个）；全站复用率最高的页面结构——骨架相同换内容，天然一致。
+
+**要点**（完整骨架见 `../templates/case-page.html`）：
+- 结构链：`topbar`（logo + 语言 + 返回）→ `case-hero`（海报 + 标题 + 元信息）→ `case-grid`（`case-aside` 事实侧栏 sticky + `case-art` 编号章节）→ `next-proj` → footer；
+- **内容优先硬规则：Links 永远是第 01 节**——外链/iframe/视频先于长文出现（「看作品」优先于「读介绍」）；
+- 章节标题带 `data-n` 编号（01/02/…），全站详情页编号语义一致；
+- 事实侧栏 = k-v 行（领域/年份/角色/团队），`position:sticky` 随正文滚动；
+- **案例互链列表**：JS 生成——当前案例置顶 + 强调色标记 + `aria-current="page"` 不可点，其余直链；语言切换时按字典重建；移动端（<960px）经 matchMedia 自动移到正文之后；
+- 交互增强四件套：媒体淡入缩放（`.rv-s`）、链接按钮 hover、章节标题视差、图片 lightbox；
+- 页面 = 页面专属字典 `CASE_T` + 共享引擎，不复制引擎代码。
+
+**反面**：每个详情页手写一套结构（改版时要改 N 处）；Links 藏在文末；侧栏内容与正文重复。
+
+## 10. 预加载器（Preloader）
+
+**何时用**：品牌开场提示；与导航防抖窗口（700ms，见 08 文档）同量级。
+
+**要点**：
+```js
+/* 720ms 编排式进度（ease-out cubic）——节奏提示，不是真实资源计量 */
+const dur = 720, t0 = performance.now();
+(function tick(t){
+  const k = Math.min(1,(t-t0)/dur), e = 1-Math.pow(1-k,3);
+  if(pct) pct.textContent = Math.round(e*100)+'%';
+  if(bar) bar.style.transform = `scaleX(${e})`;
+  if(k<1) requestAnimationFrame(tick);
+  else setTimeout(() => { el.classList.add('done'); onDone(); setTimeout(() => el.remove(), 260); }, 100);
+})(t0);
+```
+- 字标 + 细进度线 + 百分比计数；完成淡出后**自我移除**（不留 display:none 死节点）；
+- `onDone()` 触发 Hero 姓名解码——预载结束 = 首屏动画开始，形成编排感；
+- RM（减弱动效）时**直接 remove() 不播动画**；
+- 只做一次，不进 sessionStorage 重播。
+
+**反面**：真实资源加载进度条（静态站本来就近乎瞬时，进度条是表演）；永不清除的遮罩。
+
+## 11. Contact 区模式
+
+**何时用**：全站收尾的联系区块。
+
+**要点**：
+- **mailto: 邮箱为主 CTA**（大字号、hover 变强调色）——跨设备最可靠的动作，没有之一；
+- 按钮行次之：CV（外链，**按语言切地址**——海外网盘 vs 内地镜像，走字典 href 键）+ LinkedIn 等社交链接；
+- 第三方可嵌入物（电子名片等）用 iframe `loading="lazy"` + `title`（i18n）；
+- **必须有降级路径**：`card not loading?` 外链兜底——iframe 被平台策略拦截或加载失败时，用户仍有点击出口；
+- 背景可用低密度装饰场（对角疏密），保持收尾区的安静。
+
+**反面**：只放表单（静态站无后端、垃圾提交无从过滤）；嵌入式内容无降级链接；联系方式散落在多个区块。
+
+## 12. 其他小组件（速查）
 
 | 组件 | 要点 |
 |---|---|

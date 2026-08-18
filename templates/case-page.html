@@ -1,0 +1,185 @@
+<!--
+  templates/case-page.html — 作品详情页（case page）骨架
+  依赖：trilingual.html 的字典 + 引擎（window.CASE_T / setLang / lang-btn / CASE_MAIN），
+        本页只写「页面专属字典 + 页面专属逻辑」。
+  结构：topbar（logo+语言+返回）→ case-hero（海报+标题+元信息）
+        → case-grid（case-aside 事实侧栏 + case-art 编号章节）
+        → next-proj（下一案例）→ footer
+  纪律：
+    · 内容优先——Links 永远是第 01 节（外链/iframe/视频先于长文出现）
+    · 章节用 data-n 编号（01/02/…），全站详情页结构一致
+    · 区域化媒体：data-langs 整块切换（海外 <video>/直链 vs 内地 iframe），见 regional-links.html
+    · 图片 figure 统一带 lightbox（点击放大）
+-->
+
+<!-- ============ ① TOPBAR（与全站子页一致） ============ -->
+<div class="topbar">
+  <div class="wrap bar">
+    <a class="logo" id="backHome" href="../index.html" data-cursor="HOME"><b>LOGO</b></a>
+    <div class="top-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <a class="lang-btn on" data-lang="en" href="#">EN</a>
+        <a class="lang-btn" data-lang="tw" href="#">繁</a>
+        <a class="lang-btn" data-lang="zh" href="#">简</a>
+      </div>
+      <a class="back" href="../index.html" data-cursor="BACK"><span aria-hidden="true">←</span><span data-i18n="back">Back</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ② CASE HERO（海报 + 标题 + 元信息） ============ -->
+<header class="case-hero">
+  <div class="wrap">
+    <p class="case-kicker" data-i18n="kicker">CASE FILE · 01</p>
+    <h1 data-i18n="h1">Work Title</h1>
+    <p class="case-meta" data-i18n="meta">CATEGORY · ORGANISATION · YEAR</p>
+  </div>
+</header>
+
+<!-- ============ ③ CASE GRID：事实侧栏 + 正文 ============ -->
+<div class="wrap case-grid">
+
+  <!-- 事实侧栏（sticky）：编号/领域/年份/团队/角色 等 k-v 行 -->
+  <aside class="case-aside rv" aria-label="Project facts">
+    <dl>
+      <div class="fact"><dt data-i18n="fk1">Field</dt><dd data-i18n="fv1">Category</dd></div>
+      <div class="fact"><dt data-i18n="fk2">Year</dt><dd data-i18n="fv2">2026</dd></div>
+      <div class="fact"><dt data-i18n="fk3">Role</dt><dd data-i18n="fv3">Your role</dd></div>
+      <div class="fact"><dt data-i18n="fk4">Team</dt><dd data-i18n="fv4">Solo / team</dd></div>
+    </dl>
+    <!-- 案例互链列表（JS 注入，见文末 ⑤） -->
+  </aside>
+
+  <!-- 正文：编号章节，Links 永远第 01 节 -->
+  <article class="case-art">
+
+    <!-- 01 · LINKS（内容优先：外链/嵌入先于长文） -->
+    <section class="rv">
+      <h2 data-n="01" data-i18n="sLinks">Links</h2>
+      <!-- 海外/繁中版块：直链 + 可选内嵌 -->
+      <div class="block" data-langs="en tw">
+        <div class="link-box">
+          <span class="lb-k" data-i18n="lbK">FULL WORK</span>
+          <div class="link-row">
+            <a class="btn solid" data-i18n-href="btnReadHref" href="https://overseas.example/work"
+               target="_blank" rel="noopener" data-i18n="btnRead">Read / Watch ↗</a>
+          </div>
+        </div>
+        <!-- 可内嵌平台用 iframe + ?embed；重型嵌入可做点击加载（regional-links.html ③） -->
+      </div>
+      <!-- 简中版块：内地可达链接（镜像/本地存档） -->
+      <div class="block" data-langs="zh">
+        <div class="link-box">
+          <span class="lb-k" data-i18n="lbKZh">完整作品</span>
+          <div class="link-row">
+            <a class="btn solid" data-i18n-href="btnReadZhHref" href="https://mainland.example/work"
+               target="_blank" rel="noopener" data-i18n="btnReadZh">在线观看（内地可达）</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02+ · 内容章节（标题可加视差；每节一个主题） -->
+    <section class="rv">
+      <h2 data-n="02" data-i18n="s2h">Section Title 2</h2>
+      <div class="block" data-langs="en"><p data-i18n="s2pEn">…</p></div>
+      <div class="block" data-langs="zh tw"><p data-i18n="s2pZh">…</p></div>
+    </section>
+
+    <!-- 图集章节：figure 统一带 lightbox -->
+    <section class="rv">
+      <h2 data-n="03" data-i18n="s3h">Gallery</h2>
+      <figure class="rv-s">
+        <img src="../assets/works/demo.webp" alt="…" data-i18n-alt="altG1" loading="lazy">
+        <figcaption data-i18n="capG1">Caption</figcaption>
+      </figure>
+    </section>
+  </article>
+</div>
+
+<!-- ============ ④ 下一项目（全站循环：最后一张链回第一张） ============ -->
+<a class="next-proj" href="next-case.html" data-i18n="nextP">Next Project →</a>
+
+<footer>
+  <div class="wrap foot">
+    <a href="../colophon.html" data-i18n="footColophon">How this site was made</a>
+    <a href="#top" data-i18n="footTop">Back to top ↑</a>
+    <span data-i18n="footRights">© 2026 Your Name</span>
+  </div>
+</footer>
+
+<!-- ============ ⑤ 页面专属字典 + 案例互链列表 ============ -->
+<script>
+/* 页面字典：仅本页 key；CASE_MAIN 定义回首页的语言化链接 */
+window.CASE_MAIN = {en:'../index.html', zh:'../index.html?lang=zh', tw:'../index.html?lang=tw'};
+window.CASE_T = {
+  en:{ docTitle:"Work Title — Your Name", back:"Back",
+       kicker:"CASE FILE · 01", h1:"Work Title", meta:"CATEGORY · ORGANISATION · YEAR",
+       fk1:"Field",fv1:"Category",fk2:"Year",fv2:"2026",fk3:"Role",fv3:"Your role",fk4:"Team",fv4:"Solo",
+       sLinks:"Links", lbK:"FULL WORK", btnRead:"Read / Watch ↗", btnReadHref:"https://overseas.example/work",
+       lbKZh:"完整作品", btnReadZh:"在线观看（内地可达）", btnReadZhHref:"https://mainland.example/work",
+       s2h:"Section Title 2", s2pEn:"…", s2pZh:"…",
+       s3h:"Gallery", altG1:"Work screenshot", capG1:"Caption",
+       nextP:"Next Project →", moreK:"MORE CASES", allK:"ALL WORKS →",
+       footColophon:"How this site was made", footTop:"Back to top ↑", footRights:"© 2026 Your Name" },
+  zh:{ /* …简体对应… */ },
+  tw:{ /* …繁體對應… */ }
+};
+
+/* 案例互链列表：
+   当前案例置顶 + 蓝标 + 不可点（aria-current="page"）；其余直链（语言经 localStorage 保持）；
+   语言切换时重建（监听 site:lang）；移动端（<960px）自动移到正文之后。 */
+(function(){
+'use strict';
+const aside = document.querySelector('.case-aside');
+if(!aside) return;
+/* 全部案例清单（与详情页文件同步维护——增删作品时记得同步，见 references/10-content-ops.md） */
+const CASES = [
+  {file:'case-a.html', n:{en:'Case A', zh:'案例 A', tw:'案例 A'}},
+  {file:'case-b.html', n:{en:'Case B', zh:'案例 B', tw:'案例 B'}},
+  {file:'case-c.html', n:{en:'Case C', zh:'案例 C', tw:'案例 C'}}
+];
+const curFile = (location.pathname.split('/').pop() || '').toLowerCase();
+const box = document.createElement('div');
+box.className = 'case-list';
+aside.appendChild(box);
+
+function render(){
+  const l = window.CASE_LANG || 'en';
+  /* 当前案例排最前，其余保持叙事顺序 */
+  const ordered = [...CASES].sort((a,b) => (b.file === curFile) - (a.file === curFile));
+  let html = `<div class="cl-k">${CASE_T[l].moreK}</div>`;
+  ordered.forEach(c => {
+    const idx = '0' + (CASES.indexOf(c) + 1);
+    const name = c.n[l] || c.n.en;
+    html += (c.file === curFile)
+      ? `<span class="cl-row cur" aria-current="page"><span class="n">${idx}</span><span class="t">${name}</span></span>`
+      : `<a class="cl-row" href="${c.file}"><span class="n">${idx}</span><span class="t">${name}</span></a>`;
+  });
+  html += `<a class="cl-all" href="../works.html">${CASE_T[l].allK}</a>`;
+  box.innerHTML = html;
+}
+render();
+document.addEventListener('site:lang', render);
+
+/* 移动端：列表移到正文后（next-proj 之前）；桌面回侧栏 */
+const mq = matchMedia('(max-width:960px)');
+const nextProj = document.querySelector('.next-proj');
+function place(){
+  if(mq.matches){ if(nextProj && box.parentNode !== nextProj.parentNode) nextProj.parentNode.insertBefore(box, nextProj); }
+  else { if(box.parentNode !== aside) aside.appendChild(box); }
+}
+place();
+mq.addEventListener('change', place);
+})();
+</script>
+
+<style>
+/* 骨架要点（token 套你自己的设计系统）： */
+/* case-grid = 侧栏 sticky + 正文自适应；figure 点击 lightbox（见 02-components.md） */
+.case-grid{display:grid;grid-template-columns:280px 1fr;gap:clamp(32px,5vw,72px);align-items:start}
+.case-aside{position:sticky;top:96px}
+.case-art h2{scroll-margin-top:96px}
+.next-proj{display:block;padding:64px 0;text-align:center;border-top:1px solid #E3E6EA}
+@media (max-width:960px){ .case-grid{grid-template-columns:1fr} .case-aside{position:static} }
+</style>

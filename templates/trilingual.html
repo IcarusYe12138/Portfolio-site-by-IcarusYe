@@ -5,21 +5,34 @@
         首访浏览器检测（不固化）；标题类锁宽解码动画，正文瞬时替换。
 -->
 
-<!-- ============ ① 正文标记语法 ============ -->
+<!-- ============ ① 正文标记语法（完整属性集） ============ -->
 <!--
-  纯文本节点：
+  文本内容：
   <h2 data-i18n="secTitle">Section Title</h2>
 
-  aria 标签：
-  <button data-i18n-aria="playLabel" aria-label="Play">
+  属性级切换（引擎各有一张表）：
+  <button data-i18n-aria="playLabel" aria-label="Play">          ← aria-label
+  <img     data-i18n-alt="altPoster" alt="Poster">               ← 图片 alt
+  <iframe  data-i18n-title="cardTitle" title="Digital card">     ← iframe title
+  <a       data-i18n-href="cvHref" href="https://…">CV</a>       ← href（字典内 href 键）
+
+  解码动画目标文本（切换标题类时重触发锁宽解码）：
+  <h2 data-scramble="作品" data-scramble-i18n="works">作品</h2>
+
+  自定义光标标签（若有光标组件）：
+  <a data-cursor="详情 →" data-cursor-i18n="caseCursor">…</a>
 
   整块区域化内容（含媒体源切换，如海外视频 vs 内地 iframe）：
   <div class="block" data-langs="en tw"> …海外媒体… </div>
   <div class="block" data-langs="zh">   …内地媒体… </div>
 
-  区域化链接（语言切换时 JS 自动换 href）：
+  区域化链接（属性对写法，与字典 href 键二选一；属性对适合索引页批量卡片）：
   <a data-href-en="https://overseas.example/x" data-href-zh="https://mainland.example/x"
      href="https://overseas.example/x" target="_blank" rel="noopener">Open</a>
+
+  屏幕阅读器镜像（marquee/装饰性滚动内容的无障碍兜底）：
+  <section class="mq" aria-label="数据">…marquee…</section>
+  <ul class="sr-only" data-i18n="srStats"></ul>   ← 字典里放 <li> 列表 HTML
 -->
 
 <!-- ============ ② 语言切换按钮（顶栏内） ============ -->
@@ -29,25 +42,56 @@
   <a class="lang-btn" data-lang="zh" href="#">简</a>
 </div>
 
-<!-- ============ ③ 页面字典 + 引擎（粘到 </body> 前） ============ -->
+<!-- ============ ③ head 内：hreflang 三语互指（SEO 直链配套） ============ -->
+<!--
+  <link rel="alternate" hreflang="en"         href="page.html">
+  <link rel="alternate" hreflang="zh-Hans-CN" href="page.html?lang=zh">
+  <link rel="alternate" hreflang="zh-Hant-HK" href="page.html?lang=tw">
+  <link rel="alternate" hreflang="x-default"  href="page.html">
+-->
+
+<!-- ============ ④ 页面字典 + 引擎（粘到 </body> 前） ============ -->
 <script>
-/* ---- 页面专属字典：key 自定，en/zh/tw 三份 ---- */
+/* ---- 页面专属字典：key 自定，en/zh/tw 三份。
+   下划线开头 = 元信息键（引擎特殊处理，不绑定 DOM）；其余 key 绑定 data-i18n* 属性。
+   href 键（如 cvHref / btnReadHref）供 data-i18n-href 使用——一处多语言链接的首选写法。 ---- */
 window.CASE_T = {
   en:{
+    _htmlLang:"en", _title:"Page Title — Your Name",
+    _desc:"Meta description…", _ogTitle:"Page Title", _ogDesc:"OG description…",
+    _cursorText:"Open ↗",
     docTitle:"Page Title — Your Name",
     secTitle:"ALL WORKS",
     playLabel:"Play",
+    altPoster:"Poster image description",
+    cardTitle:"Embedded card",
+    cvHref:"https://overseas.example/cv",
+    srStats:'<li>Stat one</li><li>Stat two</li>',
     /* …页面其余 key… */
   },
   zh:{
+    _htmlLang:"zh-Hans-CN", _title:"页面标题 — 你的名字",
+    _desc:"…", _ogTitle:"页面标题", _ogDesc:"…",
+    _cursorText:"打开 ↗",
     docTitle:"页面标题 — 你的名字",
     secTitle:"全部作品",
     playLabel:"播放",
+    altPoster:"海报图描述",
+    cardTitle:"嵌入名片",
+    cvHref:"https://mainland.example/cv",
+    srStats:'<li>数据一</li><li>数据二</li>',
   },
   tw:{
+    _htmlLang:"zh-Hant-HK", _title:"頁面標題 — 你的名字",
+    _desc:"…", _ogTitle:"頁面標題", _ogDesc:"…",
+    _cursorText:"打開 ↗",
     docTitle:"頁面標題 — 你的名字",
     secTitle:"全部作品",
     playLabel:"播放",
+    altPoster:"海報圖描述",
+    cardTitle:"嵌入名片",
+    cvHref:"https://mainland.example/cv",
+    srStats:'<li>數據一</li><li>數據二</li>',
   }
 };
 
@@ -102,10 +146,21 @@ const SWAP_SEL = 'h1,h2,h3,.sec-tag';           // 哪些元素跑解码动画
 function setLang(lang, persist, animate){
   LANG = lang;
   if(persist){ try{ localStorage.setItem('site-lang', lang); }catch(e){} }
-  document.documentElement.lang = lang === 'en' ? 'en' : (lang === 'zh' ? 'zh-Hans-CN' : 'zh-Hant-HK');
+  document.documentElement.lang = CASE_T[lang]._htmlLang || (lang === 'en' ? 'en' : (lang === 'zh' ? 'zh-Hans-CN' : 'zh-Hant-HK'));
   window.CASE_LANG = lang;
   const T = CASE_T[lang];
-  document.title = T.docTitle;
+  document.title = T._title || T.docTitle;
+  /* 元信息键：meta / og / 光标标签 */
+  ['_desc','_ogTitle','_ogDesc'].forEach(k => {
+    if(!T[k]) return;
+    const sel = k === '_desc' ? 'meta[name="description"]'
+              : k === '_ogTitle' ? 'meta[property="og:title"]' : 'meta[property="og:description"]';
+    const m = document.querySelector(sel); if(m) m.content = T[k];
+  });
+  if(T._cursorText){
+    const c = document.getElementById('cursor');
+    if(c) c.dataset.text = T._cursorText;
+  }
 
   /* data-i18n 文本 */
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -114,16 +169,31 @@ function setLang(lang, persist, animate){
     if(animate && v.indexOf('<') === -1 && el.matches(SWAP_SEL)) scrambleSwap(el, v.replace(/&amp;/g,'&'));
     else el.innerHTML = v;
   });
-  /* data-i18n-aria */
+  /* 属性级切换：aria-label / alt / title / href（字典键） */
   document.querySelectorAll('[data-i18n-aria]').forEach(el => {
-    const v = T[el.dataset.i18nAria];
-    if(v !== undefined) el.setAttribute('aria-label', v);
+    const v = T[el.dataset.i18nAria]; if(v !== undefined) el.setAttribute('aria-label', v);
+  });
+  document.querySelectorAll('[data-i18n-alt]').forEach(el => {
+    const v = T[el.dataset.i18nAlt]; if(v !== undefined) el.setAttribute('alt', v);
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const v = T[el.dataset.i18nTitle]; if(v !== undefined) el.setAttribute('title', v);
+  });
+  document.querySelectorAll('[data-i18n-href]').forEach(el => {
+    const v = T[el.dataset.i18nHref]; if(v !== undefined) el.setAttribute('href', v);
+  });
+  /* 解码动画目标文本 + 光标标签（i18n 版） */
+  document.querySelectorAll('[data-scramble-i18n]').forEach(el => {
+    const v = T[el.dataset.scrambleI18n]; if(v !== undefined) el.dataset.scramble = v;
+  });
+  document.querySelectorAll('[data-cursor-i18n]').forEach(el => {
+    const v = T[el.dataset.cursorI18n]; if(v !== undefined) el.dataset.cursor = v;
   });
   /* data-langs 整块显隐 */
   document.querySelectorAll('[data-langs]').forEach(el => {
     el.style.display = el.dataset.langs.split(' ').includes(lang) ? '' : 'none';
   });
-  /* 区域化链接 */
+  /* 区域化链接（属性对写法） */
   document.querySelectorAll('[data-href-en]').forEach(a => {
     a.href = (lang === 'zh' && a.dataset.hrefZh) ? a.dataset.hrefZh : a.dataset.hrefEn;
   });
@@ -134,7 +204,7 @@ function setLang(lang, persist, animate){
     on ? b.setAttribute('aria-current','true') : b.removeAttribute('aria-current');
   });
   history.replaceState(null, '', lang === 'en' ? location.pathname : location.pathname + '?lang=' + lang);
-  /* 通知页面级组件（筛选条/播放器/列表等）重建 */
+  /* 通知页面级组件（筛选条/播放器/互链列表等）重建 */
   document.dispatchEvent(new CustomEvent('site:lang', {detail: lang}));
 }
 
@@ -142,9 +212,32 @@ document.querySelectorAll('.lang-btn').forEach(b => {
   b.addEventListener('click', e => {
     e.preventDefault();
     if(b.dataset.lang === LANG) return;
+    /* 1000ms 节流：一次只跑一轮解码动画，连点不闪乱码（光敏保护见 08 文档） */
+    const n = performance.now();
+    if(n - langAt < 1000) return;
+    langAt = n;
     setLang(b.dataset.lang, true, true);
   });
 });
+let langAt = 0;
 setLang(LANG, false);
 })();
 </script>
+
+<!-- ============ ⑤ 双引擎分工说明 ============ -->
+<!--
+  首页 vs 子页的语言引擎分工（多页站标配）：
+
+  · 首页（index.html）：内嵌 HOME_T 字典 + homeSetLang(lang, animate)——
+    除本引擎全部动作外，还更新 body[data-lang]（驱动 CSS 中按语言显隐的注记元素）；
+    首页语言按钮由 homeSetLang 就地处理，不走页面跳转。
+
+  · 子页（works.html / works/*.html / colophon / 404）：共用本文件的 setLang 引擎
+    （每页只换页面专属字典 CASE_T）；首页与子页动画速度必须统一（同一把 scrambleSwap）。
+
+  · 跨页语言保持：子页返回首页用 CASE_MAIN = {en:'index.html', zh:'index.html?lang=zh',
+    tw:'index.html?lang=tw'}——按当前语言生成回链；站内导航统一读 localStorage。
+
+  · sessionStorage 'skip-detect' 守卫：用户手动切换过语言后跳转他页，
+    目标页跳过浏览器语言检测，避免「刚选了 EN 又被检测回中文」。
+-->
