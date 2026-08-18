@@ -1,0 +1,161 @@
+<!--
+  templates/tile-field.html — 参数化 Metro 磁贴背景场
+  用途：Hero 背景 / 分区装饰 / 空区块点缀——代码生成装饰母题，不用照片不用 AI 图。
+  视觉：单一强调色两档透明度（5%/10%），1×1 为主少量 2×1/2×2，1–2 块实心点睛，
+        L→R（或对角）由疏到密，~10% 磁贴随机周期翻转（Win10 Live Tile）。
+  每场可调（写在容器 data-* 上）：
+    data-density="0~1"  总量倍率（默认 1）
+    data-pow="1~2.4"    疏密指数（默认 2.4：左缘近空；调小=更满）
+    data-cell="40"      格子边长 px（默认按容器尺寸 26~30）
+    data-dir="diag"     密度轴改左上→右下对角（默认横向 L→R）
+  注意：容器需 position:relative（或 absolute 全铺），.tile-field 为
+        absolute inset:0 的 pointer-events:none 装饰层。
+-->
+
+<!-- ============ HTML 用法 ============ -->
+<!-- Hero 大格场 -->
+<section class="hero" style="position:relative;min-height:80vh">
+  <div class="tile-field" aria-hidden="true" data-density="1" data-cell="40"></div>
+  <div class="wrap"> …内容… </div>
+</section>
+
+<!-- 侧栏点缀列：更小格、更满 -->
+<div style="position:relative;min-height:440px">
+  <div class="tile-field" aria-hidden="true" data-density=".65" data-cell="48" data-pow="1.9"></div>
+</div>
+
+<!-- 全幅对角疏密背景场 -->
+<section style="position:relative">
+  <div class="tile-field" aria-hidden="true" data-density=".5" data-cell="40" data-dir="diag"></div>
+  <div class="wrap"> …内容… </div>
+</section>
+
+<!-- ============ CSS ============ -->
+<style>
+.tile-field{
+  position:absolute;inset:0;overflow:hidden;pointer-events:none;
+  display:grid;place-content:center;
+  grid-template-columns:repeat(var(--cols,24),var(--cell,28px));
+  grid-auto-rows:var(--cell,28px);
+  gap:3px;
+}
+.tile{position:relative;transform-style:preserve-3d}
+.tile .tf,.tile .tb{
+  position:absolute;inset:0;display:block;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+}
+.tile .tb{transform:rotateY(180deg)}
+.tile.flip{
+  animation:tileFlip var(--fd,9s) cubic-bezier(.65,0,.35,1) infinite;
+  animation-delay:var(--fdel,0s);
+  will-change:transform;
+}
+@keyframes tileFlip{
+  0%,38%{transform:rotateY(0deg)}
+  50%,88%{transform:rotateY(180deg)}
+  100%{transform:rotateY(360deg)}
+}
+@media (prefers-reduced-motion:reduce){
+  .tile.flip{animation:none}
+}
+</style>
+
+<!-- ============ JS ============ -->
+<script>
+(function(){
+'use strict';
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const BLUE = '47,47,228';                          /* 强调色 RGB，按 token 替换 */
+const TIERS = [0.05, 0.10];                        /* 两档冷静透明度 */
+const SIZES = [[1,1],[1,1],[1,1],[1,1],[1,1],[1,1],[2,1],[2,1],[2,2],[2,2]]; /* 1×1 为主 */
+
+function build(field){
+  field.innerHTML = '';
+  const w = field.clientWidth, h = field.clientHeight;
+  if(!w || !h) return;
+  const dens = Math.min(1, Math.max(.1, parseFloat(field.dataset.density) || 1));
+  const pow  = Math.min(2.4, Math.max(1, parseFloat(field.dataset.pow) || 2.4));
+  const diag = field.dataset.dir === 'diag';
+  const cell = parseInt(field.dataset.cell, 10) || (Math.min(w, h) > 500 ? 30 : 26);
+  const gap = 3;
+  const cols = Math.max(4, Math.floor((w + gap) / (cell + gap)));
+  const rows = Math.max(2, Math.floor((h + gap) / (cell + gap)));
+  field.style.setProperty('--cols', cols);
+  field.style.setProperty('--cell', cell + 'px');
+
+  const map = new Uint8Array(cols * rows);         /* 占位网格 */
+  const frag = document.createDocumentFragment();
+  /* 每场 1–2 块实心强调色（只落在右半=最密处） */
+  let solidBudget = Math.max(1, Math.round((1 + (Math.random() < .5 ? 1 : 0)) * dens));
+
+  for(let r = 0; r < rows; r++){
+    for(let c = 0; c < cols; c++){
+      if(map[r*cols + c]) continue;
+      const fx = c / cols;
+      const ax = diag ? (fx + r / rows) / 2 : fx;  /* 密度轴 */
+      /* p = ax^pow × .45 + .008 —— 左缘近空、右侧渐密 */
+      const p = (Math.pow(ax, pow) * .45 + .008) * dens;
+      if(Math.random() > p) continue;
+
+      /* 找一个放得下的尺寸（1×1 兜底） */
+      let sw = 1, sh = 1;
+      for(let t = 0; t < 4; t++){
+        const cand = SIZES[Math.floor(Math.random() * SIZES.length)];
+        const cw = cand[0], ch = cand[1];
+        if(c + cw > cols || r + ch > rows) continue;
+        let free = true;
+        for(let dr = 0; dr < ch && free; dr++)
+          for(let dc = 0; dc < cw && free; dc++)
+            if(map[(r+dr)*cols + (c+dc)]) free = false;
+        if(free){ sw = cw; sh = ch; break; }
+      }
+      for(let dr = 0; dr < sh; dr++)
+        for(let dc = 0; dc < sw; dc++)
+          map[(r+dr)*cols + (c+dc)] = 1;
+
+      let tier = TIERS[Math.floor(Math.random() * TIERS.length)];
+      if(solidBudget > 0 && fx > .55 && Math.random() < .12){ tier = 1; solidBudget--; }
+
+      const t = document.createElement('i');
+      t.className = 'tile';
+      t.style.gridColumn = (c + 1) + ' / span ' + sw;
+      t.style.gridRow    = (r + 1) + ' / span ' + sh;
+      const f = document.createElement('b');
+      f.className = 'tf';
+      f.style.background = `rgba(${BLUE},${tier})`;
+      t.appendChild(f);
+
+      /* ~10% 磁贴带背板，7–15s 随机周期翻转，负延迟错峰 */
+      if(!RM && Math.random() < .10){
+        const b = document.createElement('b');
+        b.className = 'tb';
+        b.style.background = `rgba(${BLUE},${tier === 1 ? 0.10 : 0.16})`;
+        t.appendChild(b);
+        t.classList.add('flip');
+        t.style.setProperty('--fd',   (7 + Math.random() * 8).toFixed(2) + 's');
+        t.style.setProperty('--fdel', (-Math.random() * 14).toFixed(2) + 's');
+      }
+      frag.appendChild(t);
+    }
+  }
+  field.appendChild(frag);
+}
+
+function init(){
+  const fields = [...document.querySelectorAll('.tile-field')];
+  if(!fields.length) return;
+  fields.forEach(build);
+  let rt = null;
+  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => fields.forEach(build), 220); });
+}
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+})();
+</script>
+
+<!-- ============ 调参速查 ============ -->
+<!--
+  「看起来太花」→ data-pow 调大（更空）或 density 调小；确认只有两档透明度
+  「看起来太空」→ data-pow 调小（1.5~1.9）或 density 调大
+  文字区下方作背景 → 密度减半 + 对角 data-dir="diag"，避免右侧文字区过密
+-->

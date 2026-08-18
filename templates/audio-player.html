@@ -1,0 +1,137 @@
+<!--
+  templates/audio-player.html — 内嵌音频播放器（作品试听用）
+  功能：播放/暂停 · 可拖 seek（菱形 knob）· 当前/总时长 · 下载 ↓ · 全站单实例
+  约束：音频文件本地自托管（assets/audio/）；preload=metadata 只拉时长；
+        多语言可经 data-src-en / data-src-zh 切换音源（不用时可只留 data-src）。
+  依赖：页面已定义 window.CASE_LANG（'en'/'zh'/'tw'，见 trilingual.html）
+-->
+
+<!-- ============ HTML（每个音频一处） ============ -->
+<div class="aplayer"
+     data-src-en="assets/audio/demo-en.mp3"
+     data-src-zh="assets/audio/demo-zh.mp3"
+     data-dl-en="assets/audio/demo-en.mp3">
+  <button class="ap-btn" type="button" aria-label="Play" data-i18n-aria="apPlay"><i></i></button>
+  <div class="ap-track"><span class="ap-fill"></span><span class="ap-knob"></span></div>
+  <span class="ap-time"><b class="ap-cur">0:00</b>/<b class="ap-dur">--:--</b></span>
+  <a class="ap-dl" href="assets/audio/demo-en.mp3" target="_blank" rel="noopener" aria-label="Download">↓</a>
+</div>
+
+<!-- ============ CSS ============ -->
+<style>
+.aplayer{display:flex;align-items:center;gap:14px;width:100%;min-width:0}
+.ap-btn{
+  flex:none;width:44px;height:44px;border:1px solid #1A1A2E;background:#fff;
+  display:grid;place-items:center;cursor:pointer;padding:0;border-radius:0;
+  transition:background .2s,border-color .2s;
+}
+.ap-btn i{ /* 三角播放标 */
+  display:block;width:0;height:0;margin-left:3px;
+  border-left:11px solid #1A1A2E;
+  border-top:7px solid transparent;border-bottom:7px solid transparent;
+  transition:border-color .2s;
+}
+.aplayer.on .ap-btn i{ /* 播放态=双竖条 */
+  width:9px;height:11px;margin-left:0;border:0;
+  border-left:3.5px solid var(--accent);border-right:3.5px solid var(--accent);
+}
+.ap-btn:hover{background:var(--accent,#2F2FE4);border-color:var(--accent,#2F2FE4)}
+.ap-btn:hover i{border-left-color:#fff}
+.aplayer.on .ap-btn{border-color:var(--accent,#2F2FE4)}
+.aplayer.on .ap-btn:hover i{border-left-color:#fff;border-right-color:#fff}
+.ap-track{position:relative;flex:1;min-width:0;height:26px;cursor:pointer;touch-action:none}
+.ap-track::before{ /* 底轨 */
+  content:'';position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;
+  background:rgba(26,26,46,.3);
+}
+.ap-fill{ /* 进度 */
+  position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;
+  background:var(--accent,#2F2FE4);transform:scaleX(0);transform-origin:left center;
+}
+.ap-knob{ /* 菱形滑钮 */
+  position:absolute;top:50%;left:0;width:10px;height:10px;margin:-5px 0 0 -5px;
+  background:var(--accent,#2F2FE4);transform:rotate(45deg);
+  transition:opacity .2s;opacity:0;
+}
+.aplayer:hover .ap-knob,.aplayer.on .ap-knob{opacity:1}
+.ap-time{
+  flex:none;font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.06em;
+  color:rgba(26,26,46,.5);font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.aplayer.on .ap-time .ap-cur{color:var(--accent,#2F2FE4)}
+.ap-dl{
+  flex:none;width:34px;height:34px;border:1px solid #E3E6EA;background:#fff;
+  display:grid;place-items:center;font-size:14px;color:#1A1A2E;text-decoration:none;
+  transition:color .2s,border-color .2s,background .2s;
+}
+.ap-dl:hover{color:#fff;background:var(--accent,#2F2FE4);border-color:var(--accent,#2F2FE4)}
+</style>
+
+<!-- ============ JS ============ -->
+<script>
+(function(){
+'use strict';
+function lang(){ return window.CASE_LANG || 'en'; }
+const fmt = s => {
+  if(!isFinite(s)) return '--:--';
+  s = Math.floor(s); return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+};
+let playing = null;   /* 全站单实例：新的播放自动停掉旧的 */
+
+document.querySelectorAll('.aplayer').forEach(p => {
+  const a = new Audio();
+  a.preload = 'metadata';
+  a.src = (lang() === 'zh') ? p.dataset.srcZh : p.dataset.srcEn;
+  p.dataset.cur = a.src;
+  p._audio = a;
+  const btn = p.querySelector('.ap-btn'), track = p.querySelector('.ap-track');
+  const fill = p.querySelector('.ap-fill'), knob = p.querySelector('.ap-knob');
+  const cur = p.querySelector('.ap-cur'), dur = p.querySelector('.ap-dur');
+  const dl  = p.querySelector('.ap-dl');
+  if(dl) dl.href = (lang() === 'zh') ? p.dataset.srcZh : p.dataset.dlEn;
+
+  a.addEventListener('loadedmetadata', () => { dur.textContent = fmt(a.duration); });
+  a.addEventListener('timeupdate', () => {
+    const k = a.duration ? a.currentTime / a.duration : 0;
+    fill.style.transform = `scaleX(${k})`;
+    knob.style.left = (k*100) + '%';
+    cur.textContent = fmt(a.currentTime);
+  });
+  a.addEventListener('ended', () => { p.classList.remove('on'); playing = null; });
+
+  btn.addEventListener('click', () => {
+    if(playing && playing !== a){ playing.pause(); playing._p.classList.remove('on'); }
+    if(a.paused){
+      a.play().catch(()=>{});
+      p.classList.add('on'); playing = a; playing._p = p;
+    } else {
+      a.pause(); p.classList.remove('on'); playing = null;
+    }
+  });
+
+  /* seek：点击 + 拖动（pointer capture） */
+  let seeking = false;
+  const seekAt = e => {
+    const r = track.getBoundingClientRect();
+    const k = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+    if(isFinite(a.duration)) a.currentTime = k * a.duration;
+    fill.style.transform = `scaleX(${k})`;
+    knob.style.left = (k*100) + '%';
+  };
+  track.addEventListener('pointerdown', e => { seeking = true; track.setPointerCapture(e.pointerId); seekAt(e); });
+  track.addEventListener('pointermove', e => { if(seeking) seekAt(e); });
+  track.addEventListener('pointerup',    () => { seeking = false; });
+  track.addEventListener('pointercancel',() => { seeking = false; });
+});
+
+/* 语言切换时换音源（正在播则切到新源；下载链接同步） */
+document.addEventListener('site:lang', () => {
+  document.querySelectorAll('.aplayer').forEach(p => {
+    const src = (lang() === 'zh') ? p.dataset.srcZh : p.dataset.srcEn;
+    if(p._audio && p.dataset.cur !== src){ p._audio.src = src; p.dataset.cur = src; }
+    const dl = p.querySelector('.ap-dl');
+    if(dl) dl.href = (lang() === 'zh') ? p.dataset.srcZh : p.dataset.dlEn;
+  });
+});
+})();
+</script>

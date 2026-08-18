@@ -1,0 +1,102 @@
+<!--
+  templates/regional-links.html — 区域化链接 / 视频双链路 / iframe 内嵌
+  解决：同一资源「海外可达」与「内地可达」两个地址，随语言（或用户区域）切换。
+  三件套：
+    ① 卡片级 data-href-en / data-href-zh（语言切换换 href）
+    ② 视频双链路：<video> 海外直链（raw=1）+ 内地平台 iframe（?embed），整块 data-langs 切换
+    ③ 重型 iframe 点击加载（embed-load）
+-->
+
+<!-- ============ ① 卡片级区域化链接 ============ -->
+<!--
+  外链型作品卡：href 默认海外地址；语言切到简中时 JS 换成 data-href-zh。
+  外链必须 target="_blank" rel="noopener"。
+-->
+<a class="cell" data-cat="FILM"
+   data-href-en="https://overseas.example/file.mp4?rlkey=xxx&raw=1"
+   data-href-zh="https://mainland.example/design/xxx/watch"
+   href="https://overseas.example/file.mp4?rlkey=xxx&raw=1"
+   target="_blank" rel="noopener">
+  …卡片内容…
+</a>
+
+<!-- 配套 JS（通常并入语言引擎的 setLang，见 trilingual.html；独立版如下） -->
+<script>
+function applyRegionalLinks(){
+  const l = window.CASE_LANG || 'en';
+  document.querySelectorAll('[data-href-en]').forEach(a => {
+    a.href = (l === 'zh' && a.dataset.hrefZh) ? a.dataset.hrefZh : a.dataset.hrefEn;
+  });
+}
+applyRegionalLinks();
+document.addEventListener('site:lang', applyRegionalLinks);
+</script>
+
+<!-- ============ ② 视频双链路（整块媒体源切换） ============ -->
+<!--
+  海外版块：<video> + 网盘流式直链。
+    raw=1 = 流式直链（<video> 可播）；dl=0 = 下载页（<video> 吃不到）。
+    poster 本地 webp；preload="metadata" 只拉时长。
+  内地版块：同一视频换可内嵌的国内平台 iframe。
+    裸 /watch 会被 X-Frame-Options / CSP 拒绝 → 必须加 ?embed。
+  data-langs 整块显隐：语言切换时【媒体源连同容器】一起换，绝不只换文字。
+-->
+<section class="rv">
+  <h2 data-i18n="watchH">Watch</h2>
+
+  <!-- 海外 / 繁中：直链 <video> -->
+  <div class="block" data-langs="en tw">
+    <div class="video-shell">
+      <video controls preload="metadata" poster="assets/works/demo-poster.webp">
+        <source src="https://overseas.example/film.mp4?rlkey=xxx&raw=1" type="video/mp4">
+      </video>
+    </div>
+    <a class="btn" href="https://overseas.example/film.mp4?rlkey=xxx&dl=0"
+       target="_blank" rel="noopener">Watch on overseas host</a>
+  </div>
+
+  <!-- 简中：内地可嵌平台 iframe（?embed 必加） -->
+  <div class="block" data-langs="zh">
+    <div class="video-shell" style="aspect-ratio:16/9">
+      <iframe src="https://mainland.example/design/xxx/watch?embed"
+              title="影片 — 在线播放" loading="lazy" allowfullscreen></iframe>
+    </div>
+    <a class="btn" href="https://mainland.example/design/xxx/watch"
+       target="_blank" rel="noopener">在线观看（内地可达）</a>
+  </div>
+</section>
+
+<style>
+.video-shell{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;background:#000}
+.video-shell video,.video-shell iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+</style>
+
+<!-- ============ ③ 重型 iframe 点击加载（embed-load） ============ -->
+<!--
+  在线 deck / 长页面嵌入很重：首屏只放一个加载按钮，点击后才注入 iframe。
+-->
+<div class="embed-shell" style="aspect-ratio:16/9">
+  <button class="embed-load btn" type="button"
+          data-embed="https://mainland.example/design/xxx/view?embed"
+          data-title="在线演示文档">Load embed</button>
+</div>
+
+<script>
+document.querySelectorAll('.embed-load').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const shell = btn.closest('.embed-shell');
+    if(!shell || shell.querySelector('iframe')) return;
+    const src = btn.dataset.embed;
+    const title = btn.dataset.title || 'Embedded content';
+    shell.innerHTML = `<iframe src="${src}" title="${title}" loading="lazy" allowfullscreen></iframe>`;
+  });
+});
+</script>
+
+<!-- ============ 参数速查 ============ -->
+<!--
+  网盘直链：  …?rlkey=xxx&raw=1   → 流式（<video>/<audio> 用这个）
+  网盘下载页：…?rlkey=xxx&dl=0    → 落地页（外链按钮用这个）
+  平台内嵌：  …/watch?embed / …/view?embed   → iframe 用这个；裸 /watch 会被拦
+  preload：   metadata=只拉时长（推荐默认） / none=完全不预载（BGM）
+-->

@@ -1,0 +1,68 @@
+<!--
+  templates/bgm.html — 背景音乐单例按钮
+  原则：默认不播（浏览器自动播放策略 + 不打扰）；点击才创建 Audio 并播放；
+        loop 循环、音量 ~0.7、preload='none'（未点击零流量）；aria-pressed 表状态。
+  音频文件本地自托管：assets/audio/bgm.mp3
+-->
+
+<!-- ============ HTML（顶栏内，一处） ============ -->
+<button class="bgm-btn" id="bgmBtn" type="button" aria-pressed="false"
+        title="BGM — <曲名> · Music by <来源>"
+        aria-label="背景音乐 <曲名>，点击播放或暂停">
+  <span class="bgm-ico" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+    </svg>
+  </span>
+  <span class="bgm-txt">Music</span>
+</button>
+
+<!-- ============ CSS（按需并入样式表） ============ -->
+<style>
+.bgm-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid #E3E6EA;background:#fff;color:#1A1A2E;
+  font:500 10px/1 ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase;
+  padding:9px 14px;cursor:pointer;border-radius:0;
+  transition:color .2s,border-color .2s,background .2s;
+}
+.bgm-btn:hover{color:var(--accent,#2F2FE4);border-color:var(--accent,#2F2FE4)}
+.bgm-btn.playing{background:var(--accent,#2F2FE4);border-color:var(--accent,#2F2FE4);color:#fff}
+/* 播放中图标轻微律动（尊重 reduced-motion） */
+.bgm-btn.playing .bgm-ico{animation:bgmPulse 1.6s ease-in-out infinite}
+@keyframes bgmPulse{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@media (prefers-reduced-motion:reduce){.bgm-btn.playing .bgm-ico{animation:none}}
+</style>
+
+<!-- ============ JS ============ -->
+<script>
+(function(){
+'use strict';
+var btn = document.getElementById('bgmBtn');
+if(!btn) return;
+var audio = null;
+
+function ensure(){
+  if(audio) return;
+  audio = new Audio('/assets/audio/bgm.mp3');
+  audio.loop = true;
+  audio.volume = 0.7;
+  audio.preload = 'none';
+}
+function on(){
+  ensure();
+  var p = audio.play();
+  if(p && p.catch) p.catch(function(){});   /* 自动播放策略兜底 */
+  btn.classList.add('playing');
+  btn.setAttribute('aria-pressed','true');
+}
+function off(){
+  if(audio) audio.pause();
+  btn.classList.remove('playing');
+  btn.setAttribute('aria-pressed','false');
+}
+btn.addEventListener('click', function(){
+  btn.classList.contains('playing') ? off() : on();
+});
+})();
+</script>

@@ -1,0 +1,177 @@
+<!--
+  templates/marquee.html — 无限滚动条（数据带 / 词汇墙）
+  机制：overflow 容器 + max-content 行；内容克隆×2（不足视口宽继续克隆，上限4轮）；
+        rAF 推进 scrollLeft，越半宽回卷=无缝循环；鼠标拖拽 1:1 跟手，松手 ~400ms 恢复；
+        触屏走原生滚动（touchstart 暂停自动滚，touchend 600ms 后恢复）；
+        hover 任一带暂停【所有】带（联动计数）；克隆节点剥离 data-count 防重复动画。
+  关键坑：不要用 scroll 事件判断用户操作（自动滚也会触发）——只认真实输入。
+  行速度经 CSS 变量 --mq-dur（秒/半程）控制，多带可差速。
+-->
+
+<!-- ============ HTML ============ -->
+<!-- 数据带（单行 marquee） -->
+<div class="mq strip">
+  <div class="mq-lane">
+    <div class="mq-row" style="--mq-dur:48">
+      <span class="mq-item"><b data-count="528.8" data-decimal="1" data-suffix="%">0%</b> DATA POINT A</span>
+      <span class="mq-dot"></span>
+      <span class="mq-item"><b data-count="18" data-suffix="">0</b> WORKS INDEXED</span>
+      <span class="mq-dot"></span>
+      <span class="mq-item">STATIC · ZERO BUILD · SELF-HOSTED</span>
+      <span class="mq-dot"></span>
+      <span class="mq-cat">SIGNAL</span>
+      <!-- 内容至少一份；JS 会克隆补齐 -->
+    </div>
+  </div>
+</div>
+
+<!-- 词汇墙（第二条，差速） -->
+<div class="mq">
+  <div class="mq-lane">
+    <div class="mq-row" style="--mq-dur:64">
+      <span class="mq-item">EDITORIAL</span><span class="mq-dot"></span>
+      <span class="mq-item">CAMPAIGN</span><span class="mq-dot"></span>
+      <span class="mq-item">DATA STORY</span><span class="mq-dot"></span>
+      <span class="mq-item">BRAND SYSTEM</span><span class="mq-dot"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CSS ============ -->
+<style>
+.mq{position:relative}
+.mq-lane{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;cursor:grab}
+.mq-lane::-webkit-scrollbar{display:none}
+.mq-lane.grabbing{cursor:grabbing}
+.mq-row{display:flex;align-items:center;width:max-content}
+/* 数据带皮肤 */
+.strip{background:#F5F6F7;border-top:1px solid #E3E6EA;border-bottom:1px solid #E3E6EA}
+.strip .mq-row{align-items:stretch}
+.mq-item{
+  flex:none;font-size:clamp(.98rem,1.5vw,1.2rem);font-weight:300;letter-spacing:.02em;
+  color:#1A1A2E;white-space:nowrap;transition:color .2s;
+}
+.mq-item:hover{color:var(--accent,#2F2FE4)}
+.mq-item b{font-weight:500;color:var(--accent,#2F2FE4);font-variant-numeric:tabular-nums}
+.mq-dot{flex:none;width:5px;height:5px;background:var(--accent,#2F2FE4);transform:rotate(45deg);margin:0 22px}
+.mq-cat{
+  flex:none;font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:#fff;background:var(--accent,#2F2FE4);padding:4px 9px;margin:0 22px;white-space:nowrap;
+}
+</style>
+
+<!-- ============ JS ============ -->
+<script>
+(function(){
+'use strict';
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const bands = document.querySelectorAll('.mq');
+const lanes = [...document.querySelectorAll('.mq-lane')];
+if(!lanes.length) return;
+let dragHold = 0, hoverHold = 0;   /* 联动：任一带被拖/hover → 全部暂停 */
+
+bands.forEach(b => {
+  b.addEventListener('mouseenter', () => hoverHold++);
+  b.addEventListener('mouseleave', () => hoverHold = Math.max(0, hoverHold - 1));
+});
+
+lanes.forEach(lane => {
+  const row = lane.querySelector('.mq-row');
+  if(!row) return;
+  const durS = parseFloat(getComputedStyle(row).getPropertyValue('--mq-dur')) || 48;
+
+  /* 无缝保证：克隆内容直到半程 ≥ 视口宽 +40（最多 4 轮）；
+     克隆节点剥离 data-count 等动画属性，防计数动画重复触发 */
+  (function ensureLoop(){
+    const minW = lane.clientWidth + 40;
+    let guard = 0;
+    while(row.scrollWidth / 2 < minW && guard++ < 4){
+      [...row.childNodes].forEach(node => {
+        const c = node.cloneNode(true);
+        if(c.nodeType === 1){
+          c.querySelectorAll('[data-count]').forEach(x => {
+            x.removeAttribute('data-count');
+            x.removeAttribute('data-decimal');
+            x.removeAttribute('data-suffix');
+          });
+        }
+        row.appendChild(c);
+      });
+    }
+  })();
+
+  const half = () => row.scrollWidth / 2;
+  let holding = false, sx = 0, sl0 = 0, resumeT = null, lastUser = -1e9, last = performance.now();
+
+  const wrap = () => {   /* 越半宽回卷 */
+    const h = half();
+    if(h <= 0) return;
+    if(lane.scrollLeft >= h) lane.scrollLeft -= h;
+    else if(lane.scrollLeft < 0) lane.scrollLeft += h;
+  };
+
+  /* 只认真实用户输入更新 lastUser——自动滚自己写的 scrollLeft 不算 */
+  lane.addEventListener('wheel', () => { if(!holding) lastUser = performance.now(); }, {passive:true});
+
+  if(!RM){
+    (function tick(now){
+      const dt = Math.min(64, now - last); last = now;
+      const idle = now - lastUser > 200;
+      if(!holding && dragHold === 0 && hoverHold === 0 && idle){
+        lane.scrollLeft += (half() / durS) * dt / 1000;
+        wrap();
+      }
+      requestAnimationFrame(tick);
+    })(performance.now());
+  }
+
+  /* 鼠标拖拽 1:1 跟手 */
+  lane.addEventListener('pointerdown', e => {
+    if(e.pointerType === 'touch') return;          /* 触屏走原生滚动 */
+    if(e.button !== undefined && e.button > 0) return;
+    holding = true; sx = e.clientX; sl0 = lane.scrollLeft;
+    dragHold++;
+    try{ lane.setPointerCapture(e.pointerId); }catch(err){}
+    lane.classList.add('grabbing');
+    clearTimeout(resumeT);
+  });
+  lane.addEventListener('pointermove', e => {
+    if(!holding) return;
+    lane.scrollLeft = sl0 - (e.clientX - sx);
+    wrap();
+  });
+  const up = e => {
+    if(!holding) return;
+    holding = false;
+    lane.classList.remove('grabbing');
+    try{ lane.releasePointerCapture(e.pointerId); }catch(err){}
+    resumeT = setTimeout(() => { dragHold = Math.max(0, dragHold - 1); }, 400);
+  };
+  lane.addEventListener('pointerup', up);
+  lane.addEventListener('pointercancel', up);
+
+  /* 触屏：按住暂停，松手 600ms 后恢复（等惯性滚完） */
+  lane.addEventListener('touchstart', () => { holding = true; clearTimeout(resumeT); }, {passive:true});
+  lane.addEventListener('touchend',   () => { resumeT = setTimeout(() => { holding = false; }, 600); }, {passive:true});
+});
+})();
+
+/* 附：滚动计数动画（进入视口触发一次，ease-out 1.2s） */
+(function(){
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if(!e.isIntersecting) return;
+  const el = e.target;
+  const target = parseFloat(el.dataset.count);
+  const dec = +(el.dataset.decimal || 0), suf = el.dataset.suffix || '';
+  const t0 = performance.now(), dur = RM ? 60 : 1200;
+  (function tick(t){
+    const k = Math.min(1,(t-t0)/dur), ease = 1-Math.pow(1-k,3);
+    el.textContent = (target*ease).toFixed(dec) + suf;
+    if(k < 1) requestAnimationFrame(tick);
+  })(t0);
+  io.unobserve(el);
+}), {threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el => io.observe(el));
+})();
+</script>

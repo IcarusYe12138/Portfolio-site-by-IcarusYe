@@ -1,0 +1,150 @@
+<!--
+  templates/trilingual.html — 三语切换机制骨架
+  用法：把「字典 + 引擎」粘进页面底部，「标记语法」用于正文，语言按钮见文末。
+  机制：单页 DOM + data-i18n/data-langs 就地切换；?lang= 直链；localStorage 持久化；
+        首访浏览器检测（不固化）；标题类锁宽解码动画，正文瞬时替换。
+-->
+
+<!-- ============ ① 正文标记语法 ============ -->
+<!--
+  纯文本节点：
+  <h2 data-i18n="secTitle">Section Title</h2>
+
+  aria 标签：
+  <button data-i18n-aria="playLabel" aria-label="Play">
+
+  整块区域化内容（含媒体源切换，如海外视频 vs 内地 iframe）：
+  <div class="block" data-langs="en tw"> …海外媒体… </div>
+  <div class="block" data-langs="zh">   …内地媒体… </div>
+
+  区域化链接（语言切换时 JS 自动换 href）：
+  <a data-href-en="https://overseas.example/x" data-href-zh="https://mainland.example/x"
+     href="https://overseas.example/x" target="_blank" rel="noopener">Open</a>
+-->
+
+<!-- ============ ② 语言切换按钮（顶栏内） ============ -->
+<div class="lang-switch" role="group" aria-label="Language">
+  <a class="lang-btn on" data-lang="en" href="#">EN</a>
+  <a class="lang-btn" data-lang="tw" href="#">繁</a>
+  <a class="lang-btn" data-lang="zh" href="#">简</a>
+</div>
+
+<!-- ============ ③ 页面字典 + 引擎（粘到 </body> 前） ============ -->
+<script>
+/* ---- 页面专属字典：key 自定，en/zh/tw 三份 ---- */
+window.CASE_T = {
+  en:{
+    docTitle:"Page Title — Your Name",
+    secTitle:"ALL WORKS",
+    playLabel:"Play",
+    /* …页面其余 key… */
+  },
+  zh:{
+    docTitle:"页面标题 — 你的名字",
+    secTitle:"全部作品",
+    playLabel:"播放",
+  },
+  tw:{
+    docTitle:"頁面標題 — 你的名字",
+    secTitle:"全部作品",
+    playLabel:"播放",
+  }
+};
+
+/* ---- 共享引擎（每页一份，或抽成 i18n.js 统一引入） ---- */
+(function(){
+'use strict';
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const MAIN = {en:'index.html', zh:'index.html?lang=zh', tw:'index.html?lang=tw'};
+let LANG = 'en';
+
+/* 语言判定：URL ?lang= > localStorage > 首访浏览器检测（不落存储） */
+(function detect(){
+  const q = new URLSearchParams(location.search).get('lang');
+  if(q && CASE_T[q]){ LANG = q; return; }
+  let saved = null;
+  try{ saved = localStorage.getItem('site-lang'); }catch(e){}
+  if(saved && CASE_T[saved]){ LANG = saved; return; }
+  const nl = (navigator.language || 'en').toLowerCase();
+  LANG = nl.startsWith('zh') ? (/tw|hk|mo|hant/.test(nl) ? 'tw' : 'zh') : 'en';
+})();
+
+/* 锁宽解码：标题类切换动画——冻结高度防随机字符宽度引发的重排抖动 */
+const POOL_A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&/';
+const POOL_C = '作品关于经历联系档案首页设计网格秩序信号';
+function scrambleSwap(el, final_){
+  if(RM){ el.textContent = final_; return; }
+  const token = el._scrT = (el._scrT || 0) + 1;
+  if(!el._scrLock){
+    el._scrLock = true;
+    el.style.height = el.getBoundingClientRect().height + 'px';
+    el.style.overflow = 'hidden';
+  }
+  const chars = [...final_]; let frame = 0;
+  const maxFrames = 18 + chars.length * 3.5;
+  (function step(){
+    if(el._scrT !== token) return;              // 被更新的切换取代
+    let out = '';
+    for(let i = 0; i < chars.length; i++){
+      const c = chars[i];
+      if(c === ' '){ out += ' '; continue; }
+      if(frame > 9 + i * 2.8){ out += c; continue; }
+      const pool = c.charCodeAt(0) > 0x2E7F ? POOL_C : POOL_A;
+      out += pool[Math.floor(Math.random()*pool.length)];
+    }
+    el.textContent = out;
+    if(++frame < maxFrames) requestAnimationFrame(step);
+    else { el.textContent = final_; el.style.height = ''; el.style.overflow = ''; el._scrLock = false; }
+  })();
+}
+const SWAP_SEL = 'h1,h2,h3,.sec-tag';           // 哪些元素跑解码动画
+
+function setLang(lang, persist, animate){
+  LANG = lang;
+  if(persist){ try{ localStorage.setItem('site-lang', lang); }catch(e){} }
+  document.documentElement.lang = lang === 'en' ? 'en' : (lang === 'zh' ? 'zh-Hans-CN' : 'zh-Hant-HK');
+  window.CASE_LANG = lang;
+  const T = CASE_T[lang];
+  document.title = T.docTitle;
+
+  /* data-i18n 文本 */
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = T[el.dataset.i18n];
+    if(v === undefined) return;
+    if(animate && v.indexOf('<') === -1 && el.matches(SWAP_SEL)) scrambleSwap(el, v.replace(/&amp;/g,'&'));
+    else el.innerHTML = v;
+  });
+  /* data-i18n-aria */
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+    const v = T[el.dataset.i18nAria];
+    if(v !== undefined) el.setAttribute('aria-label', v);
+  });
+  /* data-langs 整块显隐 */
+  document.querySelectorAll('[data-langs]').forEach(el => {
+    el.style.display = el.dataset.langs.split(' ').includes(lang) ? '' : 'none';
+  });
+  /* 区域化链接 */
+  document.querySelectorAll('[data-href-en]').forEach(a => {
+    a.href = (lang === 'zh' && a.dataset.hrefZh) ? a.dataset.hrefZh : a.dataset.hrefEn;
+  });
+  /* 按钮态 + URL 参数 */
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    const on = b.dataset.lang === lang;
+    b.classList.toggle('on', on);
+    on ? b.setAttribute('aria-current','true') : b.removeAttribute('aria-current');
+  });
+  history.replaceState(null, '', lang === 'en' ? location.pathname : location.pathname + '?lang=' + lang);
+  /* 通知页面级组件（筛选条/播放器/列表等）重建 */
+  document.dispatchEvent(new CustomEvent('site:lang', {detail: lang}));
+}
+
+document.querySelectorAll('.lang-btn').forEach(b => {
+  b.addEventListener('click', e => {
+    e.preventDefault();
+    if(b.dataset.lang === LANG) return;
+    setLang(b.dataset.lang, true, true);
+  });
+});
+setLang(LANG, false);
+})();
+</script>
