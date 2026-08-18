@@ -33,7 +33,9 @@ Distilled from a real, production portfolio: hand-written HTML/CSS/JS on Cloudfl
 │   ├── 04-deploy-and-domain.md   Hosting, caching discipline, domain strategy, China reachability
 │   ├── 05-structure-i18n.md      Folder structure + the trilingual mechanism
 │   ├── 06-iteration.md           Iteration cadence and decision-log format
-│   └── 07-pitfalls.md            23 pitfalls, each as symptom → root cause → avoidance
+│   ├── 07-pitfalls.md            23 pitfalls, each as symptom → root cause → avoidance
+│   ├── 08-accessibility-motion.md  Accessibility patterns, reduced-motion strategy, photosensitivity guards
+│   └── 09-performance.md         Performance: font subsetting pipeline, lazy loading, IO patterns
 └── templates/                    Copy-paste component skeletons
     ├── trilingual.html           Trilingual engine (dictionary + setLang + width-locked scramble)
     ├── audio-player.html         Inline audio player (play / seek / time / download, single instance)
@@ -77,6 +79,7 @@ The `references/` folder reads as a standalone handbook. Start with:
 
 - `references/03-media-compat.md` if you care about cross-region media;
 - `references/07-pitfalls.md` before and after every major change, as a checklist;
+- `references/09-performance.md` before shipping, for the font pipeline and lazy-loading matrix;
 - `templates/` for the component skeletons, all dependency-free and self-documented.
 
 ## Suggested workflow for a new site

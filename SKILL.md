@@ -52,7 +52,9 @@ portfolio-site-kit/
 │   ├── 04-deploy-and-domain.md   部署、缓存、域名策略、内地可达
 │   ├── 05-structure-i18n.md      文件夹结构 + 三语机制
 │   ├── 06-iteration.md           迭代节奏与改进文档写法
-│   └── 07-pitfalls.md            ★ 避坑清单（现象→原因→怎么避免）
+│   ├── 07-pitfalls.md            ★ 避坑清单（现象→原因→怎么避免）
+│   ├── 08-accessibility-motion.md 无障碍模式 + reduced-motion 策略 + 光敏保护
+│   └── 09-performance.md         性能：字体子集分片管线、懒加载、IO 模式
 └── templates/                    ← 可直接复制的组件模板
     ├── trilingual.html           三语切换机制骨架（字典+setLang+data-langs）
     ├── audio-player.html         内嵌音频播放器（播放/seek/时间/下载）

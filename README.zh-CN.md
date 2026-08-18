@@ -33,7 +33,9 @@
 │   ├── 04-deploy-and-domain.md   托管、缓存纪律、域名策略、内地可达性
 │   ├── 05-structure-i18n.md      文件夹结构 + 三语机制
 │   ├── 06-iteration.md           迭代节奏与决策日志格式
-│   └── 07-pitfalls.md            23 条坑，每条按「现象 → 根因 → 怎么避免」
+│   ├── 07-pitfalls.md            23 条坑，每条按「现象 → 根因 → 怎么避免」
+│   ├── 08-accessibility-motion.md 无障碍模式 + reduced-motion 策略 + 光敏保护
+│   └── 09-performance.md         性能：字体子集分片管线、懒加载、IO 模式
 └── templates/                    可直接复制的组件骨架
     ├── trilingual.html           三语引擎（字典 + setLang + 锁宽解码）
     ├── audio-player.html         内嵌音频播放器（播放 / seek / 时间 / 下载，单实例）
@@ -77,6 +79,7 @@
 
 - 关心跨地域媒体 → 从 `references/03-media-compat.md` 读起；
 - 每次大改前后 → 把 `references/07-pitfalls.md` 当 checklist 过一遍；
+- 上线之前 → 用 `references/09-performance.md` 过字体管线与懒加载矩阵；
 - 需要组件骨架 → 直接抄 `templates/`，全部零依赖、自带注释。
 
 ## 新站建议工作流
