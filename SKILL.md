@@ -48,8 +48,8 @@ portfolio-site-kit/
 ├── references/                   ← 分主题深度文档
 │   ├── 00-onboarding.md          ★ 首次接洽：问卷、素材载体、工具链与隐私红线
 │   ├── 01-design-and-style.md    设计规范与「找风格」方法论（含书面 Style Spec、文案纪律）
-│   ├── 02-components.md          组件规范（顶栏/卡片/筛选/播放器/磁贴场/详情页/预载器/Contact…）
-│   ├── 03-media-compat.md        ★ 音视频与图文的跨地域兼容（专节）
+│   ├── 02-components.md          组件规范（顶栏/卡片/筛选/播放器/磁贴场/详情页/预载器/Contact/嵌入名片/Colophon…）
+│   ├── 03-media-compat.md        ★ 音视频与图文的跨地域兼容（含区域差异四层清单）
 │   ├── 04-deploy-and-domain.md   部署、缓存、域名购买指南、内地可达
 │   ├── 05-structure-i18n.md      文件夹结构 + 三语机制（属性级 i18n 全集 + 首页架构）
 │   ├── 06-iteration.md           三层迭代文档体系（总规/轮次日志/站根活档）

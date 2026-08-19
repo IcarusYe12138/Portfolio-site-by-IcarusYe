@@ -37,8 +37,8 @@
 ├── references/
 │   ├── 00-onboarding.md          接洽问卷、内容载体、工具链与隐私红线
 │   ├── 01-design-and-style.md    设计 token + 「找风格」方法论 + 文案纪律
-│   ├── 02-components.md          组件规格：顶栏、卡片、筛选、播放器、详情页、预载器、Contact
-│   ├── 03-media-compat.md        跨地域媒体兼容（视频 / 音频 / 网页存档）
+│   ├── 02-components.md          组件规格：顶栏、卡片、筛选、播放器、详情页、预载器、Contact、嵌入名片、Colophon
+│   ├── 03-media-compat.md        跨地域媒体兼容（视频 / 音频 / 网页存档 / 区域差异四层清单）
 │   ├── 04-deploy-and-domain.md   托管、缓存纪律、域名购买指南、内地可达性
 │   ├── 05-structure-i18n.md      文件夹结构 + 三语引擎 + 首页架构
 │   ├── 06-iteration.md           三层文档体系（总规 / 轮次日志 / 站根活档）

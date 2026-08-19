@@ -37,8 +37,8 @@ The kit is distilled from the real-world experience of building [icarusye.site](
 ├── references/
 │   ├── 00-onboarding.md          Intake questionnaire, content carriers, toolchain, privacy rules
 │   ├── 01-design-and-style.md    Design tokens + the "find your style" methodology + copy discipline
-│   ├── 02-components.md          Component specs: topbar, cards, filters, players, case pages, preloader, contact
-│   ├── 03-media-compat.md        Cross-region media compatibility (video / audio / web archives)
+│   ├── 02-components.md          Component specs: topbar, cards, filters, players, case pages, preloader, contact, embedded cards, colophon
+│   ├── 03-media-compat.md        Cross-region media compatibility (video / audio / web archives / four-layer regional diff)
 │   ├── 04-deploy-and-domain.md   Hosting, caching discipline, domain-buying guide, China reachability
 │   ├── 05-structure-i18n.md      Folder structure + trilingual engine + homepage architecture
 │   ├── 06-iteration.md           Three-layer documentation system (master plan / round logs / living archive)

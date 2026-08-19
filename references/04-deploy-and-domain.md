@@ -16,6 +16,7 @@
 - `robots.txt`：`Allow: /`、禁抓 404 页、`Sitemap: https://<域名>/sitemap.xml`；
 - `sitemap.xml` 列出全部可分享页面；
 - 每页 OG 分享三件套：`og:title` / `og:description` / `og:image`（1200×630 JPG，绝对 URL）+ `twitter:card: summary_large_image`——微信/Telegram/X 卡片才会出图；
+- og 标签多页站**用脚本批量挂**（枚举页面清单统一注入 og:image + 宽高声明 + twitter 卡片），不逐页手写——漏挂与不一致是事故之源；
 - 内地可达性：Cloudflare Pages 的 `*.pages.dev` 域名在内地**时通时断**，绑自定义域名走 CF 解析更稳；要求高时另备境内 CDN/托管（见域名策略）。
 
 ## 二、缓存纪律（最高频翻车点）

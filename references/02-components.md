@@ -185,7 +185,77 @@ const dur = 720, t0 = performance.now();
 
 **反面**：只放表单（静态站无后端、垃圾提交无从过滤）；嵌入式内容无降级链接；联系方式散落在多个区块。
 
-## 12. 其他小组件（速查）
+## 12. 嵌入名片 / 第三方卡片（iframe）
+
+**何时用**：Contact 区嵌入电子名片、第三方卡片式页面。
+
+**要点**：
+```html
+<div class="card-frame">
+  <iframe id="cardIframe" src="https://overseas.example/card"
+          title="Digital card" data-i18n-title="cardTitle" loading="lazy"></iframe>
+</div>
+<a class="cf-fallback" id="cardFallback" href="https://overseas.example/card"
+   target="_blank" rel="noopener" data-i18n="cfFallback">Card not loading? Open it directly ↗</a>
+```
+```css
+.card-frame{
+  border:1px solid var(--ink);background:var(--card);
+  aspect-ratio:9/16;                          /* 9:16 竖屏 = 卡片类嵌入的黄金比例 */
+  width:min(100%,380px);margin-inline:auto;   /* 移动端：宽度驱动 */
+  position:relative;overflow:hidden;
+}
+.card-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+@media (min-width:1024px){
+  /* 桌面端：改高度驱动——左列文案高度随语言不同，
+     若宽度驱动会三语卡片高矮不齐；高度驱动保证卡片形状一致 */
+  .card-frame{width:auto;height:clamp(520px,68vh,680px)}
+}
+```
+```js
+/* 源按语言切换：cardSrc / cardTitle / cardHref 三键进字典，
+   setLang 时 iframe 源 + title + 兜底链接三同步 */
+const iframe = document.getElementById('cardIframe');
+if(iframe){ iframe.src = T.cardSrc; iframe.title = T.cardTitle; }
+const fb = document.getElementById('cardFallback');
+if(fb){ fb.href = T.cardHref; }
+```
+- **源按区域配双源**：海外/繁中 → 境外名片平台；简中 → 内地可达的名片平台（与视频双链路同理，见 `03-media-compat.md`）；
+- **兜底链接常驻**：第三方嵌入随时可能被拦或挂掉，iframe 下方留一条文字出口（「名片加载不出来？直接打开 ↗」，文案进字典三语）；
+- `loading="lazy"` + i18n `title`；
+- 名片类轻量嵌入**不需要**「点击加载」按钮——折叠方案容易过度设计；该保留给重型 deck。
+
+**反面**：宽度 + 高度双固定（多语言/多设备下卡片变形）；只换外链不换 iframe 源（简中用户仍打境外源）；无兜底链接。
+
+## 13. Colophon 页模式（「这个网站咋做的」）
+
+**何时用**：展示型站点都值得有——把书面设计规范与迭代日志公开化，让访客看到工艺。
+
+**六节结构**：
+```
+01 Concept          概念与风格来源（引用唯一书面 Style Spec）
+02 Tokens           色板（交互式）
+03 Typography       字体标本行（交互式）
+04 Motion           动效系统总述
+05 Stack & Delivery 架构与交付（翻转卡）
+06 Iteration Log    迭代日志（一轮一行）
+```
+
+**招牌交互组件**：
+- **Strata 色板**：颜色竖排成「地质剖面」（基底白 → 深墨，强调色作斜插「矿脉」）；点击任一层复制 hex，该层显示 `COPIED ✓`，~900ms 后自动复位；
+- **字体标本行**：每角色（display/body/mono）一行，hover 改字距/字重/颜色——「感受字体」胜过用文字描述规格；
+- **fx 自演示词库**：Motion 节里每个术语演示自己命名的效果——wipe 自己给自己擦背景、count 自己计数、cursor 自己变箭头、parallax 自己漂移——术语表即演示，动效系统最有说服力的呈现方式；
+- **Spec 翻转卡**：front = 术语标签，back = 详情文案；周期翻转（随机 9–16s，负延迟错峰起步）+ 点击手动翻；back 背景用强调色 ~82% 不透明度（降刺眼）；RM 静态；
+- **Iteration Log**：轮号 + 日期 + 一句主题 + 条数徽标，hover 位移 + 编号变强调色；主题按「演进方向」措辞，不翻已推翻项。
+
+**工程纪律**：
+- **内容必须与实际实现同步**——站内退役的动效（页面转场、悬浮头像等）要从 colophon 描述里删掉，否则说明书与产品漂移；每次做减法轮，顺手做一次「colophon 同步」；
+- 三语与详情页同机制（字典 + setLang）；
+- 轮数 / 决策条数 / 版本标识三处联动更新。
+
+**反面**：colophon 过时（描述已退役的效果）；全文字无交互；迭代日志写成流水账日记。
+
+## 14. 其他小组件（速查）
 
 | 组件 | 要点 |
 |---|---|
