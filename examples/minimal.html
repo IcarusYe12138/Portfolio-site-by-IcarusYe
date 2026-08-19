@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<!--
+  examples/minimal.html — 组件活体测试页（双击直接在浏览器打开即可跑）
+  用途：
+    1. 新站起步的最小组装示例——四件最常用组件各一段，标注了来源模板；
+    2. 模板自身的回归测试——以后改 templates/ 里的任何一段，先同步改这里并打开验证。
+  组装清单（全部来自 ../templates/，此处为可直接运行的精简拼装）：
+    · trilingual.html  — 三语引擎（字典 + setLang + site:lang）
+    · marquee.html     — 无限滚动条（克隆回卷 + 拖拽 + 联动暂停）
+    · audio-player.html— 内嵌播放器（seek + 单实例）
+    · tile-field.html  — 参数化磁贴背景场
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kit minimal example</title>
+<style>
+:root{--bg:#FAFAFA;--bg2:#F5F6F7;--card:#fff;--ink:#1A1A2E;--ink50:rgba(26,26,46,.5);--line:#E3E6EA;--accent:#2F2FE4}
+*{margin:0;padding:0;box-sizing:border-box;border-radius:0!important}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.65 ui-sans-serif,system-ui,sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:0 clamp(20px,4vw,64px)}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+h1{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:300;letter-spacing:.1em;text-transform:uppercase;margin:40px 0 10px}
+.note{font-size:12px;color:var(--ink50);margin-bottom:40px}
+.lang-btn{display:inline-block;margin-left:8px;border:1px solid var(--line);padding:6px 12px;font-size:11px;letter-spacing:.1em;color:var(--ink);text-decoration:none}
+.lang-btn.on{border-color:var(--accent);color:var(--accent)}
+section{margin-bottom:64px}
+.sec-tag{font:600 10px/1 ui-monospace,monospace;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:14px}
+/* ── marquee（精简自 ../templates/marquee.html）── */
+.mq-lane{overflow-x:auto;scrollbar-width:none;cursor:grab;background:var(--bg2);border-block:1px solid var(--line)}
+.mq-lane::-webkit-scrollbar{display:none}
+.mq-row{display:flex;align-items:center;width:max-content;padding:14px 0}
+.mq-item{flex:none;font-size:15px;font-weight:300;white-space:nowrap}
+.mq-dot{flex:none;width:5px;height:5px;background:var(--accent);transform:rotate(45deg);margin:0 22px}
+/* ── aplayer（精简自 ../templates/audio-player.html）── */
+.aplayer{display:flex;align-items:center;gap:14px;max-width:520px}
+.ap-btn{flex:none;width:44px;height:44px;border:1px solid var(--ink);background:var(--card);display:grid;place-items:center;cursor:pointer}
+.ap-btn i{display:block;width:0;height:0;margin-left:3px;border-left:11px solid var(--ink);border-top:7px solid transparent;border-bottom:7px solid transparent}
+.aplayer.on .ap-btn i{width:9px;height:11px;margin:0;border:0;border-left:3.5px solid var(--accent);border-right:3.5px solid var(--accent)}
+.ap-track{position:relative;flex:1;height:26px;cursor:pointer;touch-action:none}
+.ap-track::before{content:'';position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:rgba(26,26,46,.3)}
+.ap-fill{position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:var(--accent);transform:scaleX(0);transform-origin:left center}
+.ap-knob{position:absolute;top:50%;left:0;width:10px;height:10px;margin:-5px 0 0 -5px;background:var(--accent);transform:rotate(45deg)}
+.ap-time{font:500 10.5px/1 ui-monospace,monospace;color:var(--ink50);font-variant-numeric:tabular-nums}
+/* ── tile-field（精简自 ../templates/tile-field.html，容器位）── */
+.tile-demo{position:relative;min-height:220px;border:1px solid var(--line);margin-top:10px}
+.tile-field{position:absolute;inset:0;overflow:hidden;pointer-events:none;display:grid;place-content:center;grid-template-columns:repeat(var(--cols,24),var(--cell,28px));grid-auto-rows:var(--cell,28px);gap:3px}
+.tile{position:relative;transform-style:preserve-3d}
+.tile .tf{position:absolute;inset:0;display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <b style="letter-spacing:.2em">KIT·DEMO</b>
+  <nav>
+    <a class="lang-btn on" data-lang="en" href="#">EN</a><a class="lang-btn" data-lang="tw" href="#">繁</a><a class="lang-btn" data-lang="zh" href="#">简</a>
+  </nav>
+</header>
+
+<h1 data-i18n="h1">Minimal example</h1>
+<p class="note" data-i18n="note">Four components assembled: trilingual · marquee · audio player · tile field.</p>
+
+<section>
+  <span class="sec-tag">01 · MARQUEE</span>
+  <div class="mq"><div class="mq-lane"><div class="mq-row" style="--mq-dur:30">
+    <span class="mq-item" data-i18n="m1">Drag me — I loop forever</span><i class="mq-dot"></i>
+    <span class="mq-item">STATIC · ZERO BUILD</span><i class="mq-dot"></i>
+    <span class="mq-item" data-i18n="m2">Hover pauses all lanes</span><i class="mq-dot"></i>
+  </div></div></div>
+</section>
+
+<section>
+  <span class="sec-tag">02 · AUDIO PLAYER</span>
+  <div class="aplayer" data-src-en="https://example.com/demo.mp3" data-src-zh="https://example.com/demo.mp3">
+    <button class="ap-btn" type="button" aria-label="Play"><i></i></button>
+    <div class="ap-track"><span class="ap-fill"></span><span class="ap-knob"></span></div>
+    <span class="ap-time"><b class="ap-cur">0:00</b>/<b class="ap-dur">--:--</b></span>
+  </div>
+  <p class="note" data-i18n="anote">Point data-src at a real MP3 to test playback.</p>
+</section>
+
+<section>
+  <span class="sec-tag">03 · TILE FIELD</span>
+  <div class="tile-demo"><div class="tile-field" data-density=".8" data-cell="34" data-pow="2"></div></div>
+</section>
+</div>
+
+<script>
+/* ══ ① 三语引擎（精简自 ../templates/trilingual.html：去掉解码动画，保留全套属性切换）══ */
+window.CASE_T = {
+  en:{ _title:"Kit minimal example", h1:"Minimal example",
+       note:"Four components assembled: trilingual · marquee · audio player · tile field.",
+       m1:"Drag me — I loop forever", m2:"Hover pauses all lanes",
+       anote:"Point data-src at a real MP3 to test playback." },
+  zh:{ _title:"Kit 最小示例", h1:"最小示例",
+       note:"四个组件的拼装演示：三语 · 无限滚动 · 音频播放器 · 磁贴场。",
+       m1:"拖我——无限循环", m2:"悬停暂停全部车道",
+       anote:"把 data-src 指向真实 MP3 即可测试播放。" },
+  tw:{ _title:"Kit 最小示例", h1:"最小示例",
+       note:"四個組件的拼裝演示：三語 · 無限滾動 · 音頻播放器 · 磁貼場。",
+       m1:"拖我——無限循環", m2:"懸停暫停全部車道",
+       anote:"把 data-src 指向真實 MP3 即可測試播放。" }
+};
+(function(){
+'use strict';
+var LANG = 'en';
+try{ LANG = localStorage.getItem('site-lang') || 'en'; }catch(e){}
+function langOf(){
+  var nl = (navigator.language||'en').toLowerCase();
+  return nl.indexOf('zh')===0 ? (/tw|hk|mo|hant/.test(nl)?'tw':'zh') : 'en';
+}
+if(!CASE_T[LANG]) LANG = 'en';
+function setLang(lang){
+  LANG = lang;
+  try{ localStorage.setItem('site-lang', lang); }catch(e){}
+  document.documentElement.lang = lang==='en'?'en':(lang==='zh'?'zh-Hans-CN':'zh-Hant-HK');
+  window.CASE_LANG = lang;
+  var T = CASE_T[lang]; document.title = T._title;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var v = T[el.dataset.i18n]; if(v !== undefined) el.textContent = v;
+  });
+  document.querySelectorAll('.lang-btn').forEach(function(b){
+    b.classList.toggle('on', b.dataset.lang === lang);
+  });
+  document.dispatchEvent(new CustomEvent('site:lang', {detail: lang}));
+}
+document.querySelectorAll('.lang-btn').forEach(function(b){
+  b.addEventListener('click', function(e){ e.preventDefault(); setLang(b.dataset.lang); });
+});
+setLang(LANG);
+})();
+
+/* ══ ② Marquee（精简自 ../templates/marquee.html）══ */
+(function(){
+'use strict';
+var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+var lanes = [].slice.call(document.querySelectorAll('.mq-lane'));
+if(!lanes.length) return;
+lanes.forEach(function(lane){
+  var row = lane.querySelector('.mq-row');
+  var durS = parseFloat(getComputedStyle(row).getPropertyValue('--mq-dur')) || 40;
+  /* 克隆到半程 ≥ 视口宽（≤4 轮） */
+  var guard = 0;
+  while(row.scrollWidth / 2 < lane.clientWidth + 40 && guard++ < 4){
+    [].slice.call(row.childNodes).forEach(function(n){ row.appendChild(n.cloneNode(true)); });
+  }
+  var half = function(){ return row.scrollWidth / 2; };
+  var holding = false, sx = 0, sl0 = 0, lastUser = -1e9, last = performance.now();
+  var wrap = function(){
+    var h = half(); if(h <= 0) return;
+    if(lane.scrollLeft >= h) lane.scrollLeft -= h;
+    else if(lane.scrollLeft < 0) lane.scrollLeft += h;
+  };
+  lane.addEventListener('wheel', function(){ if(!holding) lastUser = performance.now(); }, {passive:true});
+  if(!RM){
+    (function tick(now){
+      var dt = Math.min(64, now - last); last = now;
+      if(!holding && now - lastUser > 200){
+        lane.scrollLeft += (half() / durS) * dt / 1000; wrap();
+      }
+      requestAnimationFrame(tick);
+    })(performance.now());
+  }
+  lane.addEventListener('pointerdown', function(e){
+    if(e.pointerType === 'touch') return;
+    holding = true; sx = e.clientX; sl0 = lane.scrollLeft;
+    try{ lane.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  lane.addEventListener('pointermove', function(e){
+    if(!holding) return;
+    lane.scrollLeft = sl0 - (e.clientX - sx); wrap();
+  });
+  var up = function(){ holding = false; };
+  lane.addEventListener('pointerup', up);
+  lane.addEventListener('pointercancel', up);
+});
+})();
+
+/* ══ ③ Audio player（精简自 ../templates/audio-player.html）══ */
+(function(){
+'use strict';
+var lang = function(){ return window.CASE_LANG || 'en'; };
+var fmt = function(s){ if(!isFinite(s)) return '--:--'; s = Math.floor(s);
+  return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); };
+var playing = null;
+document.querySelectorAll('.aplayer').forEach(function(p){
+  var a = new Audio(); a.preload = 'metadata';
+  a.src = (lang()==='zh') ? p.dataset.srcZh : p.dataset.srcEn;
+  var btn = p.querySelector('.ap-btn'), track = p.querySelector('.ap-track');
+  var fill = p.querySelector('.ap-fill'), knob = p.querySelector('.ap-knob');
+  var cur = p.querySelector('.ap-cur'), dur = p.querySelector('.ap-dur');
+  a.addEventListener('loadedmetadata', function(){ dur.textContent = fmt(a.duration); });
+  a.addEventListener('timeupdate', function(){
+    var k = a.duration ? a.currentTime / a.duration : 0;
+    fill.style.transform = 'scaleX(' + k + ')'; knob.style.left = (k*100) + '%';
+    cur.textContent = fmt(a.currentTime);
+  });
+  a.addEventListener('ended', function(){ p.classList.remove('on'); playing = null; });
+  btn.addEventListener('click', function(){
+    if(playing && playing !== a){ playing.pause(); playing._p.classList.remove('on'); }
+    if(a.paused){ a.play().catch(function(){}); p.classList.add('on'); playing = a; playing._p = p; }
+    else { a.pause(); p.classList.remove('on'); playing = null; }
+  });
+  var seeking = false;
+  var seekAt = function(e){
+    var r = track.getBoundingClientRect();
+    var k = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+    if(isFinite(a.duration)) a.currentTime = k * a.duration;
+    fill.style.transform = 'scaleX(' + k + ')'; knob.style.left = (k*100) + '%';
+  };
+  track.addEventListener('pointerdown', function(e){ seeking = true; track.setPointerCapture(e.pointerId); seekAt(e); });
+  track.addEventListener('pointermove', function(e){ if(seeking) seekAt(e); });
+  track.addEventListener('pointerup', function(){ seeking = false; });
+  track.addEventListener('pointercancel', function(){ seeking = false; });
+});
+})();
+
+/* ══ ④ Tile field（精简自 ../templates/tile-field.html：去掉翻转，保留密度/尺寸/对角）══ */
+(function(){
+'use strict';
+var BLUE = '47,47,228', TIERS = [0.05, 0.10];
+function build(field){
+  field.innerHTML = '';
+  var w = field.clientWidth, h = field.clientHeight;
+  if(!w || !h) return;
+  var dens = Math.min(1, Math.max(.1, parseFloat(field.dataset.density) || 1));
+  var pow  = Math.min(2.4, Math.max(1, parseFloat(field.dataset.pow) || 2.4));
+  var diag = field.dataset.dir === 'diag';
+  var cell = parseInt(field.dataset.cell, 10) || 28, gap = 3;
+  var cols = Math.max(4, Math.floor((w + gap) / (cell + gap)));
+  var rows = Math.max(2, Math.floor((h + gap) / (cell + gap)));
+  field.style.setProperty('--cols', cols); field.style.setProperty('--cell', cell + 'px');
+  var frag = document.createDocumentFragment();
+  for(var r = 0; r < rows; r++) for(var c = 0; c < cols; c++){
+    var fx = c / cols, ax = diag ? (fx + r / rows) / 2 : fx;
+    if(Math.random() > (Math.pow(ax, pow) * .45 + .008) * dens) continue;
+    var t = document.createElement('i'); t.className = 'tile';
+    t.style.gridColumn = (c+1) + ''; t.style.gridRow = (r+1) + '';
+    var f = document.createElement('b'); f.className = 'tf';
+    f.style.background = 'rgba(' + BLUE + ',' + TIERS[Math.random() < .5 ? 0 : 1] + ')';
+    t.appendChild(f); frag.appendChild(t);
+  }
+  field.appendChild(frag);
+}
+var fields = [].slice.call(document.querySelectorAll('.tile-field'));
+fields.forEach(build);
+var rt; addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ fields.forEach(build); }, 220); });
+})();
+</script>
+</body>
+</html>

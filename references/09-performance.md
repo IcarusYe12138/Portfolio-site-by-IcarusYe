@@ -20,23 +20,25 @@ HTML 本身也要「瘦」：正常多页站单页 50–100KB 级；若 HTML 膨
 - 正确路线 = **先按「站内实际字符集」子集化、再分片**。
 
 ### 管线（一条命令可复现）
+> **三个脚本的通用版随本 kit 提供**：`tools/collect_chars.py` → `tools/subset_fonts.py` → `tools/split_cjk.js`（依赖、配置与三坑备忘见 `tools/README.md`；拷到你的站点 tools/ 目录，改 JOBS 配置即可用）。
+
 ```bash
 # ① 收集全站实际用字 → 字符清单
-python3 tools/collect_chars.py        # 产出 tools/cjk-set.txt（约 1–2 千字）
+python3 tools/collect_chars.py /path/to/site   # 产出 cjk-set.txt（约 1–2 千字）
 
-# ② 按字符集子集化（pyftsubset，产中间 OTF）
-python3 tools/subset_fonts.py         # desubroutinize=True，防下游子集器卡死
+# ② 按字符集子集化（pyftsubset，产中间 OTF；先改脚本头部 JOBS 为你的字体）
+python3 tools/subset_fonts.py                  # desubroutinize=True，防下游子集器卡死
 
 # ③ 分片 + 自动生成 CSS
-node tools/split_cjk.js               # 产出 assets/fonts/split/** + assets/css/cjk.css
+node tools/split_cjk.js                        # 产出 assets/fonts/split/** + assets/css/cjk.css
 ```
 
 ### 机制：unicode-range 按需拉取
 生成的 `cjk.css` 每个 @font-face 声明 `unicode-range`：
 ```css
 @font-face{
-  font-family:'GlowSC';
-  src:url("../fonts/split/glow-sc-45/xxxx.woff2") format("woff2");
+  font-family:'CJK-SC';
+  src:url("../fonts/split/sc-45/xxxx.woff2") format("woff2");
   font-weight:300;font-display:swap;
   unicode-range:U+4E00,U+4E0A,U+4E0D, …;   /* 本片负责的码位 */
 }
@@ -73,6 +75,8 @@ node tools/split_cjk.js               # 产出 assets/fonts/split/** + assets/cs
 | 作品音频 | `new Audio()` + `preload="metadata"`（只拉时长） |
 | 背景音乐 | `preload="none"`，且**首次点击才创建** Audio 实例——未点击零流量 |
 | 外链视频 | `<video preload="metadata">` + 直链（raw=1） |
+
+图片处理（webp 批量转换、视频抽 poster 帧、og 图 1200×630 中心裁剪）的 macOS 命令速查见 `tools/README.md` 末节。
 
 点击加载模式（省首屏、用户体验也更好——重型 iframe 不抢带宽）：
 ```js

@@ -33,27 +33,39 @@ The kit is distilled from the real-world experience of building [icarusye.site](
 ## Repository layout
 
 ```
-├── SKILL.md                  Skill entry point: triggers, core principles, workflow, hard limits
+├── SKILL.md                  Skill entry point: triggers, core principles, workflow, file map
+├── CHANGELOG.md              Versioned history of the kit itself
 ├── references/
 │   ├── 00-onboarding.md          Intake questionnaire, content carriers, toolchain, privacy rules
 │   ├── 01-design-and-style.md    Design tokens + the "find your style" methodology + copy discipline
 │   ├── 02-components.md          Component specs: topbar, cards, filters, players, case pages, preloader, contact, embedded cards, colophon
 │   ├── 03-media-compat.md        Cross-region media compatibility (video / audio / web archives / four-layer regional diff)
-│   ├── 04-deploy-and-domain.md   Hosting, caching discipline, domain-buying guide, China reachability
+│   ├── 04-deploy-and-domain.md   Hosting, caching discipline, domain-buying guide, privacy-friendly analytics, China reachability
 │   ├── 05-structure-i18n.md      Folder structure + trilingual engine + homepage architecture
 │   ├── 06-iteration.md           Three-layer documentation system (master plan / round logs / living archive)
 │   ├── 07-pitfalls.md            23 pitfalls, each as symptom → root cause → avoidance
 │   ├── 08-accessibility-motion.md  Accessibility patterns, reduced-motion strategy, photosensitivity guards
 │   ├── 09-performance.md         Performance: font subsetting pipeline, lazy loading, IO patterns
-│   └── 10-content-ops.md         Content ops: works add/remove sync checklist + count automation
-└── templates/                    Copy-paste component skeletons
-    ├── trilingual.html           Trilingual engine (full attribute set: text/alt/title/href/scramble/cursor)
-    ├── case-page.html            Case detail page skeleton (cross-link list + dual-link Links section)
-    ├── audio-player.html         Inline audio player (play / seek / time / download, single instance)
-    ├── bgm.html                  Background-music singleton button
-    ├── tile-field.html           Parameterised Metro live-tile background field
-    ├── marquee.html              Infinite marquee (clone ×2 + wrap + drag + linked pause)
-    └── regional-links.html       Dual-link pattern (raw=1 / ?embed / data-href-* / lazy embed)
+│   ├── 10-content-ops.md         Content ops: works add/remove sync checklist + count automation
+│   └── 11-preship-checklist.md   One-page pre-ship gate (hard limits + all checklists merged)
+├── templates/                    Copy-paste component skeletons
+│   ├── trilingual.html           Trilingual engine (full attribute set: text/alt/title/href/scramble/cursor)
+│   ├── works-index.html          Works index page skeleton (DOM-computed counts + filters + HIGHLIGHT)
+│   ├── case-page.html            Case detail page skeleton (cross-link list + dual-link Links section)
+│   ├── 404.html                  Generic fail page (4XX-agnostic copy + language-aware return)
+│   ├── audio-player.html         Inline audio player (play / seek / time / download, single instance)
+│   ├── bgm.html                  Background-music singleton button
+│   ├── tile-field.html           Parameterised Metro live-tile background field
+│   ├── marquee.html              Infinite marquee (clone ×2 + wrap + drag + linked pause)
+│   └── regional-links.html       Dual-link pattern (raw=1 / ?embed / data-href-* / lazy embed)
+├── tools/                        Build & audit scripts (see tools/README.md)
+│   ├── collect_chars.py          Collect CJK chars used by the site → charset file
+│   ├── subset_fonts.py           Subset source fonts to the charset (TTF/OTF intermediates)
+│   ├── split_cjk.js              cn-font-split → unicode-range woff2 chunks + cjk.css
+│   ├── audit.sh                  Six-check consistency audit (counts / ?v= / badges / sitemap / size)
+│   └── README.md                 Pipeline usage, dependencies, pitfalls, image cheat-sheet
+└── examples/
+    └── minimal.html              Living test page: four components assembled (double-click to run)
 ```
 
 ## Core principles
@@ -71,29 +83,27 @@ The kit is distilled from the real-world experience of building [icarusye.site](
 
 ## Using the skill
 
-### In TRAE (or any agent with skill support)
+### Install (TRAE or any agent with skill support)
 
-Copy this repository's contents into your skills directory, e.g.:
-
-```
-~/.trae-cn/skills/portfolio-site-kit/
-├── SKILL.md
-├── references/
-└── templates/
+```bash
+git clone https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe.git \
+  ~/.trae-cn/skills/portfolio-site-kit
 ```
 
-The agent then invokes it when you ask to create, restructure or iterate a portfolio, works showcase, or media-rich static site.
+(Or copy the repository folder into your skills directory.) The agent then invokes it when you ask to create, restructure or iterate a portfolio, works showcase, or media-rich static site. `tools/` and `examples/` ship with the kit — see `tools/README.md` for the font pipeline and consistency audit.
 
 ### As plain reference documentation
 
-The `references/` folder reads as a standalone handbook. Start with:
+The `references/` folder reads as a standalone handbook (written in Chinese; this README is the English summary). Start with:
 
 - `references/00-onboarding.md` before any project kickoff — the intake questionnaire and privacy rules;
 - `references/03-media-compat.md` if you care about cross-region media;
 - `references/07-pitfalls.md` before and after every major change, as a checklist;
 - `references/09-performance.md` before shipping, for the font pipeline and lazy-loading matrix;
 - `references/10-content-ops.md` whenever works are added or removed;
-- `templates/` for the component skeletons, all dependency-free and self-documented.
+- `references/11-preship-checklist.md` as the one-page final gate before every release;
+- `templates/` for the component skeletons, all dependency-free and self-documented;
+- `examples/minimal.html` — open it directly in a browser to see four components assembled.
 
 ## Suggested workflow for a new site
 

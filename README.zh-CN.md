@@ -33,27 +33,39 @@
 ## 仓库结构
 
 ```
-├── SKILL.md                  Skill 主入口：触发条件、核心原则、工作流、硬约束
+├── SKILL.md                  Skill 主入口：触发条件、核心原则、工作流、文件地图
+├── CHANGELOG.md              本 skill 自身的版本日志
 ├── references/
 │   ├── 00-onboarding.md          接洽问卷、内容载体、工具链与隐私红线
 │   ├── 01-design-and-style.md    设计 token + 「找风格」方法论 + 文案纪律
 │   ├── 02-components.md          组件规格：顶栏、卡片、筛选、播放器、详情页、预载器、Contact、嵌入名片、Colophon
 │   ├── 03-media-compat.md        跨地域媒体兼容（视频 / 音频 / 网页存档 / 区域差异四层清单）
-│   ├── 04-deploy-and-domain.md   托管、缓存纪律、域名购买指南、内地可达性
+│   ├── 04-deploy-and-domain.md   托管、缓存纪律、域名购买指南、隐私友好统计、内地可达性
 │   ├── 05-structure-i18n.md      文件夹结构 + 三语引擎 + 首页架构
 │   ├── 06-iteration.md           三层文档体系（总规 / 轮次日志 / 站根活档）
 │   ├── 07-pitfalls.md            23 条坑，每条按「现象 → 根因 → 怎么避免」
 │   ├── 08-accessibility-motion.md 无障碍模式 + reduced-motion 策略 + 光敏保护
 │   ├── 09-performance.md         性能：字体子集分片管线、懒加载、IO 模式
-│   └── 10-content-ops.md         内容运维：作品增删同步清单 + 计数自动化
-└── templates/                    可直接复制的组件骨架
-    ├── trilingual.html           三语引擎（完整属性集：文本/alt/title/href/解码/光标）
-    ├── case-page.html            案例详情页骨架（互链列表 + 双链路 Links 区）
-    ├── audio-player.html         内嵌音频播放器（播放 / seek / 时间 / 下载，单实例）
-    ├── bgm.html                  背景音乐单例按钮
-    ├── tile-field.html           参数化 Metro 磁贴背景场
-    ├── marquee.html              无限滚动条（克隆×2 + 回卷 + 拖拽 + 联动暂停）
-    └── regional-links.html       双链路模式（raw=1 / ?embed / data-href-* / 点击加载）
+│   ├── 10-content-ops.md         内容运维：作品增删同步清单 + 计数自动化
+│   └── 11-preship-checklist.md   上线前总检单（硬约束 + 全部 checklist 一页汇总）
+├── templates/                    可直接复制的组件骨架
+│   ├── trilingual.html           三语引擎（完整属性集：文本/alt/title/href/解码/光标）
+│   ├── works-index.html          全部作品索引页骨架（计数自动化 + 筛选 + HIGHLIGHT）
+│   ├── case-page.html            案例详情页骨架（互链列表 + 双链路 Links 区）
+│   ├── 404.html                  通用失败页（4XX 语义化 + 三语 + 语言回链）
+│   ├── audio-player.html         内嵌音频播放器（播放 / seek / 时间 / 下载，单实例）
+│   ├── bgm.html                  背景音乐单例按钮
+│   ├── tile-field.html           参数化 Metro 磁贴背景场
+│   ├── marquee.html              无限滚动条（克隆×2 + 回卷 + 拖拽 + 联动暂停）
+│   └── regional-links.html       双链路模式（raw=1 / ?embed / data-href-* / 点击加载）
+├── tools/                        构建与审计脚本（用法见 tools/README.md）
+│   ├── collect_chars.py          收集站内 CJK 用字 → 字符集清单
+│   ├── subset_fonts.py           按字符集子集化原字体（产中间 OTF）
+│   ├── split_cjk.js              cn-font-split 分片 → unicode-range woff2 + cjk.css
+│   ├── audit.sh                  一致性审计六项（计数 / ?v= / 徽标 / sitemap / 体量）
+│   └── README.md                 管线用法、依赖、三坑备忘、图片处理速查
+└── examples/
+    └── minimal.html              活体测试页：四组件最小组装（双击即跑）
 ```
 
 ## 核心原则
@@ -71,18 +83,14 @@
 
 ## 使用方式
 
-### 在 TRAE（或任何支持 skill 的 agent）中
+### 安装（TRAE 或任何支持 skill 的 agent）
 
-把本仓库内容复制进 skills 目录，例如：
-
-```
-~/.trae-cn/skills/portfolio-site-kit/
-├── SKILL.md
-├── references/
-└── templates/
+```bash
+git clone https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe.git \
+  ~/.trae-cn/skills/portfolio-site-kit
 ```
 
-之后当你要求创建、重构或迭代作品集、作品展示站、富媒体静态站时，agent 会自动调用。
+（或把仓库文件夹复制进你的 skills 目录。）之后当你要求创建、重构或迭代作品集、作品展示站、富媒体静态站时，agent 会自动调用。`tools/` 与 `examples/` 随仓库分发——字体管线与一致性审计用法见 `tools/README.md`。
 
 ### 当作纯参考文档
 
@@ -93,7 +101,9 @@
 - 每次大改前后 → 把 `references/07-pitfalls.md` 当 checklist 过一遍；
 - 上线之前 → 用 `references/09-performance.md` 过字体管线与懒加载矩阵；
 - 作品增删时 → 照 `references/10-content-ops.md` 的同步清单执行；
-- 需要组件骨架 → 直接抄 `templates/`，全部零依赖、自带注释。
+- 每次发布前 → `references/11-preship-checklist.md` 一页总检单收尾；
+- 需要组件骨架 → 直接抄 `templates/`，全部零依赖、自带注释；
+- `examples/minimal.html` → 双击浏览器打开，看四组件的最小拼装。
 
 ## 新站建议工作流
 

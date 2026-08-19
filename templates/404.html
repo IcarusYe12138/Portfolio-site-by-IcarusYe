@@ -1,0 +1,75 @@
+<!--
+  templates/404.html — 通用失败页（覆盖全部 4XX：401/403/404…）
+  纪律：
+    · 文案语义化，不写死「404」（本页会兜底所有 4XX 状态）
+    · 返回按钮读 localStorage['site-lang'] 生成带 ?lang= 的首页链接（与 trilingual.html 同 key）
+    · 背景母题与主站一致（可选挂 tile-field）；轻量独立，不依赖共享引擎
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-t="t">Signal lost — Your Name</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--bg:#FAFAFA;--ink:#1A1A2E;--ink50:rgba(26,26,46,.5);--line:#E3E6EA;--accent:#2F2FE4}
+*{margin:0;padding:0;box-sizing:border-box;border-radius:0!important}
+body{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:var(--bg) radial-gradient(circle,#C8CDD2 .8px,transparent .8px);
+  background-size:28px 28px;color:var(--ink);
+  font-family:ui-monospace,'Courier New',monospace;
+}
+.fail{max-width:640px;padding:0 24px;text-align:center}
+.fail .sig{font-size:clamp(2.4rem,9vw,4.6rem);font-weight:700;letter-spacing:.08em}
+.fail .sub{margin-top:14px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink50)}
+.fail .code{margin-top:26px;font-size:11px;letter-spacing:.3em;color:var(--ink50)}
+.fail .ret{
+  display:inline-block;margin-top:44px;padding:14px 42px;
+  border:1px solid var(--ink);color:var(--ink);text-decoration:none;
+  font-size:12px;letter-spacing:.3em;text-transform:uppercase;
+  transition:background .2s,color .2s,border-color .2s;
+}
+.fail .ret:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+</style>
+</head>
+<body>
+<main class="fail">
+  <p class="sig" data-t="sig">SIGNAL LOST</p>
+  <p class="sub" data-t="sub">The page you requested is unavailable</p>
+  <p class="code">4XX · OFF THE GRID</p>
+  <a class="ret" id="returnBtn" href="/" data-t="ret">RETURN</a>
+</main>
+<script>
+/* 三语迷你字典（独立小引擎：404 页不值得挂完整切换器） */
+(function(){
+'use strict';
+var T = {
+  en:{ t:"Signal lost — Your Name",
+       sig:"SIGNAL LOST",
+       sub:"The page you requested is unavailable",
+       ret:"RETURN" },
+  zh:{ t:"信号丢失 — 你的名字",
+       sig:"信号丢失",
+       sub:"您访问的页面暂不可用",
+       ret:"返回" },
+  tw:{ t:"信號丟失 — 你的名字",
+       sig:"信號丟失",
+       sub:"您訪問的頁面暫不可用",
+       ret:"返回" }
+};
+var lang = 'en';
+try{ lang = localStorage.getItem('site-lang') || 'en'; }catch(e){}
+if(!T[lang]) lang = 'en';
+document.documentElement.lang = lang === 'en' ? 'en' : (lang === 'zh' ? 'zh-Hans-CN' : 'zh-Hant-HK');
+var d = T[lang];
+document.querySelectorAll('[data-t]').forEach(function(el){ el.textContent = d[el.dataset.t]; });
+document.title = d.t;
+/* 返回首页：带上语言参数（与 trilingual 引擎的 ?lang= 约定一致） */
+var btn = document.getElementById('returnBtn');
+if(btn) btn.href = 'index.html' + (lang === 'en' ? '' : '?lang=' + lang);
+})();
+</script>
+</body>
+</html>

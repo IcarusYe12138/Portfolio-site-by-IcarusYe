@@ -52,14 +52,14 @@ window.CASE_T = {
 ```
 
 ### setLang 要做的事（缺一不可）
-1. `localStorage.setItem('yy-lang', lang)` 持久化；
+1. `localStorage.setItem('site-lang', lang)` 持久化（key 全站统一，与 `templates/trilingual.html` 一致）；
 2. `document.documentElement.lang` 按语言设 `en` / `zh-Hans-CN` / `zh-Hant-HK`（同时驱动 CSS 字体栈切换）；
 3. `document.title = T.docTitle`；meta description / og:title / og:description 同步；
 4. 遍历 `[data-i18n]` 换 innerHTML（标题类可选锁宽解码动画，正文瞬时）；
 5. 遍历 `[data-langs]` 按当前语言显隐整块（display none/block）；
 6. 遍历 `[data-href-en]/[data-href-zh]` 等区域化链接换 href；
 7. 语言按钮 active 态 + `aria-current`；
-8. 派发自定义事件（如 `case:lang`），页面级组件（筛选条、播放器、跨案例列表）监听后重建；
+8. 派发自定义事件 `site:lang`（全站统一事件名，与全部 templates 一致），页面级组件（筛选条、播放器、跨案例列表）监听后重建；
 9. `history.replaceState` 把 `?lang=zh` 写进 URL（可直链、可分享、SEO 友好）。
 
 ### 属性级 i18n 全集（引擎各有一张表）

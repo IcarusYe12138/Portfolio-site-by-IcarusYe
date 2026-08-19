@@ -1,0 +1,240 @@
+<!--
+  templates/works-index.html — 全部作品索引页骨架
+  依赖：trilingual.html 的字典 + 引擎（CASE_T / setLang / site:lang 事件）
+        音频卡接线：从 audio-player.html 复制 <style> 与 <script> 段
+  机制：
+    · 计数自动化——筛选按钮计数从 data-cat 实时统计，绝不手写 N（见 10-content-ops.md）
+    · 筛选动画 = 淡入 + 上移 24px + scale(.96→1)，90ms 错落，结束清 transitionDelay
+    · 外链卡 data-href-en / data-href-zh 双地址；HIGHLIGHT 徽标三语
+    · 头部「INDEX ×N」由 JS 从卡片数生成（模板内已做，手写文案只留占位）
+-->
+
+<!-- ============ 页面结构 ============ -->
+<div class="topbar">
+  <div class="wrap bar">
+    <a class="logo" href="index.html" data-cursor="HOME"><b>LOGO</b></a>
+    <div class="top-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <a class="lang-btn on" data-lang="en" href="#">EN</a>
+        <a class="lang-btn" data-lang="tw" href="#">繁</a>
+        <a class="lang-btn" data-lang="zh" href="#">简</a>
+      </div>
+      <a class="back" href="index.html" data-cursor="BACK"><span aria-hidden="true">←</span><span data-i18n="back">Back</span></a>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="aw-hero" style="position:relative;padding:120px 0 48px">
+    <div class="tile-field" aria-hidden="true"></div><!-- 可选装饰场，见 tile-field.html -->
+    <div class="wrap">
+      <div class="sec-head">
+        <!-- INDEX ×N 由 JS 填充真实卡数 -->
+        <span class="sec-num" data-i18n="awK">INDEX</span>
+        <h2 class="sec-title" data-i18n="awH">ALL WORKS</h2>
+        <span class="sec-meta" data-i18n="awMeta">CATEGORIES ×N</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="fbar" id="filters" role="group" aria-label="Filter works"></div>
+
+    <div class="matrix" id="matrix">
+
+      <!-- ① 外链型卡（双链路 + HIGHLIGHT 徽标变体：加 <span class="cell-hl"> 即可） -->
+      <a class="cell" data-cat="FILM"
+         data-href-en="https://overseas.example/film.mp4?rlkey=x&raw=1"
+         data-href-zh="https://mainland.example/film/watch"
+         href="https://overseas.example/film.mp4?rlkey=x&raw=1"
+         target="_blank" rel="noopener" data-cursor="WATCH">
+        <div class="cell-media">
+          <span class="cell-idx">01</span>
+          <span class="cell-hl" data-i18n="hlBadge">HIGHLIGHT</span><!-- 精选才保留此行 -->
+          <img src="assets/works/demo.webp" alt="…" data-i18n-alt="alt1" loading="lazy">
+        </div>
+        <div class="cell-cap">
+          <span class="cell-title" data-i18n="t1">Work Title</span>
+          <span class="cell-cat" data-i18n="c1">FILM · 26</span>
+        </div>
+      </a>
+
+      <!-- ② 详情页型卡（站内跳转，无 data-href-*） -->
+      <a class="cell" data-cat="DECK" href="works/case-a.html" data-cursor="CASE →">
+        <div class="cell-media">
+          <span class="cell-idx">02</span>
+          <img src="assets/works/demo2.webp" alt="…" data-i18n-alt="alt2" loading="lazy">
+        </div>
+        <div class="cell-cap">
+          <span class="cell-title" data-i18n="t2">Case Study</span>
+          <span class="cell-cat" data-i18n="c2">DECK · 26</span>
+        </div>
+      </a>
+
+      <!-- ③ 音频卡（.aplayer 接线见 audio-player.html：复制其 <style>+<script>） -->
+      <div class="cell cell-audio" data-cat="AUDIO">
+        <div class="cell-media"><span class="cell-idx">03</span>
+          <div class="aplayer"
+               data-src-en="assets/audio/demo.mp3"
+               data-src-zh="assets/audio/demo.mp3"
+               data-dl-en="assets/audio/demo.mp3">
+            <button class="ap-btn" type="button" aria-label="Play" data-i18n-aria="apPlay"><i></i></button>
+            <div class="ap-track"><span class="ap-fill"></span><span class="ap-knob"></span></div>
+            <span class="ap-time"><b class="ap-cur">0:00</b>/<b class="ap-dur">--:--</b></span>
+            <a class="ap-dl" href="assets/audio/demo.mp3" target="_blank" rel="noopener" aria-label="Download">↓</a>
+          </div>
+        </div>
+        <div class="cell-cap">
+          <span class="cell-title" data-i18n="t3">Radio Piece</span>
+          <span class="cell-cat" data-i18n="c3">AUDIO · 25</span>
+          <span class="cell-src" data-i18n="srcHint">INLINE PLAYER · DL ↓</span>
+        </div>
+      </div>
+
+      <!-- …按 data-cat 增删卡片；编号角标保持连续；增删后跑 tools/audit.sh …-->
+    </div>
+
+    <p class="works-foot" data-i18n="foot">grayscale by default, hover for colour — click to open ↗</p>
+  </div>
+</main>
+
+<!-- ============ 最小样式（token 套你的设计系统） ============ -->
+<style>
+.matrix{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.cell{display:flex;flex-direction:column;border:1px solid #E3E6EA;background:#fff;text-decoration:none;color:inherit;transition:transform .2s}
+.cell:hover{transform:translateY(-3px)}
+.cell-media{position:relative;aspect-ratio:16/9;overflow:hidden;background:#F5F6F7}
+.cell-media img{width:100%;height:100%;object-fit:cover}
+@media (hover:hover) and (pointer:fine){
+  .cell-media img{filter:grayscale(1)}
+  .cell:hover .cell-media img{filter:grayscale(0);transform:scale(1.03)}
+}
+.cell-idx{position:absolute;top:10px;left:12px;font:600 10px/1 ui-monospace,monospace;letter-spacing:.16em;color:#fff;background:#1A1A2E;padding:3px 7px}
+.cell-hl{position:absolute;top:10px;right:12px;font:600 9px/1 ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase;color:#fff;background:var(--accent,#2F2FE4);padding:3px 7px}
+.cell-cap{flex:1;display:flex;flex-direction:column;align-items:flex-start;padding:14px 16px;border-top:1px solid #E3E6EA}
+.cell-title{font-size:13.5px;font-weight:500}
+.cell-cat{margin-top:auto;padding-top:8px;font:600 9.5px/1 ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;opacity:.5}
+.cell-src{font:600 9px/1 ui-monospace,monospace;letter-spacing:.2em;color:var(--accent,#2F2FE4);margin-top:4px}
+.cell-audio .cell-media{display:flex;align-items:center;padding:0 18px}
+.fbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}
+.fbtn{border:1px solid #E3E6EA;background:#fff;padding:8px 14px;font:500 11px/1 ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.fbtn.on{border-color:var(--accent,#2F2FE4);color:var(--accent,#2F2FE4)}
+.fbtn sup{margin-left:2px;opacity:.6}
+/* 筛选错落动画：进场三态，结束必须清 transitionDelay（防污染 hover 过渡） */
+.cell.f-pre{opacity:0;transform:translateY(24px) scale(.96)}
+.cell.f-run{transition:opacity .5s ease-out,transform .5s ease-out}
+</style>
+
+<!-- ============ 页面字典（每页一份） ============ -->
+<script>
+window.CASE_MAIN = {en:'index.html', zh:'index.html?lang=zh', tw:'index.html?lang=tw'};
+window.CASE_T = {
+  en:{ docTitle:"All Works — Your Name", back:"Back",
+       awK:"INDEX", awH:"ALL WORKS", awMeta:"CATEGORIES",
+       cats:{ALL:"All",FILM:"Film",AUDIO:"Audio",WEB:"Web·Article",DECK:"Decks",PRINT:"Brand Design"},
+       hlBadge:"HIGHLIGHT", srcHint:"INLINE PLAYER · DL ↓", apPlay:"Play",
+       t1:"Work Title", c1:"FILM · 26", alt1:"Film poster",
+       t2:"Case Study", c2:"DECK · 26", alt2:"Deck cover",
+       t3:"Radio Piece", c3:"AUDIO · 25",
+       foot:"grayscale by default, hover for colour — click to open ↗" },
+  zh:{ docTitle:"全部作品 — 你的名字", back:"返回",
+       awK:"索引", awH:"全部作品", awMeta:"分类",
+       cats:{ALL:"全部",FILM:"影像",AUDIO:"音频",WEB:"网页·文章",DECK:"方案",PRINT:"品牌设计"},
+       hlBadge:"精选", srcHint:"内嵌播放 · 下载 ↓", apPlay:"播放",
+       t1:"作品标题", c1:"影像 · 26", alt1:"影片海报",
+       t2:"案例研究", c2:"方案 · 26", alt2:"方案封面",
+       t3:"广播作品", c3:"音频 · 25",
+       foot:"默认灰度、悬停显色——点击打开 ↗" },
+  tw:{ docTitle:"全部作品 — 你的名字", back:"返回",
+       awK:"索引", awH:"全部作品", awMeta:"分類",
+       cats:{ALL:"全部",FILM:"影像",AUDIO:"音頻",WEB:"網頁·文章",DECK:"方案",PRINT:"品牌設計"},
+       hlBadge:"精選", srcHint:"內嵌播放 · 下載 ↓", apPlay:"播放",
+       t1:"作品標題", c1:"影像 · 26", alt1:"影片海報",
+       t2:"案例研究", c2:"方案 · 26", alt2:"方案封面",
+       t3:"廣播作品", c3:"音頻 · 25",
+       foot:"預設灰度、懸停顯色——點擊打開 ↗" }
+};
+</script>
+<!-- 引擎引入：<script src="…/trilingual 引擎"></script>（见 trilingual.html ④） -->
+<!-- 播放器接线：从 audio-player.html 复制 <style> 与 <script> 段 -->
+
+<script>
+/* ============ 索引页专属逻辑：计数自动化 + 筛选 + 区域链接 ============ */
+(function(){
+'use strict';
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const box = document.getElementById('filters');
+const grid = document.getElementById('matrix');
+if(!box || !grid) return;
+const cells = [...grid.querySelectorAll('.cell')];
+const counts = {ALL: cells.length};                       // 计数从 DOM 统计
+cells.forEach(c => counts[c.dataset.cat] = (counts[c.dataset.cat] || 0) + 1);
+
+const lang = () => window.CASE_LANG || 'en';
+
+/* 头部宣称数也由 JS 生成——全站唯一事实源是卡片本身 */
+function paintHead(){
+  const T = CASE_T[lang()];
+  const cats = Object.entries(counts).filter(([k]) => k !== 'ALL')
+    .map(([k]) => `${T.cats[k] || k} ×${counts[k]}`).join(' / ');
+  const k = document.querySelector('[data-i18n="awK"]');
+  const m = document.querySelector('[data-i18n="awMeta"]');
+  if(k) k.textContent = (T.awK || 'INDEX') + ' ×' + counts.ALL;
+  if(m) m.textContent = cats;
+}
+
+function build(){
+  box.innerHTML = '';
+  Object.keys(counts).forEach(c => {
+    if(c !== 'ALL' && !counts[c]) return;
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'fbtn' + (c === 'ALL' ? ' on' : '');
+    b.dataset.cat = c;
+    b.innerHTML = `${CASE_T[lang()].cats[c] || c}<sup>${counts[c] || 0}</sup>`;
+    b.addEventListener('click', () => apply(c, b));
+    box.appendChild(b);
+  });
+}
+
+function apply(cat, btn){
+  box.querySelectorAll('.fbtn').forEach(x => x.classList.remove('on'));
+  btn.classList.add('on');
+  const match = c => cat === 'ALL' || c.dataset.cat === cat;
+  const show = cells.filter(match);
+  cells.filter(c => !match(c)).forEach(c => { c.style.display = 'none'; });
+  show.forEach((c, i) => {
+    c.style.display = '';
+    if(RM) return;
+    c.classList.add('f-pre', 'f-run');
+    c.style.transitionDelay = (i * 90) + 'ms';
+  });
+  if(!RM){
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      show.forEach(c => c.classList.remove('f-pre'));
+      /* 结束清场：撤 transitionDelay 与过渡类，防污染后续 hover */
+      setTimeout(() => show.forEach(c => {
+        c.style.transitionDelay = ''; c.classList.remove('f-run');
+      }), show.length * 90 + 560);
+    }));
+  }
+}
+
+function applyLinks(){
+  const l = lang();
+  grid.querySelectorAll('.cell[data-href-en]').forEach(a => {
+    a.href = (l === 'zh' && a.dataset.hrefZh) ? a.dataset.hrefZh : a.dataset.hrefEn;
+  });
+}
+
+build(); paintHead(); applyLinks();
+/* 语言切换：重建按钮文案（保持当前分类）、重刷头部与链接 */
+document.addEventListener('site:lang', () => {
+  const active = box.querySelector('.fbtn.on');
+  const cur = active ? active.dataset.cat : 'ALL';
+  build();
+  box.querySelectorAll('.fbtn').forEach(b => b.classList.toggle('on', b.dataset.cat === cur));
+  paintHead(); applyLinks();
+});
+})();
+</script>

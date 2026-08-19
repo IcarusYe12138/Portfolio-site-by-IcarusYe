@@ -45,29 +45,41 @@ description: Builds trilingual portfolio / works-showcase static sites with dual
 ```
 portfolio-site-kit/
 ├── SKILL.md                      ← 本文件
+├── CHANGELOG.md                  版本日志（本 skill 自身的迭代记录）
 ├── references/                   ← 分主题深度文档
 │   ├── 00-onboarding.md          ★ 首次接洽：问卷、素材载体、工具链与隐私红线
 │   ├── 01-design-and-style.md    设计规范与「找风格」方法论（含书面 Style Spec、文案纪律）
 │   ├── 02-components.md          组件规范（顶栏/卡片/筛选/播放器/磁贴场/详情页/预载器/Contact/嵌入名片/Colophon…）
 │   ├── 03-media-compat.md        ★ 音视频与图文的跨地域兼容（含区域差异四层清单）
-│   ├── 04-deploy-and-domain.md   部署、缓存、域名购买指南、内地可达
+│   ├── 04-deploy-and-domain.md   部署、缓存、域名购买指南、隐私友好统计、内地可达
 │   ├── 05-structure-i18n.md      文件夹结构 + 三语机制（属性级 i18n 全集 + 首页架构）
 │   ├── 06-iteration.md           三层迭代文档体系（总规/轮次日志/站根活档）
 │   ├── 07-pitfalls.md            ★ 避坑清单（现象→原因→怎么避免）
 │   ├── 08-accessibility-motion.md 无障碍模式 + reduced-motion 策略 + 光敏保护
 │   ├── 09-performance.md         性能：字体子集分片管线、懒加载、IO 模式
-│   └── 10-content-ops.md         内容运维：作品增删改的同步清单与计数自动化
-└── templates/                    ← 可直接复制的组件模板
-    ├── trilingual.html           三语引擎（完整属性集：i18n/alt/title/href/scramble/cursor）
-    ├── case-page.html            案例详情页骨架（互链列表 + 双链路 Links 区）
-    ├── audio-player.html         内嵌音频播放器（播放/seek/时间/下载）
-    ├── bgm.html                  背景音乐单例按钮
-    ├── tile-field.html           参数化 Metro 磁贴背景场
-    ├── marquee.html              无限滚动条（克隆×2+回卷+拖拽+联动暂停）
-    └── regional-links.html       区域化链接 / 视频双链路 / iframe 内嵌模式
+│   ├── 10-content-ops.md         内容运维：作品增删改的同步清单与计数自动化
+│   └── 11-preship-checklist.md   ★ 上线前总检单（硬约束 + 全 checklist 一页汇总）
+├── templates/                    ← 可直接复制的组件模板
+│   ├── trilingual.html           三语引擎（完整属性集：i18n/alt/title/href/scramble/cursor）
+│   ├── works-index.html          全部作品索引页骨架（计数自动化 + 筛选 + HIGHLIGHT）
+│   ├── case-page.html            案例详情页骨架（互链列表 + 双链路 Links 区）
+│   ├── 404.html                  通用失败页（4XX 语义化 + 三语 + 语言回链）
+│   ├── audio-player.html         内嵌音频播放器（播放/seek/时间/下载）
+│   ├── bgm.html                  背景音乐单例按钮
+│   ├── tile-field.html           参数化 Metro 磁贴背景场
+│   ├── marquee.html              无限滚动条（克隆×2+回卷+拖拽+联动暂停）
+│   └── regional-links.html       区域化链接 / 视频双链路 / iframe 内嵌模式
+├── tools/                        ← 构建与审计脚本（用法见 tools/README.md）
+│   ├── collect_chars.py          收集站内 CJK 用字 → cjk-set.txt
+│   ├── subset_fonts.py           按字符集子集化原字体（TTF/OTF → 中间 OTF）
+│   ├── split_cjk.js              cn-font-split 分片 → unicode-range woff2 + cjk.css
+│   ├── audit.sh                  一致性审计（计数/版本号/徽标/sitemap/体量 六项）
+│   └── README.md                 管线用法、依赖、三坑备忘、图片处理速查
+└── examples/
+    └── minimal.html              活体测试页：四组件最小组装（双击即跑）
 ```
 
-★ = 使用本 skill 时最先翻的三篇。
+★ = 使用本 skill 时最先翻的四篇。
 
 ---
 
@@ -83,23 +95,12 @@ portfolio-site-kit/
    - 参考素材 + 作者专业方向 → 交给任意可用图片的 Agent（Kimi K3 推荐）产出一版属于作者自己的 Demo（配色、字体、母题、版式）；
    - Demo 锁定后固化为**书面 Style Spec** 再动代码——不要预设任何单一审美，更不要照抄某个现有网站。
 2. **定结构**（→ `05-structure-i18n.md`）：页面清单、首页架构（单页锚点+索引页）、assets 拆分、语言机制先定型——后期改结构成本最高。
-3. **铺组件**（→ `02-components.md` + `templates/`）：从 templates 复制骨架，套入 Style Spec 的 token；详情页用 `case-page.html` 骨架。
+3. **铺组件**（→ `02-components.md` + `templates/`）：从 templates 复制骨架，套入 Style Spec 的 token；`examples/minimal.html` 是最小组装参考；索引页与详情页用 `works-index.html` / `case-page.html` 骨架。
 4. **接媒体**（→ `03-media-compat.md`）：视频双链路、音频自托管、外链文章本地存档，一次配对配全。
-5. **部署上线**（→ `04-deploy-and-domain.md`）：直传托管、`_headers`、robots/sitemap/og:image、域名选购。
+5. **部署上线**（→ `04-deploy-and-domain.md`）：直传托管、`_headers`、robots/sitemap/og:image、域名选购、（可选）隐私友好统计。
 6. **迭代打磨**（→ `06-iteration.md` + `07-pitfalls.md`）：三层文档体系 + 书面迭代一轮一轮来，改动后跑一遍坑清单自查。
-7. **内容增删**（→ `10-content-ops.md`）：任何作品增删改，照同步清单执行 + 计数审计。
-
-## 硬约束速查
-
-| 项 | 约束 |
-|---|---|
-| 托管单文件上限 | Cloudflare Pages 25 MiB（大媒体放对象存储） |
-| CSS/JS 缓存 | 改内容必 bump `?v=`，否则旧缓存不刷新 |
-| 字体 | 全部自托管 woff2，禁外部字体 CDN（内地不稳） |
-| 大媒体直链 | 网盘直链需 `raw=1`（流式）而非 `dl=0`（下载页）；需服务端支持 Range |
-| 可内嵌页面 | iframe 必须 `?embed` 参数，否则被 X-Frame-Options/CSP 拦截 |
-| 音频 | 本地 MP3 自托管；`preload="metadata"` 控制预载 |
-| 语言切换 | 动画克制（标题类锁宽解码即可），正文瞬时切换，不引重排 |
+7. **内容增删**（→ `10-content-ops.md`）：任何作品增删改，照同步清单执行 + `tools/audit.sh` 计数审计。
+8. **上线收尾**（→ `11-preship-checklist.md`）：跑 audit.sh + 过一页总检单，全部打勾再发布。
 
 ## 隐私与可复用性声明
 
