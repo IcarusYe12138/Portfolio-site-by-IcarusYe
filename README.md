@@ -124,6 +124,44 @@ Rule of thumb: ask first (the user may already have equivalents), keep the total
 
 **Installation discipline (hard rule, applies to every MCP and skill): never install anything without the user's explicit consent.** The agent recommends, gives the command and the reasoning — the user executes it themselves, or explicitly authorises the agent to do so. Every optional tool above is just that: optional, and nothing in the workflow breaks without it.
 
+## Resources for the design phase
+
+These are separate from the companion skills above: they address *"which icon set?"* / *"how do I prototype a style?"* / *"which frontend skills are worth installing?"* questions. Full disclosure applies — the agent never installs anything on its own (see the discipline rule above). Ratings are the author's assessment, not an obligation.
+
+### Icon libraries (when a user asks which icons to use)
+
+| Library | Style | Agent access | Coverage | Licence / notes |
+|---|---|---|---|---|
+| [simple-icons](https://github.com/simple-icons/simple-icons) ★ **first choice** | Monochrome minimal line/silhouette, 3300+ brand icons | Direct CDN SVG by slug — no build, agent can `fetch` `https://cdn.jsdelivr.net/npm/simple-icons@15/icons/slug.svg` | QQ (renamed), Sina Weibo, Bilibili, Xiaohongshu + nearly all overseas platforms | **CC0 / no attribution**; industry fact-standard; paste the slug into a URL and you are done |
+| [NViconsLib Silhouette](https://github.com/nullice/NViconsLib_Silhouette) | Pure-silhouette, **built for mainland CN + global** social sites, 189 icons | Raw GitHub SVG/PSD/EPS (`raw.githubusercontent.com`) | WeChat, moments, Sina/Tencent Weibo, QQ Zone, Bilibili, Tencent Video + Facebook/Twitter/Instagram | Best supplement when simple-icons/thesvg lack a CN-only platform |
+| [thesvg](https://github.com/glincker/thesvg) | Minimal brand SVG, 6000+ icons, mono/color both | Native `@thesvg/mcp-server` for Claude/Cursor/Windsurf; also `npx @thesvg/cli add` | Sina Weibo + suite updates continuously | Best *conversational* option — agent calls a tool by name instead of hand-writing URLs |
+| [icons8-mcp](https://github.com/icons8/icons8-mcp) | 116 styles incl. minimal line, 360k+ icons | Official MCP server (`https://mcp.icons8.com/mcp/`), natural-language search → SVG/PNG stream | By-name hits WeChat/Weibo/Douyin, needs manual verification | **Free quota only returns PNG; SVG needs an API key**; best for brand-colour fidelity and obscure CN apps |
+
+Quick pick: **simple-icons** for "look up a slug, embed the SVG" (CC0, zero setup); **NViconsLib Silhouette** when a mainland-only platform is missing upstream; **thesvg / icons8** when you want conversational, tool-calling lookup.
+
+### Design & prototyping tools
+
+| Tool | What it does | When it helps |
+|---|---|---|
+| [Google Stitch](https://stitch.withgoogle.com/) | Gemini-driven AI UI generator: text / sketch / screenshot → multi-screen prototype + HTML/CSS/Tailwind or React code; can extract a design system from a pasted URL | Prototyping a style demo aimed at overseas design taste; free, Google account only |
+| [Design Skills Hub](https://designskills.xyz/skills) · (official site [vaporaviator.com/works/design-skills-hub](https://vaporaviator.com/works/design-skills-hub)) | A community "skill registry" for design/agents — aesthetic skills (design systems, brand, critiquing) and engineering skills (code architecture, a11y, perf) | Borrowing an existing style taste (e.g. a Notion-like system) or exporting your own Figma file into a reusable skill |
+
+The two are complementary: Stitch *generates* UI, Design Skills Hub *encodes design judgement* for an agent to follow.
+
+### Frontend-design skills worth considering (author's assessment)
+
+Alongside the ★ companion skills already listed above, the following were evaluated:
+
+| Skill | Verdict | Why |
+|---|---|---|
+| **Design Tokens** (OKLCH colour) — [XINGANLIU/design-system-generator-skill](https://github.com/XINGANLIU/design-system-generator-skill) (also community [Owl-Listener/designer-skills](https://github.com/Owl-Listener/designer-skills#design-token)) | ★ recommended | Complements this kit's token discipline — switch one `hue` and the whole site recolours (OKLCH), with light/dark auto-adaptation; fits static-first and the single-accent principle |
+| **identity-skill** (Sac-Y) — [Sac-Y/identity-skill](https://github.com/Sac-Y/identity-skill) | optional | Generates a reference image first, you confirm, then it recreates 1:1 with blocking checkpoints — pairs well with the "find your style" step, but depends on an image model |
+| **Motion Skill** (Framer Motion) — community e.g. [schoepplake/framer-motion-skill](https://github.com/schoepplake/framer-motion-skill) | **not recommended for this stack** | Built for React/animation-heavy apps; conflicts with this kit's static-first + restrained-motion principles |
+| **vercel-domain** | **only if you choose Vercel** | Auto DNS + HTTPS + SEO deployment — useful if the user hosts on Vercel, but this kit's baseline is Cloudflare Pages. **No reliable standalone skill repo found**; the authoritative source is Vercel's own domain docs (vercel.com/docs), not a community skill |
+| Frontend Design / UI/UX Pro Max / Web Design Guidelines | already in the ★ companion table above | no action needed |
+
+Bottom line: install **Design Tokens** if you care about colour science; skip **Motion Skill** unless you are building a React app (out of this kit's scope); keep the rest as comfort picks.
+
 ### As plain reference documentation
 
 The `references/` folder reads as a standalone handbook (written in Chinese; this README is the English summary). Start with:

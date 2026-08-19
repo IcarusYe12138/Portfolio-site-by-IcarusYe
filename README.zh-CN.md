@@ -124,6 +124,44 @@ npx skills add https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe
 
 **安装纪律（硬规则，适用于一切 MCP 与 skill）：绝不未经用户明确许可就安装任何东西。** agent 只负责推荐——给出命令、理由与影响，由用户自己执行，或明确授权后代为执行。上表所有可选工具都是「不装不碍事」：没有任何流程环节依赖它们。
 
+## 设计阶段资源（设计期按需推荐）
+
+这些与上面的伴侣 skill 区分开：它们回答的是「图标用哪个库？」「风格原型怎么做？」「值得装哪些前端 skill？」。**充分知情权**——agent 绝不自作主张安装（见上文安装纪律）；星级是作者的主观评估，不是强制。
+
+### 图标库（当用户问图标用哪个时）
+
+| 库 | 风格 | Agent 调用方式 | 覆盖 | 许可 / 注意 |
+|---|---|---|---|---|
+| [simple-icons](https://github.com/simple-icons/simple-icons) ★ **首选** | 单色极简线性/剪影，3300+ 品牌图标 | CDN 按 slug 直链，零构建——agent 直接 `fetch` `https://cdn.jsdelivr.net/npm/simple-icons@15/icons/slug.svg` | 已收录 QQ（改名后）、新浪微博、Bilibili、小红书 + 几乎全部海外平台 | **CC0 / 免署名**；行业事实标准；把 slug 拼进 URL 就完事 |
+| [NViconsLib Silhouette](https://github.com/nullice/NViconsLib_Silhouette) | 纯剪影，**专为中国大陆 + 全球**社媒设计，189 个 | GitHub Raw 直链 SVG/PSD/EPS（`raw.githubusercontent.com`） | 微信、朋友圈、新浪/腾讯微博、QQ 空间、B 站、腾讯视频 + Facebook/Twitter/Instagram | 当上游缺内地专属平台时的最佳补充 |
+| [thesvg](https://github.com/glincker/thesvg) | 极简品牌 SVG，6000+ 图标，mono/color 双版 | 原生 `@thesvg/mcp-server` 供 Claude/Cursor/Windsurf；也有 `npx @thesvg/cli add` | 含新浪微博，同系列品牌持续更新 | 最能「对话式」调用——agent 按名字调工具而非手写 URL |
+| [icons8-mcp](https://github.com/icons8/icons8-mcp) | 116 种风格（含极简线性），36 万+ 图标 | 官方 MCP server（`https://mcp.icons8.com/mcp/`），自然语言搜索 → SVG/PNG 流式 | 按名可命中微信/微博/抖音，需人工核实具体图标 | **免费额度只出 PNG，SVG 需 API Key**；品牌色还原度高、能覆盖小众内地 App |
+
+快速选择：**simple-icons** 满足「查 slug 直嵌 SVG」（CC0、零配置）；上游缺内地平台时用 **NViconsLib Silhouette** 补；想要对话式工具调用就用 **thesvg / icons8**。
+
+### 设计与原型工具
+
+| 工具 | 作用 | 何时有用 |
+|---|---|---|
+| [Google Stitch](https://stitch.withgoogle.com/) | Gemini 驱动的 AI UI 生成器：文字 / 草图 / 截图 → 多屏原型 + HTML/CSS/Tailwind 或 React 代码；可粘贴 URL 提取现有网站的设计系统 | 面向海外审美的风格 Demo 原型；免费，仅需 Google 账号 |
+| [Design Skills Hub](https://designskills.xyz/skills) ·（官网 [vaporaviator.com/works/design-skills-hub](https://vaporaviator.com/works/design-skills-hub)） | 面向设计/agent 的社区「技能注册中心」——审美技能（设计系统、品牌、评审）与工程技能（代码架构、无障碍、性能） | 借现成风格品味（如 Notion 式系统），或把你自己的 Figma 文件导出成可复用技能包 |
+
+两者互补：Stitch **生成** UI，Design Skills Hub **编码设计判断**供 agent 遵循。
+
+### 值得考虑的前端 skill（作者评估）
+
+除上面 ★ 必装的伴侣 skill 之外，额外评估了这些：
+
+| Skill | 结论 | 理由 |
+|---|---|---|
+| **Design Tokens**（OKLCH 配色）— [XINGANLIU/design-system-generator-skill](https://github.com/XINGANLIU/design-system-generator-skill)（另有社区版 [Owl-Listener/designer-skills](https://github.com/Owl-Listener/designer-skills#design-token)） | ★ 推荐 | 与本 kit 的 token 纪律互补——改一个 `hue` 全站换色（OKLCH），亮暗模式自动适配；契合「静态优先 + 单一强调色」 |
+| **identity-skill**（Sac-Y）— [Sac-Y/identity-skill](https://github.com/Sac-Y/identity-skill) | 可选 | 先出参考图给你确认、锁定后再 1:1 还原、每步阻塞式确认关卡——配合「找风格」那一步很好，但依赖生图模型 |
+| **Motion Skill**（Framer Motion）— 社区版如 [schoepplake/framer-motion-skill](https://github.com/schoepplake/framer-motion-skill) | **本栈不推荐** | 面向 React/重动画应用；与本 kit「静态优先 + 动效克制」冲突 |
+| **vercel-domain** | **仅当你选 Vercel** | 一键 DNS + HTTPS + SEO 部署——用户托管在 Vercel 时有用，但本 kit 基线是 Cloudflare Pages。**未找到可靠独立仓库**；权威来源是 Vercel 官方域名文档（vercel.com/docs），不是社区 skill |
+| Frontend Design / UI/UX Pro Max / Web Design Guidelines | 已在上面 ★ 伴侣表 | 无需处理 |
+
+一句话：在意色彩科学就装 **Design Tokens**；除非你在做 React 应用（超出本 kit 范围），否则跳过 **Motion Skill**；其余按需。
+
 ### 当作纯参考文档
 
 `references/` 目录本身就是一本独立手册。建议入口：

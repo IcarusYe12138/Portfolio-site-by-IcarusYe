@@ -2,6 +2,22 @@
 
 本 skill 自身的迭代记录（践行 `references/06-iteration.md` 的方法论）。格式参考 Keep a Changelog；版本号语义化。
 
+## [0.4.1] — 2026-08-19
+
+### Added
+- **三语 README 新增「设计阶段资源 / Resources for the design phase」**（README.md / zh-CN / zh-HK 同步）：
+  - **图标库推荐**：simple-icons（★首选，CC0，CDN 直链）、NViconsLib Silhouette（内地专属平台补充）、thesvg（对话式 MCP 调用）、icons8-mcp（品牌色还原，SVG 需 API Key）；含中文社媒覆盖说明与许可警示；
+  - **设计与原型工具**：Google Stitch（Gemini UI 生成器）、Design Skills Hub（社区设计技能注册中心）；
+  - **前端 skill 作者评估**：Design Tokens（★推荐，OKLCH 与本 kit token 纪律互补）、identity-skill（可选，依赖生图模型）、Motion Skill（本栈不推荐，Framer Motion/React 与本 kit 静态优先冲突）、vercel-domain（仅当用户选 Vercel）、前端三件套已在 ★ 伴侣表。
+  - 延续「充分知情权」纪律：所有推荐标注 Agent 调用方式、许可、覆盖范围与作者主观评估，绝不自作主张安装。
+
+### Fixed / 补全
+- **为推荐的前端 skill 补齐 GitHub 链接**（应作者要求，从 GitHub 检索）：
+  - Design Tokens → [XINGANLIU/design-system-generator-skill](https://github.com/XINGANLIU/design-system-generator-skill)（OKLCH+亮暗适配）+ 社区版 [Owl-Listener/designer-skills](https://github.com/Owl-Listener/designer-skills#design-token)；
+  - identity-skill → [Sac-Y/identity-skill](https://github.com/Sac-Y/identity-skill)；
+  - Motion Skill (Framer Motion) → 社区版 [schoepplake/framer-motion-skill](https://github.com/schoepplake/framer-motion-skill)；
+  - **vercel-domain 未找到可靠独立 skill 仓库**——已在文档中明确标注，其权威来源为 Vercel 官方域名文档（非社区 skill），并提示用户。
+
 ## [0.4.0] — 2026-08-19
 
 ### Added
