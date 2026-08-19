@@ -2,6 +2,18 @@
 
 本 skill 自身的迭代记录（践行 `references/06-iteration.md` 的方法论）。格式参考 Keep a Changelog；版本号语义化。
 
+## [0.1.1] — 2026-08-19
+
+### Added
+- **04-deploy-and-domain.md 新增「四、自定义域名绑定实操」**（后续章节顺延重编号）：
+  - 路线 A（保留注册商 DNS + CNAME，约 10 分钟）/ 路线 B（NS 迁移 Cloudflare，上生态）完整步骤与对比表；
+  - 绑定后必做：Always Use HTTPS + www/非 www 规范域重定向；
+  - 排障实录三连（真实部署）：「名称服务器无效」（NS 删净 / DNSSEC 先关 / 手动 Check）、Error 1016（绑定未完成触发自动记录 / 橙云代理 / flattening）、「初始化 48h」的真实耗时预期；
+  - 附：交给浏览器 Agent 执行 NS 切换的任务 Prompt 模板（含安全护栏）；
+  - 内容整理自一次真实配置咨询（Perplexity 问答），已泛化所有域名 / NS / 账号信息。
+- **推荐服务链接落位**：03 对象存储选型表（COS / OSS / R2 + 选择逻辑）、02 名片平台（Popl / muse link）、04 托管基线与存储行内链、00 飞书载体链接 + 可选 MCP 小节（github-mcp-server / mcp-server-cloudflare）；
+- 双语 README 新增「推荐服务 / Recommended services」汇总表。
+
 ## [0.1.0] — 2026-08-19
 
 首个打标版本。自 Initial commit 起的全部变更：
