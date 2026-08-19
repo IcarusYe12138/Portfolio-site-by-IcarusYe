@@ -2,6 +2,16 @@
 
 本 skill 自身的迭代记录（践行 `references/06-iteration.md` 的方法论）。格式参考 Keep a Changelog；版本号语义化。
 
+## [0.2.0] — 2026-08-19
+
+### Added
+- **伴侣 skill 推荐机制**（`00-onboarding.md` 新节 + `SKILL.md` 工作流第 0 步 + 双语 README）：
+  - 分层推荐表（★ 必装 frontend-design / web-design-guidelines；推荐 ui-ux-pro-max / impeccable；可选 high-end-visual-design / webapp-testing），各附安装命令与「补什么位」说明；
+  - 接洽话术模板 + 开工判据新增「伴侣 skill 已询问（装了/已有同类/拒绝 三态记录）」；
+  - 三条纪律：先问再推（防重复安装）、skill 预算 ≤ 20–30（Anthropic 官方建议，过多致触发判定下降）、冲突时以本 skill「静态优先」为准。
+  - 背景调研结论：当前生态热门 skill 集中于审美判断（frontend-design 27 万+）与工程规则（web-design-guidelines 39 万+）两条横向赛道，无作品集垂直生命周期同类；本 skill 定位为垂直方法论 + 伴侣 skill 横向补位。
+- 安装方式补充 `npx skills add <本仓库>`（vercel-labs skills CLI 兼容任意 GitHub 仓库）。
+
 ## [0.1.1] — 2026-08-19
 
 ### Added

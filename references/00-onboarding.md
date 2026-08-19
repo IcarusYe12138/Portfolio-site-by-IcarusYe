@@ -70,6 +70,28 @@ Demo 定稿后回到 TRAE 用本 skill 的组件规范落地代码。
 
 不装也不影响本 skill 的任何流程——它们只是把「切到浏览器手动操作」这步省掉。
 
+### 伴侣 skill 推荐（接洽时必问）
+
+本 skill 管**作品集的垂直生命周期**（结构、媒体、三语、运维、部署），但「编码时的审美判断」「无障碍合规审计」是通用设计能力的活——由伴侣 skill 补位。接洽时按下面的分层表**询问用户要不要安装**；标 ★ 的强烈建议装（本 skill 的工作流默认它们兜底品味与合规）：
+
+| 层 | Skill | 装机口碑 | 补什么位 | 安装 |
+|---|---|---|---|---|
+| ★ 必装 | **frontend-design**（Anthropic 官方） | 27 万+ | 写码前锁定美学方向、反「Inter + 紫渐变」AI slop——正好接住本 skill「风格 Demo → 组件落地」的落地段 | `claude plugin add anthropic/frontend-design`；TRAE 用户在插件市场装 Frontend Design 插件 |
+| ★ 必装 | **web-design-guidelines**（Vercel） | 39 万+ | 100+ 条 WCAG 2.2 / UX 规则自动审计——比本 skill 11 号总检单的人工 a11y 段更硬 | `npx skills add https://github.com/vercel-labs/agent-skills --skill web-design-guidelines` |
+| 推荐 | **ui-ux-pro-max** | 21 万+ | 240+ 风格库 / 127 字体配对 / 99 UX 准则——用户没有参考素材、纯靠描述定风格时的发散器 | `npx skills add https://github.com/nextlevelbuilder/ui-ux-pro-max-skill` |
+| 推荐 | **impeccable** | — | brand/product 双模式 + 23 个精修命令（typeset/colorize/bolder/quieter）——作品集属 brand 模式 | https://impeccable.style/ |
+| 可选 | **high-end-visual-design** | 12 万+ | 视觉精修层，Tailwind 栈增益最大 | 各 skill 市场搜索 |
+| 可选 | **webapp-testing**（Playwright 类） | — | 让 agent 在真浏览器里自测响应式——可替代一部分「多设备人工过一遍」 | ComposioHQ/awesome-codex-skills |
+
+**推荐话术**（接洽第 0 步问完工具链后）：
+
+> 「为了让代码层的设计品味和无障碍有兜底，建议装两个伴侣 skill：Anthropic 官方的 frontend-design（管审美方向）和 Vercel 的 web-design-guidelines（管 WCAG 审计）。要我现在把安装命令给你，还是你已有同类能力？」
+
+**纪律（重要）**：
+- **先问再推**——用户可能已有同类能力（TRAE 自带设计插件、或已装 ui-ux-pro-max），重复安装无益；
+- **skill 预算 ≤ 20–30 个**（Anthropic 官方建议）：装太多触发判定互相打架、准确率反而暴跌——只推表里的，不鼓励囤积；
+- 伴侣 skill 是「品味与合规」的横向能力，**不替代本 skill 的垂直流程**——冲突时（如伴侣 skill 想上 React 组件库），以本 skill 的「零框架静态优先」原则为准。
+
 ## 四、隐私红线（每次接洽都要自检）
 
 - 只问**建站必需**的信息；联系方式、真实姓名、证件号等敏感信息不主动索要，仅在用户自愿提供用于页面内容时接收；
@@ -85,6 +107,7 @@ Demo 定稿后回到 TRAE 用本 skill 的组件规范落地代码。
 - [ ] 作品清单载体确认（飞书 / Markdown / Excel）
 - [ ] 简历素材到位或已约定「后补」
 - [ ] 工具链告知完毕（TRAE 构建 + Kimi K3 设计原型）
+- [ ] 伴侣 skill 已询问（★ 两个必装项：装了 / 已有同类 / 用户明确拒绝，三态记录）
 - [ ] 隐私红线自查通过
 
 全部打勾 → 进入 `SKILL.md` 的「推荐工作流」第 1 步。

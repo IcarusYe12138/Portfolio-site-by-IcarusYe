@@ -100,9 +100,24 @@
 ```bash
 git clone https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe.git \
   ~/.trae-cn/skills/portfolio-site-kit
+# 或用 vercel-labs 的 skills CLI：
+npx skills add https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe
 ```
 
 （或把仓库文件夹复制进你的 skills 目录。）之后当你要求创建、重构或迭代作品集、作品展示站、富媒体静态站时，agent 会自动调用。`tools/` 与 `examples/` 随仓库分发——字体管线与一致性审计用法见 `tools/README.md`。
+
+### 伴侣 skill（接洽时会询问是否安装）
+
+本 skill 管作品集的**垂直生命周期**（结构 / 双地域媒体 / 三语 / 内容运维 / 部署）；横向的审美与合规由伴侣 skill 补位，接洽时按分层表询问：
+
+| 层 | Skill | 补什么位 |
+|---|---|---|
+| ★ 必装 | [frontend-design](https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design)（Anthropic 官方） | 写码前锁定美学方向、反 AI slop |
+| ★ 必装 | [web-design-guidelines](https://github.com/vercel-labs/agent-skills)（Vercel） | 100+ 条 WCAG 2.2 / UX 自动审计 |
+| 推荐 | [ui-ux-pro-max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | 240+ 风格库 / 127 字体配对——无参考素材时的发散器 |
+| 推荐 | [impeccable](https://impeccable.style/) | brand 模式精修命令（typeset / colorize / bolder / quieter） |
+
+纪律：先问再推（用户可能已有同类）；skill 总量控制在 20–30 个内；伴侣 skill 若推 React 组件库，以本 skill 的「静态优先」原则为准。
 
 ### 当作纯参考文档
 

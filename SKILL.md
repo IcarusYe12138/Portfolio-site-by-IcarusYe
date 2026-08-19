@@ -90,6 +90,7 @@ portfolio-site-kit/
    - 问内容底子：简历、作品集、外链（海外+内地）齐不齐？不齐就先做风格 Demo、内容后补；
    - 引导作品清单进结构化载体（飞书 / Markdown / Excel）；
    - 告知工具链：构建推荐 TRAE（多设备实时预览，https://www.trae.cn/ ），设计原型推荐 Kimi K3（审美在线，https://www.kimi.ai/blog/kimi-k3 ）——不强制；
+   - **询问伴侣 skill**：审美与无障碍兜底建议装 frontend-design（Anthropic 官方）+ web-design-guidelines（Vercel）——先问用户是否已有同类，推荐分层表与话术见 `00-onboarding.md`；
    - **信息缺失就反问，不擅自代答**。
 1. **定性风格**（→ `01-design-and-style.md`）
    - 参考素材 + 作者专业方向 → 交给任意可用图片的 Agent（Kimi K3 推荐）产出一版属于作者自己的 Demo（配色、字体、母题、版式）；

@@ -100,9 +100,24 @@ The kit is distilled from the real-world experience of building [icarusye.site](
 ```bash
 git clone https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe.git \
   ~/.trae-cn/skills/portfolio-site-kit
+# or, with the vercel-labs skills CLI:
+npx skills add https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe
 ```
 
 (Or copy the repository folder into your skills directory.) The agent then invokes it when you ask to create, restructure or iterate a portfolio, works showcase, or media-rich static site. `tools/` and `examples/` ship with the kit — see `tools/README.md` for the font pipeline and consistency audit.
+
+### Companion skills (asked during onboarding)
+
+This kit owns the portfolio **lifecycle** (structure, dual-region media, trilingual, content ops, deploy); horizontal taste and compliance come from companion skills. During intake it asks whether to install:
+
+| Tier | Skill | Fills |
+|---|---|---|
+| ★ essential | [frontend-design](https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design) (Anthropic) | Aesthetic direction before code; anti AI-slop |
+| ★ essential | [web-design-guidelines](https://github.com/vercel-labs/agent-skills) (Vercel) | 100+ WCAG 2.2 / UX audit rules |
+| recommended | [ui-ux-pro-max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | 240+ styles / 127 font pairings — divergence when no references exist |
+| recommended | [impeccable](https://impeccable.style/) | brand-mode polish commands (typeset / colorize / bolder / quieter) |
+
+Rule of thumb: ask first (the user may already have equivalents), keep the total skill budget ≤ 20–30, and when a companion skill pushes a React component stack, this kit's static-first principle wins.
 
 ### As plain reference documentation
 
