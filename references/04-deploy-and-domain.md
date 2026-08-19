@@ -2,11 +2,11 @@
 
 ## 一、托管：静态直传
 
-**推荐基线**：Cloudflare Pages（或同类静态托管）Direct Upload——拖目录上传即部署，**零构建命令、零框架依赖**。
+**推荐基线**：[Cloudflare Pages](https://pages.cloudflare.com/)（或同类静态托管）Direct Upload——拖目录上传即部署，**零构建命令、零框架依赖**。
 
 **要点**：
 - 输出目录 = 仓库根目录；HTML/CSS/JS/字体/装饰 SVG 全在页面层；
-- 大媒体（PDF、长视频、长音频）放**对象存储**（如腾讯云 COS），页面层直链——绕开单文件 25 MiB 上限，也省钱流量；
+- 大媒体（PDF、长视频、长音频）放**对象存储**（[腾讯云 COS](https://cloud.tencent.com/product/cos) / [阿里云 OSS](https://cn.aliyun.com/product/oss) / [Cloudflare R2](https://www.cloudflare.com/products/r2/)，选型对比见 `03-media-compat.md`），页面层直链——绕开单文件 25 MiB 上限，也省钱流量；
 - 配 `_headers` 加安全响应头：
 ```
 /*

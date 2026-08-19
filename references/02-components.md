@@ -220,7 +220,7 @@ if(iframe){ iframe.src = T.cardSrc; iframe.title = T.cardTitle; }
 const fb = document.getElementById('cardFallback');
 if(fb){ fb.href = T.cardHref; }
 ```
-- **源按区域配双源**：海外/繁中 → 境外名片平台；简中 → 内地可达的名片平台（与视频双链路同理，见 `03-media-compat.md`）；
+- **源按区域配双源**：海外/繁中 → [Popl](https://popl.co/)；简中 → [muse link](https://muselink.cc/)（与视频双链路同理，见 `03-media-compat.md`）；
 - **兜底链接常驻**：第三方嵌入随时可能被拦或挂掉，iframe 下方留一条文字出口（「名片加载不出来？直接打开 ↗」，文案进字典三语）；
 - `loading="lazy"` + i18n `title`；
 - 名片类轻量嵌入**不需要**「点击加载」按钮——折叠方案容易过度设计；该保留给重型 deck。

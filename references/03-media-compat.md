@@ -94,6 +94,16 @@ btn.addEventListener('click', () => {
 | 本地开发服务器无 Range 支持 | 音视频 seek 报错/控制台 ERR_ABORTED 可能是本地环境问题，非代码 bug（见 07 坑 #7） |
 | 平台内嵌政策随时变 | 上线前两地各实测一遍 |
 
+### 对象存储选型
+
+| 服务 | 链接 | 适合 |
+|---|---|---|
+| 腾讯云 COS | https://cloud.tencent.com/product/cos | 内地受众为主——大媒体（PDF/长视频）内地直连稳定，与境内域名/CDN 组合顺 |
+| 阿里云 OSS | https://cn.aliyun.com/product/oss | 同上，生态二选一（已有阿里云账号则顺手） |
+| Cloudflare R2 | https://www.cloudflare.com/products/r2/ | 海外受众为主——**零出口流量费**（egress free），与 CF Pages 同账号管理最省心 |
+
+选择逻辑跟托管策略走（见 `04-deploy-and-domain.md` 域名三方案）：站点在 CF Pages + 主要给海外看 → R2；内地体验优先（备案/境内 CDN 路线）→ COS/OSS。双地区都要求高时，两者并存按链路分流即可——反正只是「每条媒体链接配两个地址」。
+
 ## 六、为什么这么做更适用（设计依据）
 
 1. **自托管 + 本地存档**去掉对境外 CDN/字体/媒体的强依赖 → 内地稳定可达；

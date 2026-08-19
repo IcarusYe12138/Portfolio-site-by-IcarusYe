@@ -35,7 +35,7 @@
 
 | 载体 | 适合 | 优点 |
 |---|---|---|
-| **飞书文档**（多维表格更佳） | 团队协作 / 手机随时改 | 结构化字段（作品名/类型/年份/海外链接/内地链接/简介）天然对齐双链路需求 |
+| **[飞书](https://www.feishu.cn/)文档**（多维表格更佳） | 团队协作 / 手机随时改 | 结构化字段（作品名/类型/年份/海外链接/内地链接/简介）天然对齐双链路需求 |
 | **详细 Markdown 文件** | 技术型用户 / 仓库党 | 可进 git、可 diff、可生成 |
 | **Excel 表格** | 数据量大 / 表格控 | 列即字段，一行一作品 |
 
@@ -60,6 +60,15 @@
 Demo 定稿后回到 TRAE 用本 skill 的组件规范落地代码。
 
 **分工记忆口诀：Kimi 出审美，TRAE 出工程。**
+
+### MCP（可选，agent 提效）
+
+如果用户的构建 agent 支持 MCP，按需推荐接入：
+
+- **[github-mcp-server](https://github.com/github/github-mcp-server)**（官方）——让 agent 直接操作 GitHub 仓库：建站代码托管、PR / release 管理、迭代文档进库都能在对话里完成；
+- **[mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare)**（官方）——让 agent 直接查配额、管理 Workers / R2 等资源，配合 CF Pages 部署链路排障顺手。
+
+不装也不影响本 skill 的任何流程——它们只是把「切到浏览器手动操作」这步省掉。
 
 ## 四、隐私红线（每次接洽都要自检）
 

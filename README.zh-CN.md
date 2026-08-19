@@ -30,6 +30,18 @@
 - **设计原型用 [Kimi K3](https://www.kimi.ai/blog/kimi-k3)**：当前可用于网页设计的模型里审美足够好；把参考截图喂给它，产出属于你自己的风格 Demo。Demo 定稿后再进工程。
 - 分工口诀：**Kimi 出审美，TRAE 出工程。**
 
+## 推荐服务
+
+| 用途 | 服务 | 说明 |
+|---|---|---|
+| 静态托管 | [Cloudflare Pages](https://pages.cloudflare.com/) | 直传零构建；单文件 25 MiB 上限 |
+| 对象存储（内地向） | [腾讯云 COS](https://cloud.tencent.com/product/cos) · [阿里云 OSS](https://cn.aliyun.com/product/oss) | 大媒体外置，内地直连稳定 |
+| 对象存储（海外向） | [Cloudflare R2](https://www.cloudflare.com/products/r2/) | 零出口流量费；与 Pages 同账号 |
+| 电子名片（海外） | [Popl](https://popl.co/) | 可嵌入名片 iframe |
+| 电子名片（内地） | [muse link](https://muselink.cc/) | 内地可达的名片 iframe |
+| 作品清单载体 | [飞书](https://www.feishu.cn/) | 多维表格：一行一作品、链接分列 |
+| MCP（可选） | [github-mcp-server](https://github.com/github/github-mcp-server) · [mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare) | 让 agent 直接操作 GitHub / Cloudflare |
+
 ## 仓库结构
 
 ```

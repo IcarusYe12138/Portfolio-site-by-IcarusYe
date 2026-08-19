@@ -30,6 +30,18 @@ The kit is distilled from the real-world experience of building [icarusye.site](
 - **Design prototypes with [Kimi K3](https://www.kimi.ai/blog/kimi-k3)** — the strongest aesthetics among models usable for web design; feed it your reference screenshots and get a personal style demo back. Demo first, then engineering.
 - Mnemonic: *Kimi for taste, TRAE for engineering.*
 
+## Recommended services
+
+| Purpose | Service | Notes |
+|---|---|---|
+| Static hosting | [Cloudflare Pages](https://pages.cloudflare.com/) | Direct upload, zero build, 25 MiB per-file limit |
+| Object storage (mainland) | [Tencent COS](https://cloud.tencent.com/product/cos) · [Aliyun OSS](https://cn.aliyun.com/product/oss) | For large media when mainland reach matters |
+| Object storage (global) | [Cloudflare R2](https://www.cloudflare.com/products/r2/) | Zero egress fees; same account as Pages |
+| Digital card (global) | [Popl](https://popl.co/) | Embeddable card iframe |
+| Digital card (mainland) | [muse link](https://muselink.cc/) | Mainland-reachable card iframe |
+| Works inventory carrier | [Feishu](https://www.feishu.cn/) | Structured base (one row per work, link columns) |
+| MCP (optional) | [github-mcp-server](https://github.com/github/github-mcp-server) · [mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare) | Let the agent drive GitHub / Cloudflare directly |
+
 ## Repository layout
 
 ```
