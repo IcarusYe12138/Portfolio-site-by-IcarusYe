@@ -37,7 +37,7 @@
 | 靜態托管 | [Cloudflare Pages](https://pages.cloudflare.com/) | 直傳零建構；單檔 25 MiB 上限 |
 | 對象存儲（內地向） | [騰訊雲 COS](https://cloud.tencent.com/product/cos) · [阿里雲 OSS](https://cn.aliyun.com/product/oss) | 大媒體外置，內地直連穩定 |
 | 對象存儲（海外向） | [Cloudflare R2](https://www.cloudflare.com/products/r2/) | 零出流量費；同 Pages 同帳戶 |
-| 兩地可達性檢測 | [ITDOG HTTP 檢測](https://www.itdog.cn/http/) | 全國多省 + 海外節點並發測線上 URL；每次部署後跑一遍 |
+| 兩地可達性檢測 | [ITDOG HTTP 檢測](https://www.itdog.cn/http/) · [探測網](https://www.tanceshu.net/) · [kk.yun 快快測](https://www.kk.yun.com/) · [DNSPup](https://www.dnspup.com/) | 全國多省份 + 海外節點並發測 Ping/TCP/HTTP/DNS/SSL；某平台節點腳下用第二個當後備 |
 | 電子名片（海外） | [Popl](https://popl.co/) | 可內嵌名片 iframe |
 | 電子名片（內地） | [muse link](https://muselink.cc/) | 內地可達嘅名片 iframe |
 | 作品清單載體 | [飛書](https://www.feishu.cn/) | 多維表格：一行一件作品、連結分欄 |
@@ -148,6 +148,12 @@ npx skills add https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe
 
 兩者互補：Stitch **生成** UI，Design Skills Hub **編碼設計判斷**俾 agent 跟住做。
 
+### 圖表 / 數據可視化 skill
+
+| Skill | 作用 |
+|---|---|
+| [lieflat-charts](https://github.com/larashero3-dotcom/lieflat-charts) ★ | 面向 AI agent 嘅數據可視化 skill——將數據轉成精緻嘅可交互 HTML 圖表（指標、時間線、分佈），啱用喺作品集頁面呈現數據，唔使重型圖表庫。克隆入 skills 目錄就掂；自帶 `SKILL.md` |
+
 ### 值得考慮嘅前端 skill（作者評估）
 
 除上便 ★ 必裝嘅伴侶 skill 之外，額外評估咗呢啲：
@@ -157,7 +163,6 @@ npx skills add https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe
 | **Design Tokens**（OKLCH 配色）— [XINGANLIU/design-system-generator-skill](https://github.com/XINGANLIU/design-system-generator-skill)（另有社區版 [Owl-Listener/designer-skills](https://github.com/Owl-Listener/designer-skills#design-token)） | ★ 推薦 | 同本 kit 嘅 token 紀律互補——改一個 `hue` 全站換色（OKLCH），亮暗模式自動適配；契合「靜態優先 + 單一強調色」 |
 | **identity-skill**（Sac-Y）— [Sac-Y/identity-skill](https://github.com/Sac-Y/identity-skill) | 可選 | 先出參考圖俾你確認、鎖定之後再 1:1 還原、每步阻塞式確認關卡——配合「搵風格」嗰步好啱用，但依賴生圖模型 |
 | **Motion Skill**（Framer Motion）— 社區版如 [schoepplake/framer-motion-skill](https://github.com/schoepplake/framer-motion-skill) | **本棧唔建議** | 面向 React/重動畫應用；同本 kit「靜態優先 + 動效克制」衝突 |
-| **vercel-domain** | **淨係當你揀 Vercel** | 一鍵 DNS + HTTPS + SEO 部署——用戶托管喺 Vercel 先有用，但本 kit 基線係 Cloudflare Pages。**搵唔到可靠獨立倉庫**；權威來源係 Vercel 官方域名文檔（vercel.com/docs），而唔係社區 skill |
 | Frontend Design / UI/UX Pro Max / Web Design Guidelines | 已經喺上便 ★ 伴侶表 | 唔使處理 |
 
 一句講晒：在意色彩科學就裝 **Design Tokens**；除非你做緊 React 應用（超出本 kit 範圍），否則跳過 **Motion Skill**；其餘按需。

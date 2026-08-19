@@ -37,7 +37,7 @@ The kit is distilled from the real-world experience of building [icarusye.site](
 | Static hosting | [Cloudflare Pages](https://pages.cloudflare.com/) | Direct upload, zero build, 25 MiB per-file limit |
 | Object storage (mainland) | [Tencent COS](https://cloud.tencent.com/product/cos) · [Aliyun OSS](https://cn.aliyun.com/product/oss) | For large media when mainland reach matters |
 | Object storage (global) | [Cloudflare R2](https://www.cloudflare.com/products/r2/) | Zero egress fees; same account as Pages |
-| Reachability check | [ITDOG HTTP](https://www.itdog.cn/http/) | Multi-province mainland + overseas nodes probe your live URL after every deploy |
+| Reachability check (multi-node ping/speed) | [ITDOG HTTP](https://www.itdog.cn/http/) · [探测网](https://www.tanceshu.net/) · [kk.yun / 快快测](https://www.kk.yun.com/) · [DNSPup](https://www.dnspup.com/) | Multi-province mainland + overseas nodes probe ping/TCP/HTTP/DNS/SSL on your live URL; use a second one when nodes wobble or as backup |
 | Digital card (global) | [Popl](https://popl.co/) | Embeddable card iframe |
 | Digital card (mainland) | [muse link](https://muselink.cc/) | Mainland-reachable card iframe |
 | Works inventory carrier | [Feishu](https://www.feishu.cn/) | Structured base (one row per work, link columns) |
@@ -148,6 +148,12 @@ Quick pick: **simple-icons** for "look up a slug, embed the SVG" (CC0, zero setu
 
 The two are complementary: Stitch *generates* UI, Design Skills Hub *encodes design judgement* for an agent to follow.
 
+### Charting / data-visualisation skills
+
+| Skill | What it does |
+|---|---|
+| [lieflat-charts](https://github.com/larashero3-dotcom/lieflat-charts) ★ | Data-visualisation skill for AI agents — turns data into polished, interactive HTML charts for a portfolio page (metrics, timelines, distribution), no heavy charting library needed. Clone into your skills dir; ships a `SKILL.md` |
+
 ### Frontend-design skills worth considering (author's assessment)
 
 Alongside the ★ companion skills already listed above, the following were evaluated:
@@ -157,7 +163,6 @@ Alongside the ★ companion skills already listed above, the following were eval
 | **Design Tokens** (OKLCH colour) — [XINGANLIU/design-system-generator-skill](https://github.com/XINGANLIU/design-system-generator-skill) (also community [Owl-Listener/designer-skills](https://github.com/Owl-Listener/designer-skills#design-token)) | ★ recommended | Complements this kit's token discipline — switch one `hue` and the whole site recolours (OKLCH), with light/dark auto-adaptation; fits static-first and the single-accent principle |
 | **identity-skill** (Sac-Y) — [Sac-Y/identity-skill](https://github.com/Sac-Y/identity-skill) | optional | Generates a reference image first, you confirm, then it recreates 1:1 with blocking checkpoints — pairs well with the "find your style" step, but depends on an image model |
 | **Motion Skill** (Framer Motion) — community e.g. [schoepplake/framer-motion-skill](https://github.com/schoepplake/framer-motion-skill) | **not recommended for this stack** | Built for React/animation-heavy apps; conflicts with this kit's static-first + restrained-motion principles |
-| **vercel-domain** | **only if you choose Vercel** | Auto DNS + HTTPS + SEO deployment — useful if the user hosts on Vercel, but this kit's baseline is Cloudflare Pages. **No reliable standalone skill repo found**; the authoritative source is Vercel's own domain docs (vercel.com/docs), not a community skill |
 | Frontend Design / UI/UX Pro Max / Web Design Guidelines | already in the ★ companion table above | no action needed |
 
 Bottom line: install **Design Tokens** if you care about colour science; skip **Motion Skill** unless you are building a React app (out of this kit's scope); keep the rest as comfort picks.

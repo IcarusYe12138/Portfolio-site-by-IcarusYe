@@ -2,6 +2,15 @@
 
 本 skill 自身的迭代记录（践行 `references/06-iteration.md` 的方法论）。格式参考 Keep a Changelog；版本号语义化。
 
+## [0.4.2] — 2026-08-19
+
+### Changed
+- **移除 vercel-domain 推荐**（三语 README）——未找到可靠独立 skill 仓库，按作者要求删去该行描述。
+- **可达性检测扩为多平台**（README 双语推荐服务表 + `04` 两地可达性节）：在 ITDOG 基础上新增 探测网 / kk.yun（快快测）/ DNSPup，各附一句定位（重合替代 / 备用 / 出境与代理场景更全）与「选一主力 + 一备用即可」的建议。
+
+### Added
+- **图表/数据可视化 skill [lieflat-charts](https://github.com/larashero3-dotcom/lieflat-charts)**（三语 README「设计阶段资源」新增图表小节）——面向 AI agent 的数据可视化 skill，把数据转成精致可交互的 HTML 图表（指标 / 时间线 / 分布），无需重型图表库，适合作品集呈现数据；自带 `SKILL.md`。
+
 ## [0.4.1] — 2026-08-19
 
 ### Added
