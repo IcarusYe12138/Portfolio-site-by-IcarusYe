@@ -59,6 +59,9 @@ window.CASE_T = {
   en:{
     _htmlLang:"en", _title:"Page Title — Your Name",
     _desc:"Meta description…", _ogTitle:"Page Title", _ogDesc:"OG description…",
+    /* og:image 一般语言无关、用绝对 URL 一处即可；如需按语言换图，加 _ogImage 键并在
+       head 补 <meta property="og:image" data-i18n-prop="content" data-i18n-key="_ogImage"> */
+    _ogImage:"https://yoursite.example/og-cover.jpg",
     _cursorText:"Open ↗",
     docTitle:"Page Title — Your Name",
     secTitle:"ALL WORKS",
@@ -113,9 +116,13 @@ let LANG = 'en';
   LANG = nl.startsWith('zh') ? (/tw|hk|mo|hant/.test(nl) ? 'tw' : 'zh') : 'en';
 })();
 
-/* 锁宽解码：标题类切换动画——冻结高度防随机字符宽度引发的重排抖动 */
+/* 锁宽解码：标题类切换动画——冻结高度防随机字符宽度引发的重排抖动。
+   POOL_C 是中文解码动画的随机字符池：必须覆盖"你站内所有标题/解码目标里可能出现的
+   汉字"（它在动画中间帧里充当"候补乱码"）。下方是示例池，使用者的站若出现池外字
+   （如 音/影/产/研/书…），解码中间帧会出现空缺/缺字——把池扩到覆盖高频汉字即可。
+   也可在页面脚本顶部覆盖：window.SITE_POOL_C &&…（见文末常量），或直接扩本串。 */
 const POOL_A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&/';
-const POOL_C = '作品关于经历联系档案首页设计网格秩序信号';
+const POOL_C = (window.SITE_POOL_C || '作品关于经历联系档案首页设计网格秩序信号');
 function scrambleSwap(el, final_){
   if(RM){ el.textContent = final_; return; }
   const token = el._scrT = (el._scrT || 0) + 1;
@@ -150,12 +157,19 @@ function setLang(lang, persist, animate){
   window.CASE_LANG = lang;
   const T = CASE_T[lang];
   document.title = T._title || T.docTitle;
-  /* 元信息键：meta / og / 光标标签 */
+  /* 元信息键：meta / og / 光标标签。_desc/_ogTitle/_ogDesc 用固定选择器；
+     其余 _og* 元键走 data-i18n-prop / data-i18n-key 通用写法（见 _ogImage 注释，
+     也可扩展任意 meta）。默认处理带 content 属性的 meta，标记结构：
+       <meta name/property=… data-i18n-prop="content" data-i18n-key="_ogImage"> */
   ['_desc','_ogTitle','_ogDesc'].forEach(k => {
     if(!T[k]) return;
     const sel = k === '_desc' ? 'meta[name="description"]'
               : k === '_ogTitle' ? 'meta[property="og:title"]' : 'meta[property="og:description"]';
     const m = document.querySelector(sel); if(m) m.content = T[k];
+  });
+  document.querySelectorAll('meta[data-i18n-prop][data-i18n-key]').forEach(m => {
+    const k = m.dataset.i18nKey; if(T[k] === undefined) return;
+    m.setAttribute(m.dataset.i18nProp, T[k]);
   });
   if(T._cursorText){
     const c = document.getElementById('cursor');

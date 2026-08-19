@@ -2,19 +2,25 @@
   templates/bgm.html — 背景音乐单例按钮
   原则：默认不播（浏览器自动播放策略 + 不打扰）；点击才创建 Audio 并播放；
         loop 循环、音量 ~0.7、preload='none'（未点击零流量）；aria-pressed 表状态。
-  音频文件本地自托管：assets/audio/bgm.mp3
+  音频文件本地自托管：assets/audio/bgm.mp3（相对路径，子目录部署也能用）。
+  对应 references/03-media-compat.md（自动播放策略）/ 08-accessibility-motion.md（reduced-motion 守卫）。
+  【占位替换】按钮文字（.bgm-txt 的 "Music"）与 aria/title 文案由下文字典控制，
+  音源路径把 "assets/audio/bgm.mp3" 换成本站实际文件；曲名/来源替换下方 bgmAria/BG_TITLE 两处。
 -->
 
 <!-- ============ HTML（顶栏内，一处） ============ -->
+<!-- title/aria 走 data-i18n 三语字典（见本文件底部字典段，随语言切换）；属性值仅作无 JS 兜底 -->
 <button class="bgm-btn" id="bgmBtn" type="button" aria-pressed="false"
-        title="BGM — <曲名> · Music by <来源>"
-        aria-label="背景音乐 <曲名>，点击播放或暂停">
+        data-i18n-aria="bgmAria"
+        data-i18n-title="bgmTitle"
+        title="BGM — Track · Music by Source"
+        aria-label="Background music, click to play or pause">
   <span class="bgm-ico" aria-hidden="true">
     <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
       <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
     </svg>
   </span>
-  <span class="bgm-txt">Music</span>
+  <span class="bgm-txt" data-i18n="bgmLabel">Music</span>
 </button>
 
 <!-- ============ CSS（按需并入样式表） ============ -->
@@ -36,15 +42,38 @@
 
 <!-- ============ JS ============ -->
 <script>
+/* ---- BGM 专属三语字典（并入页面 CASE_T 亦可；此处独立便于 bgm 模板单用） ---- */
+window.BGM_T = {
+  en:{ bgmLabel:"Music", bgmAria:"Background music, click to play or pause",
+       bgmTitle:"BGM — Track · Music by Source" },
+  zh:{ bgmLabel:"音乐", bgmAria:"背景音乐，点击播放或暂停",
+       bgmTitle:"BGM — 曲名 · 音乐来源" },
+  tw:{ bgmLabel:"音樂", bgmAria:"背景音樂，點擊播放或暫停",
+       bgmTitle:"BGM — 曲名 · 音樂來源" }
+};
+/* 若页面已有全局三语引擎且定义了 bgmAria 键，用页面引擎的字典，否则退回上面的 BGM_T */
 (function(){
 'use strict';
 var btn = document.getElementById('bgmBtn');
 if(!btn) return;
 var audio = null;
 
+/* 语言文案就地切换（兼容孤立的 bgm 模板，也兼容页面已有 site:lang 的结构） */
+function applyBgmI18n(lang){
+  lang = lang || (window.CASE_LANG || 'en');
+  var D = (window.BGM_T && BGM_T[lang]) || {};
+  [['bgmLabel','data-i18n'],['bgmAria','data-i18n-aria'],['bgmTitle','data-i18n-title']].forEach(function(p){
+    var k=p[0], attr=p[1], el = btn.querySelector('[data-i18n="'+k+'"]') || btn;
+    if(attr === 'data-i18n'){ if(el && D[k]) el.textContent = D[k]; }
+    else if(D[k]) btn.setAttribute(attr === 'data-i18n-aria' ? 'aria-label' : 'title', D[k]);
+  });
+}
+applyBgmI18n(window.CASE_LANG);
+document.addEventListener('site:lang', function(e){ applyBgmI18n(e.detail); });
+
 function ensure(){
   if(audio) return;
-  audio = new Audio('/assets/audio/bgm.mp3');
+  audio = new Audio('assets/audio/bgm.mp3');
   audio.loop = true;
   audio.volume = 0.7;
   audio.preload = 'none';

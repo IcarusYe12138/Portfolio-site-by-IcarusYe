@@ -9,6 +9,10 @@
     · marquee.html     — 无限滚动条（克隆回卷 + 拖拽 + 联动暂停）
     · audio-player.html— 内嵌播放器（seek + 单实例）
     · tile-field.html  — 参数化磁贴背景场
+  注：本示例页为「双击即跑」的低开销最小演示，刻意用 ES5（var/function，无 Babel/构建）——
+      现代浏览器其实已完全支持 ES2015+，模板本体（templates/ 下）用的是 ES2015+；
+      若把本页改成对应模板的现代语法，性能/可读性更接近生产，但失去「零依赖裸跑」的意义。
+  对应：references/02-components.md / 09-performance.md（懒加载与动画纪律）
 -->
 <html lang="en">
 <head>

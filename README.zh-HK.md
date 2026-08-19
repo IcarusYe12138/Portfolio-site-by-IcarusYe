@@ -37,7 +37,7 @@
 | 靜態托管 | [Cloudflare Pages](https://pages.cloudflare.com/) | 直傳零建構；單檔 25 MiB 上限 |
 | 對象存儲（內地向） | [騰訊雲 COS](https://cloud.tencent.com/product/cos) · [阿里雲 OSS](https://cn.aliyun.com/product/oss) | 大媒體外置，內地直連穩定 |
 | 對象存儲（海外向） | [Cloudflare R2](https://www.cloudflare.com/products/r2/) | 零出流量費；同 Pages 同帳戶 |
-| 兩地可達性檢測 | [ITDOG HTTP 檢測](https://www.itdog.cn/http/) · [探測網](https://www.tanceshu.net/) · [kk.yun 快快測](https://www.kk.yun.com/) · [DNSPup](https://www.dnspup.com/) | 全國多省份 + 海外節點並發測 Ping/TCP/HTTP/DNS/SSL；某平台節點腳下用第二個當後備 |
+| 兩地可達性檢測 | [ITDOG HTTP 檢測](https://www.itdog.cn/http/) | 全國多省份 + 海外節點並發測線上 URL；每次部署後跑一遍 |
 | 電子名片（海外） | [Popl](https://popl.co/) | 可內嵌名片 iframe |
 | 電子名片（內地） | [muse link](https://muselink.cc/) | 內地可達嘅名片 iframe |
 | 作品清單載體 | [飛書](https://www.feishu.cn/) | 多維表格：一行一件作品、連結分欄 |
@@ -202,3 +202,7 @@ npx skills add https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe
 [MIT](LICENSE) · Copyright (c) 2026 IcarusYe12138
 
 方法論與代碼骨架可以自由重用；佢提煉來源嘅作品集仍歸作者本人所有。
+
+## 連結時效
+
+文檔入面嘅外部連結（產品頁、GitHub 倉庫、社區 skill）喺撰寫時（2026-08）已驗證可達，但隨時可能郁動或下架。若某個推薦連結失效或工具停咗，請按**同類能力**而唔係**具體品牌**去替換（例如「換一個靜態托管」「換一個識生圖嘅 agent」）——方法論一樣成立。若你發現失效連結，歡迎提 PR 或 issue。

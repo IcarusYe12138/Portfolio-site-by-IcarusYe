@@ -4,6 +4,7 @@
         rAF 推进 scrollLeft，越半宽回卷=无缝循环；鼠标拖拽 1:1 跟手，松手 ~400ms 恢复；
         触屏走原生滚动（touchstart 暂停自动滚，touchend 600ms 后恢复）；
         hover 任一带暂停【所有】带（联动计数）；克隆节点剥离 data-count 防重复动画。
+  对应：references/02-components.md（sr-only 镜像）、08-accessibility-motion.md（reduced-motion 守卫）
   关键坑：不要用 scroll 事件判断用户操作（自动滚也会触发）——只认真实输入。
   行速度经 CSS 变量 --mq-dur（秒/半程）控制，多带可差速。
 -->

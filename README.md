@@ -37,7 +37,7 @@ The kit is distilled from the real-world experience of building [icarusye.site](
 | Static hosting | [Cloudflare Pages](https://pages.cloudflare.com/) | Direct upload, zero build, 25 MiB per-file limit |
 | Object storage (mainland) | [Tencent COS](https://cloud.tencent.com/product/cos) · [Aliyun OSS](https://cn.aliyun.com/product/oss) | For large media when mainland reach matters |
 | Object storage (global) | [Cloudflare R2](https://www.cloudflare.com/products/r2/) | Zero egress fees; same account as Pages |
-| Reachability check (multi-node ping/speed) | [ITDOG HTTP](https://www.itdog.cn/http/) · [探测网](https://www.tanceshu.net/) · [kk.yun / 快快测](https://www.kk.yun.com/) · [DNSPup](https://www.dnspup.com/) | Multi-province mainland + overseas nodes probe ping/TCP/HTTP/DNS/SSL on your live URL; use a second one when nodes wobble or as backup |
+| Reachability check | [ITDOG HTTP](https://www.itdog.cn/http/) | Multi-province mainland + overseas nodes probe your live URL after every deploy |
 | Digital card (global) | [Popl](https://popl.co/) | Embeddable card iframe |
 | Digital card (mainland) | [muse link](https://muselink.cc/) | Mainland-reachable card iframe |
 | Works inventory carrier | [Feishu](https://www.feishu.cn/) | Structured base (one row per work, link columns) |
@@ -202,3 +202,7 @@ The `references/` folder reads as a standalone handbook (written in Chinese; thi
 [MIT](LICENSE) · Copyright (c) 2026 IcarusYe12138
 
 The methodology and code skeletons are free to reuse; the portfolio they were distilled from remains the author's own work.
+
+## Link freshness
+
+External links (product pages, GitHub repos, community skills) were verified as reachable at the time of writing (2026-08) but can move or be taken down. If a recommended link goes stale or the tool is discontinued, replace it by **capability** (e.g. "another static host", "another image-capable agent") rather than by the exact brand — the methodology holds regardless. If you find a dead link, please open a PR or an issue.

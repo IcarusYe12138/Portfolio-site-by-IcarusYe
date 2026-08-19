@@ -37,7 +37,7 @@
 | 静态托管 | [Cloudflare Pages](https://pages.cloudflare.com/) | 直传零构建；单文件 25 MiB 上限 |
 | 对象存储（内地向） | [腾讯云 COS](https://cloud.tencent.com/product/cos) · [阿里云 OSS](https://cn.aliyun.com/product/oss) | 大媒体外置，内地直连稳定 |
 | 对象存储（海外向） | [Cloudflare R2](https://www.cloudflare.com/products/r2/) | 零出口流量费；与 Pages 同账号 |
-| 两地可达性检测 | [ITDOG HTTP 检测](https://www.itdog.cn/http/) · [探测网](https://www.tanceshu.net/) · [kk.yun 快悐测](https://www.kk.yun.com/) · [DNSPup](https://www.dnspup.com/) | 全国多省份 + 海外节点并发测 Ping/TCP/HTTP/DNS/SSL；某平台节点抖动用第二个当备用 |
+| 两地可达性检测 | [ITDOG HTTP 检测](https://www.itdog.cn/http/) | 全国多省份 + 海外节点并发测线上 URL；每次部署后跑一遍 |
 | 电子名片（海外） | [Popl](https://popl.co/) | 可嵌入名片 iframe |
 | 电子名片（内地） | [muse link](https://muselink.cc/) | 内地可达的名片 iframe |
 | 作品清单载体 | [飞书](https://www.feishu.cn/) | 多维表格：一行一作品、链接分列 |
@@ -202,3 +202,7 @@ npx skills add https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe
 [MIT](LICENSE) · Copyright (c) 2026 IcarusYe12138
 
 方法论与代码骨架可自由复用；其提炼来源的作品集仍归作者本人所有。
+
+## 链接时效
+
+文档中的外部链接（产品页、GitHub 仓库、社区 skill）在撰写时（2026-08）已验证可达，但随时可能变动或下架。若某个推荐链接失效或工具停更，请按**同类能力**而非**具体品牌**去替换（例如「换一个静态托管」「换一个能生图的 agent」）——方法论依然成立。若你发现失效链接，欢迎提 PR 或 issue。

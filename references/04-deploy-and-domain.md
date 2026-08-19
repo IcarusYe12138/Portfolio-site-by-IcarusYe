@@ -4,6 +4,23 @@
 
 **推荐基线**：[Cloudflare Pages](https://pages.cloudflare.com/)（或同类静态托管）Direct Upload——拖目录上传即部署，**零构建命令、零框架依赖**。
 
+### 为什么默认 Cloudflare Pages（选型理由）
+
+- **直传零构建**：符合本方法论「静态优先、不引框架」——目录拖上去就上线，没有 CI / build step 要维护；
+- **缓存控制到位**：`_headers` 能对 CSS/JS 精准发 `immutable + 1y`（缓存纪律的基础）；`?v=` 纪律这套就是围绕它设计的；
+- **内地可达性可控**：`*.pages.dev` 在内地时通时断，但绑自定义域名走 CF 解析通常比同类海外托管更稳——本方法论正是「海外为主 + 内地尽力可达」的定位；
+- **免费 + 25 MiB 单文件**：对个人作品集足够，大媒体按要求外置对象存储。
+
+### 换其他平台要替换的东西（选 CF Pages 之外的托管时）
+
+| 平台 | 主要差异 / 需要替换 |
+|---|---|
+| **Vercel** | 无 `_headers`，改 `vercel.json` 的 `headers`；缓存行为不同，`?v=` 纪律仍适用但验证方式变；`*.vercel.app` 内地更不稳 |
+| **Netlify** | `_headers` 语法兼容，但 `/*` 通配与续行写法略有差异需核对；`serveRedirects` 环境差异 |
+| **GitHub Pages** | 没有服务端 `_headers`，缓存头不可控——CSS/JS **必须** `?v=` 且要在文件名上做缓存破坏，靠提交频率控制；大文件（>100MB 被禁）严格外置；不建库直接拖目录的「纯直传」不存在，要进 repo + Actions |
+
+结论：方法论（静态优先、缓存破坏、双链路、字体分片）在**任何**静态托管都成立；只有「部署形态 + 缓存头写法」随平台换。本文档其余实操（绑定域名、`_headers`、排障）以 CF Pages 为基准。
+
 **要点**：
 - 输出目录 = 仓库根目录；HTML/CSS/JS/字体/装饰 SVG 全在页面层；
 - 大媒体（PDF、长视频、长音频）放**对象存储**（[腾讯云 COS](https://cloud.tencent.com/product/cos) / [阿里云 OSS](https://cn.aliyun.com/product/oss) / [Cloudflare R2](https://www.cloudflare.com/products/r2/)，选型对比见 `03-media-compat.md`），页面层直链——绕开单文件 25 MiB 上限，也省钱流量；
@@ -133,13 +150,6 @@
 - [ ] 上线后用「无梯子的内地网络 + 手机流量」实测一遍全站
 
 **两地可达性批量验证工具**：[ITDOG HTTP 检测](https://www.itdog.cn/http/)——输入线上 URL，从全国多省份节点 + 海外节点并发测 http/https 可用性，一眼看出「哪些省份红、哪些绿」。部署完成后、以及每次大版本上线后跑一遍（内网渗透测试不必，纯可达性抽样足够）；比手工找两地朋友实测快得多，**但它不能完全替代真实设备实测**——手机流量 + 无痕窗口过一遍仍是最终判据。
-
-**同类替代与备份**（节点抖动用第二个交叉验证，别单一依赖）：
-- [探测网](https://www.tanceshu.net/)——功能与 itdog 高度重合：Ping / 网站测速 / TCPing / 路由 / DNS / SSL / IP 归属，支持 IPv4+IPv6、按运营商筛选，可作主力或替代；
-- [kk.yun（快快测）](https://www.kk.yun.com/)——多节点 Ping/TCPing、全链路测速（DNS/TCP/SSL/TTFB 分阶段）、路由 MTR；界面清爽、无烦人广告，适合当 ITDOG 的备用；
-- [DNSPup](https://www.dnspup.com/)——除 Ping/Tcping/测速/DNS/路由外，另有 IP 纯净度、DNS 泄漏、WebRTC 泄漏检测——排查「境内打不开」之外的出境/代理类问题时更全。
-
-测的是同一件事，选一个顺手的主力 + 一个备用即可，不用都装。
 
 ## 六、域名购买指南
 

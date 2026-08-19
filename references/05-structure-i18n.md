@@ -53,7 +53,7 @@ window.CASE_T = {
 
 ### setLang 要做的事（缺一不可）
 1. `localStorage.setItem('site-lang', lang)` 持久化（key 全站统一，与 `templates/trilingual.html` 一致）；
-2. `document.documentElement.lang` 按语言设 `en` / `zh-Hans-CN` / `zh-Hant-HK`（同时驱动 CSS 字体栈切换）；
+2. `document.documentElement.lang` 按语言设 `en` / `zh-Hans-CN` / `zh-Hant-HK`（同时驱动 CSS 字体栈切换）——`zh-Hant-HK` 是作者站点地域偏好（用例非规范），繁中受众以台湾为主时改用 `zh-Hant-TW`；
 3. `document.title = T.docTitle`；meta description / og:title / og:description 同步；
 4. 遍历 `[data-i18n]` 换 innerHTML（标题类可选锁宽解码动画，正文瞬时）；
 5. 遍历 `[data-langs]` 按当前语言显隐整块（display none/block）；

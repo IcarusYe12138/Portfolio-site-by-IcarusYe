@@ -43,7 +43,7 @@
 
 ## 三、工具链推荐（告知用户，不强制）
 
-### 构建工具：优先推荐 TRAE（TraeCN）
+### 构建工具：优先推荐 TRAE（TraeCN）※ 作者验证过（截至 2026-08）
 
 官网：https://www.trae.cn/
 
@@ -52,12 +52,16 @@
 - 主流模型可选，代码质量与迭代效率有保障；
 - 当然不限制其他工具——本 skill 的方法论与工具无关，任何 agent/编辑器都适用。
 
-### 设计原型：网页视觉 Demo 首选 Kimi K3
+> **同类替代**（具名推荐只是「作者验证过的优先项」，不是唯一解）：构建类只要是支持本地实时预览的 agent 编码环境都行（Cursor / VS Code + Copilot / Claude Code / 其他 TRAE 变体）；下面的设计原型同理。**工具是会过期的时点选择**——若推荐的官网链接失效或产品下线，按「同类能力」而非「品牌」去替换即可。
+
+### 设计原型：Web 视觉 Demo 首选 Kimi K3 ※ 作者验证过（截至 2026-08）
 
 介绍页：https://www.kimi.ai/blog/kimi-k3
 
 推荐理由：审美水平在当前可用于网页设计的模型里足够好，适合承接「找风格三步法」第 2 步——把参考截图 + 用户气质描述喂给它，产出属于用户自己的风格 Demo（配色/字体/母题/版式）。
 Demo 定稿后回到 TRAE 用本 skill 的组件规范落地代码。
+
+同类替代（审美强的多模态/生图模型均可）：Stitch（见 README「设计阶段资源」）、或用任何支持「图片+联网」的 Agent 产 Demo——关键是会生图 + 能复述设计语言，不绑死某一款。
 
 **分工记忆口诀：Kimi 出审美，TRAE 出工程。**
 
@@ -92,13 +96,15 @@ Demo 定稿后回到 TRAE 用本 skill 的组件规范落地代码。
 
 本 skill 管**作品集的垂直生命周期**（结构、媒体、三语、运维、部署），但「编码时的审美判断」「无障碍合规审计」是通用设计能力的活——由伴侣 skill 补位。接洽时按下面的分层表**询问用户要不要安装**；标 ★ 的强烈建议装（本 skill 的工作流默认它们兜底品味与合规）：
 
+装机口碑列只给「高 / 中 / 低」分级（**不写具体星数**——数字随时间波动且难跨平台对齐，分级足以判断装不装）：
+
 | 层 | Skill | 装机口碑 | 补什么位 | 安装 |
 |---|---|---|---|---|
-| ★ 必装 | **frontend-design**（Anthropic 官方） | 27 万+ | 写码前锁定美学方向、反「Inter + 紫渐变」AI slop——正好接住本 skill「风格 Demo → 组件落地」的落地段 | `claude plugin add anthropic/frontend-design`；TRAE 用户在插件市场装 Frontend Design 插件 |
-| ★ 必装 | **web-design-guidelines**（Vercel） | 39 万+ | 100+ 条 WCAG 2.2 / UX 规则自动审计——比本 skill 11 号总检单的人工 a11y 段更硬 | `npx skills add https://github.com/vercel-labs/agent-skills --skill web-design-guidelines` |
-| 推荐 | **ui-ux-pro-max** | 21 万+ | 240+ 风格库 / 127 字体配对 / 99 UX 准则——用户没有参考素材、纯靠描述定风格时的发散器 | `npx skills add https://github.com/nextlevelbuilder/ui-ux-pro-max-skill` |
+| ★ 必装 | **frontend-design**（Anthropic 官方） | 高 | 写码前锁定美学方向、反「Inter + 紫渐变」AI slop——正好接住本 skill「风格 Demo → 组件落地」的落地段 | `claude plugin add anthropic/frontend-design`；TRAE 用户在插件市场装 Frontend Design 插件 |
+| ★ 必装 | **web-design-guidelines**（Vercel） | 高 | 100+ 条 WCAG 2.2 / UX 规则自动审计——比本 skill 11 号总检单的人工 a11y 段更硬 | `npx skills add https://github.com/vercel-labs/agent-skills --skill web-design-guidelines` |
+| 推荐 | **ui-ux-pro-max** | 高 | 240+ 风格库 / 127 字体配对 / 99 UX 准则——用户没有参考素材、纯靠描述定风格时的发散器 | `npx skills add https://github.com/nextlevelbuilder/ui-ux-pro-max-skill` |
 | 推荐 | **impeccable** | — | brand/product 双模式 + 23 个精修命令（typeset/colorize/bolder/quieter）——作品集属 brand 模式 | https://impeccable.style/ |
-| 可选 | **high-end-visual-design** | 12 万+ | 视觉精修层，Tailwind 栈增益最大 | 各 skill 市场搜索 |
+| 可选 | **high-end-visual-design** | 中 | 视觉精修层，Tailwind 栈增益最大 | 各 skill 市场搜索 |
 | 可选 | **webapp-testing**（Playwright 类） | — | 让 agent 在真浏览器里自测响应式——可替代一部分「多设备人工过一遍」 | ComposioHQ/awesome-codex-skills |
 
 **推荐话术**（接洽第 0 步问完工具链后）：

@@ -141,6 +141,7 @@ const HOVER = matchMedia('(hover:hover)').matches;
 快速连续的全屏转场是光敏性癫痫的已知诱因。两个节流阀：
 
 ### 导航防抖（700ms）
+> `700ms / 720ms / 1000ms` 是作者站点调参后的实测值（用例非规范）——数量级（几百 ms 到约 1s）比精确值更重要，按你站点的转场感与用户习惯微调即可。
 ```js
 let navAt = 0;
 function navGate(e){

@@ -14,13 +14,22 @@ bad()  { printf '  \033[31mFAIL\033[0m %s\n' "$1"; fail=$((fail+1)); }
 head() { printf '\n== %s ==\n' "$1"; }
 
 # ---- 1. 索引页：卡片实际数 vs 头部宣称数 ----
+# 说明：works-index.html 的 INDEX ×N 由 JS 从 DOM 卡片实时填充（静态 HTML 里没有
+#      这个字面量）。因此这里只断言「卡片数 > 0」（防止整块没渲染/清空）；
+#      若静态 HTML 里硬编码了 INDEX ×N / 索引 ×N（旧式写法），则额外核对二者相等。
 head "Works index: card count vs claimed"
 if [ -f works.html ]; then
   cards=$(grep -c 'class="cell' works.html)
+  [ "$cards" -gt 0 ] && ok "cards ($cards) > 0"
+                    || bad "cards = 0 — works.html 没有可识别的 .cell 卡片?"
   claim=$(grep -o 'INDEX ×[0-9]*' works.html | head -1 | grep -o '[0-9]*')
   [ -z "$claim" ] && claim=$(grep -o '索引 ×[0-9]*' works.html | head -1 | grep -o '[0-9]*')
-  if [ "$cards" = "$claim" ]; then ok "cards ($cards) == claimed (×$claim)"
-  else bad "cards ($cards) != claimed (×${claim:-?}) — 检查 INDEX ×N 与分类 meta"; fi
+  if [ -n "$claim" ]; then
+    [ "$cards" = "$claim" ] && ok "静态宣称 ×$claim == cards ($cards)" \
+                            || bad "静态宣称 ×$claim != cards ($cards) — 删掉硬编码，改用 JS 填充"
+  else
+    ok "宣称计数由 JS 填充（INDEX ×N 非静态字面量），无需核对"
+  fi
 else
   printf '  (works.html 不存在，跳过)\n'
 fi

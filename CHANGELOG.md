@@ -2,11 +2,37 @@
 
 本 skill 自身的迭代记录（践行 `references/06-iteration.md` 的方法论）。格式参考 Keep a Changelog；版本号语义化。
 
+> 版本节奏说明：v0.1.0–0.2.0 为发布前一次性补写的初始历史（同日批量打标）。**自 v0.3.0 起改为「一轮一版」**——每次实质改动严格递增小版本（0.5.x → 0.5.x+1），与 `06-iteration.md` 倡导的一轮一主题节奏对齐。
+
+## [0.5.0] — 2026-08-19
+
+### Fixed
+- **`tools/audit.sh` 与 `works-index` 自相矛盾（真 bug）**：INDEX×N 由 JS 从 DOM 填充，静态 HTML 无此字面量，旧检查必然误报 FAIL——改为先断言卡片数>0，静态含硬编码声明时才额外核对；
+- **`templates/bgm.html` 唯一未字典化 aria/title**：aria-label/title/按钮文字全部走三语字典（新增 BGM_T + site:lang 监听），并补占位替换提示；
+- **`templates/trilingual.html` 引擎不支持 og:image**：新增 `data-i18n-prop`/`data-i18n-key` 通用 meta 扩展点（附 `_ogImage` 用例），`_desc/_ogTitle/_ogDesc` 之外任意 meta 可随语言切换。
+
+### Changed
+- **B4**：6 个模板（404 / audio-player / tile-field / marquee / regional-links / minimal）补文件头「对应 references/」标注；
+- **B5**：`case-page.html` zh/tw 字典由空注释改为「复制 en key + 待填译文」的显式骨架，防漏填；
+- **B6**：`trilingual.html` 中文解码字池 POOL_C 注释扩为「必须覆盖站内高频汉字」，并支持 `window.SITE_POOL_C` 覆盖；
+- **B8/B13**：`minimal.html` 与 `02` 文档声明 ES 版本降级理由（ES5 = 零依赖裸跑/最小自包含；模板本体 ES2015+）；
+- **B9/B10**：`tools/README` 增 JOBS 字段 schema 示例 + 图片处理 Linux/Windows（ImageMagick）替代命令；
+- **B12**：HTML 体量阈值统一到 `09`（50–100KB 正常 / >150KB 警惕 / >300KB 污染；`wc -c`），07/11 改引用；
+- **B14**：`00` 伴侣 skill「装机口碑」由具体星数改为「高/中/低」分级（数字随市场波动，分级足够判断）；
+- **B15**：三语 README 末尾新增「链接时效」声明——外部链接按能力而非品牌替换，失效欢迎提 PR。
+
+### Added（声明类）
+- **A1**：`tools/README` 新增 cn-font-split 单点依赖提示 + 兜底路线（fonttools woff2_compress / fontmin）；
+- **A2**：示例值标记「⚠ 用例非规范」——`01` 色彩 token、`05` hreflang 地域偏好、`08` 动效常量；
+- **A3**：`00` 工具链标注「作者验证过（截至 2026-08）」+ 同类替代说明（工具是会过期的时点选择）；
+- **A4**：`04` 新增「为什么默认 Cloudflare Pages」选型理由 + 换 vercel/netlify/github pages 要替换的东西对照表；
+- **A5**：`CHANGELOG` 顶部补版本节奏说明（0.1.0–0.2.0 为补写历史，自 0.3.0 起一轮一版）。
+
 ## [0.4.2] — 2026-08-19
 
 ### Changed
 - **移除 vercel-domain 推荐**（三语 README）——未找到可靠独立 skill 仓库，按作者要求删去该行描述。
-- **可达性检测扩为多平台**（README 双语推荐服务表 + `04` 两地可达性节）：在 ITDOG 基础上新增 探测网 / kk.yun（快快测）/ DNSPup，各附一句定位（重合替代 / 备用 / 出境与代理场景更全）与「选一主力 + 一备用即可」的建议。
+- **可达性检测保持 ITDOG 单一**（README 双语推荐服务表 + `04` 两地可达性节）：按作者要求仅保留 ITDOG，不扩多平台（此前评估的探测网/kk.yun/DNSPup 一律不列入）。
 
 ### Added
 - **图表/数据可视化 skill [lieflat-charts](https://github.com/larashero3-dotcom/lieflat-charts)**（三语 README「设计阶段资源」新增图表小节）——面向 AI agent 的数据可视化 skill，把数据转成精致可交互的 HTML 图表（指标 / 时间线 / 分布），无需重型图表库，适合作品集呈现数据；自带 `SKILL.md`。
