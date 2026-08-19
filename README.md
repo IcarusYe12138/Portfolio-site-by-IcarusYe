@@ -143,7 +143,7 @@ portfolio-site-kit/
 Fastest — npm (no git needed, works well where GitHub is slow):
 
 ```bash
-npx portfolio-site-kit@latest
+npx @icaruye/portfolio-site-kit@latest
 ```
 
 The installer auto-detects your agent's skills directory (TRAE / Claude Code / Codex / Cursor / OpenCode); add `--dir <path>` to choose manually, `--force` to overwrite an existing install.

@@ -17,7 +17,7 @@ const os = require('os');
 const path = require('path');
 const readline = require('readline');
 
-const SKILL_NAME = 'portfolio-site-kit';
+const SKILL_NAME = '@icaruye/portfolio-site-kit';
 const ASSETS = ['SKILL.md', 'references', 'templates', 'tools', 'examples'];
 
 // Candidate skills directories: [agent label, dir under home]

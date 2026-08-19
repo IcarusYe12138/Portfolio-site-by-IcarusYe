@@ -7,7 +7,7 @@
 ## [0.7.0] — 2026-08-19
 
 ### Added
-- **npm 包分发**：`npx portfolio-site-kit@latest` 一键安装——零依赖 Node 安装器（`bin/portfolio-site-kit.js`）自动探测 agent skills 目录（TRAE / TRAE CN / Claude Code / Codex / Cursor / OpenCode），`--dir` 手动指定、`--force` 覆盖更新；npm registry 对内地比 GitHub 稳定，`git clone` 与 skills CLI 保留为备选；新增 `package.json`（files 白名单 35 文件 / 126.8 kB tarball，`npm pack --dry-run` 验证通过）；
+- **npm 包分发**：`npx @icaruye/portfolio-site-kit@latest` 一键安装——零依赖 Node 安装器（`bin/portfolio-site-kit.js`）自动探测 agent skills 目录（TRAE / TRAE CN / Claude Code / Codex / Cursor / OpenCode），`--dir` 手动指定、`--force` 覆盖更新；npm registry 对内地比 GitHub 稳定，`git clone` 与 skills CLI 保留为备选；新增 `package.json`（files 白名单 35 文件 / 126.8 kB tarball，`npm pack --dry-run` 验证通过）；
 - **`00` 新增「按需主动推荐（需求触发式）」触发表**：接洽期问一次不够——建站全程留意用户需求信号（找图标 / 出原型 / 做图表 / 电子名片 / 大文件存储 / logo / 情报查询 / MCP），命中即主动介绍 + 问要不要装，附三条硬规则（主动介绍 ≠ 擅自安装、一次只推 1–2 项、无信号不打扰）；`SKILL.md` 推荐工作流第 0 步同步加入该纪律。
 
 ### Changed

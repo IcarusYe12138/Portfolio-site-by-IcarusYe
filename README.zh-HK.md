@@ -143,7 +143,7 @@ portfolio-site-kit/
 最快——npm（唔使 git，GitHub 慢嘅地區都裝得順）：
 
 ```bash
-npx portfolio-site-kit@latest
+npx @icaruye/portfolio-site-kit@latest
 ```
 
 安裝器會自動探測你個 agent skills 目錄（TRAE / Claude Code / Codex / Cursor / OpenCode）；加 `--dir <路徑>` 手動指定，`--force` 覆蓋已有安裝。
