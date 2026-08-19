@@ -83,7 +83,7 @@ portfolio-site-kit/
 ├── CHANGELOG.md                  版本日志（本 skill 自身的迭代记录）
 ├── references/                   ← 分主题深度文档
 │   ├── 00-onboarding.md          ★ 首次接洽：问卷、素材载体、工具链与隐私红线
-│   ├── 01-design-and-style.md    设计规范与「找风格」方法论（含书面 Style Spec、文案纪律）
+│   ├── 01-design-and-style.md    设计规范与「找风格」方法论（含书面 Style Spec、文案纪律、设计阶段资源速查）
 │   ├── 02-components.md          组件规范（顶栏/卡片/筛选/播放器/磁贴场/详情页/预载器/Contact/嵌入名片/Colophon…）
 │   ├── 03-media-compat.md        ★ 音视频与图文的跨地域兼容（含区域差异四层清单）
 │   ├── 04-deploy-and-domain.md   部署、缓存、域名购买指南、SEO 基础、隐私友好统计与合规、内地可达
@@ -128,6 +128,7 @@ portfolio-site-kit/
    - 引导作品清单进结构化载体（飞书 / Markdown / Excel）；
    - 告知工具链：构建推荐 TRAE（多设备实时预览，https://www.trae.cn/ ），设计原型推荐 Kimi K3（审美在线，https://www.kimi.ai/blog/kimi-k3 ）——不强制；可选 MCP（github / cloudflare / AnySearch）、多模态理解（Qwen-MM-Plugins）、网页版 logo 生成器见 `00-onboarding.md`；
    - **询问伴侣 skill**：审美与无障碍兜底建议装 frontend-design（Anthropic 官方）+ web-design-guidelines（Vercel）——先问用户是否已有同类，推荐分层表与话术见 `00-onboarding.md`；
+   - **按需主动推荐（建站全程生效）**：留意用户实操中的需求信号（找图标 / 出原型 / 做图表 / 电子名片 / 大文件存储 / logo / 情报查询 / MCP 提效）——命中即按 `00-onboarding.md`「按需主动推荐」表介绍相关工具/skill/MCP，**问用户要不要装，许可后才行动**；
    - **绝不擅自安装任何 MCP 或 skill**——只推荐、给命令与理由，安装须用户明确许可；
    - **信息缺失就反问，不擅自代答**。
 1. **定性风格**（→ `01`）：参考素材 + 作者专业方向 → 交给任意可用图片的 Agent（Kimi K3 推荐）产出属于作者自己的 Demo；锁定为书面 Style Spec 再动代码，不预设审美、不照抄。

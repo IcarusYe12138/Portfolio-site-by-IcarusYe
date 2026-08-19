@@ -101,3 +101,41 @@
 | 语言切换做全页扫描线/字符滚轮 | 高频操作动效喧宾夺主、引发布局抖动（详见 07 坑 #14） |
 | 直接复刻某个知名网站 | 一是版权/气质错配，二是作者自己的内容撑不起来 |
 | 灰度 hover 滤镜无媒体查询 | 触屏设备无 hover，图片永远灰色（详见 07 坑 #13） |
+
+## 五、设计阶段资源（按需主动推荐）
+
+> 本节是**推荐速查表**：当用户在实际建站中表现出对应需求（找图标、要原型、做图表、纠结装不装设计类 skill），**主动开口介绍下表相关项、问要不要用/装**——经许可才行动，绝不擅自安装（安装纪律见 `00-onboarding.md`）。评级是作者主观评估，不强制。
+
+### 图标库（用户说「要放社交媒体/品牌图标」时）
+
+| 库 | 风格 | Agent 调用 | 覆盖 | 许可/注意 |
+|---|---|---|---|---|
+| [simple-icons](https://github.com/simple-icons/simple-icons) ★ 首选 | 单色极简剪影，3300+ 品牌 | CDN 按 slug 直链 | QQ/微博/B 站/小红书 + 几乎全海外 | **CC0 免署名**，行业标准 |
+| [NViconsLib Silhouette](https://github.com/nullice/NViconsLib_Silhouette) | 纯剪影，专为内地+全球社媒 | GitHub Raw 直链 | 微信/QQ 空间/微博 + 海外 | 上游缺内地平台的补充 |
+| [thesvg](https://github.com/glincker/thesvg) | 极简品牌 SVG，6000+ | `@thesvg/mcp-server` 对话式 | 含微博，持续更新 | 按名字调工具，不用手写 URL |
+| [icons8-mcp](https://github.com/icons8/icons8-mcp) | 116 风格、36 万+ | 官方 MCP，自然语言搜 | 按名可命中，需人工核实 | 免费只出 PNG，SVG 要 Key |
+
+### 设计与原型工具（用户没参考素材 / 想快速出多屏原型时）
+
+| 工具 | 作用 |
+|---|---|
+| [Google Stitch](https://stitch.withgoogle.com/) | Gemini AI UI 生成：文字/草图/截图 → 多屏原型 + 代码；可提取现有网站设计系统 |
+| [Design Skills Hub](https://designskills.xyz/skills)（官网 [vaporaviator.com/works/design-skills-hub](https://vaporaviator.com/works/design-skills-hub)） | 社区设计技能注册中心：审美 + 工程两种 skill；可把 Figma 导出成复用 skill |
+
+两者互补：Stitch **生成** UI，Design Skills Hub **编码设计判断**。同类替代见 `00-onboarding.md` 的「工具是会过期的时点选择」原则。
+
+### 图表 / 数据可视化（用户说「想放数据图表」时）
+
+| Skill | 作用 |
+|---|---|
+| [lieflat-charts](https://github.com/larashero3-dotcom/lieflat-charts) ★ | 面向 agent 的数据可视化：数据 → 精致可交互 HTML 图表（指标/时间线/分布），无需重型图表库，自带 SKILL.md |
+
+### 前端设计 skill（用户问「要不要装 XX 设计 skill」时）
+
+| Skill | 结论 |
+|---|---|
+| **Design Tokens**（OKLCH）— [XINGANLIU/design-system-generator-skill](https://github.com/XINGANLIU/design-system-generator-skill) ★ | 改一个 `hue` 全站换色，契合静态优先 + 单一强调色 |
+| **identity-skill** — [Sac-Y/identity-skill](https://github.com/Sac-Y/identity-skill) | 可选：先出参考图确认再 1:1 还原，依赖生图模型 |
+| **Motion Skill**（Framer Motion）— [schoepplake/framer-motion-skill](https://github.com/schoepplake/framer-motion-skill) | **本栈不推荐**：面向 React，与静态优先冲突 |
+
+一句话：在意色彩科学装 **Design Tokens**；做 React 才考虑 **Motion Skill**（超本 kit 范围）；其余按需。

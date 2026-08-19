@@ -140,7 +140,15 @@ portfolio-site-kit/
 
 ## Install
 
-One-time setup (TRAE or any agent with skill support):
+Fastest — npm (no git needed, works well where GitHub is slow):
+
+```bash
+npx portfolio-site-kit@latest
+```
+
+The installer auto-detects your agent's skills directory (TRAE / Claude Code / Codex / Cursor / OpenCode); add `--dir <path>` to choose manually, `--force` to overwrite an existing install.
+
+Alternatives:
 
 ```bash
 git clone https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe.git \
@@ -149,7 +157,7 @@ git clone https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe.git \
 npx skills add https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe
 ```
 
-(Or just copy the repository folder into your skills directory.) Afterwards, saying "build a portfolio / restyle it / add languages / fix mainland access" auto-invokes it. `tools/` and `examples/` ship with the repo.
+(Or just copy the repository folder into your skills directory.) Afterwards, saying "build a portfolio / restyle it / add languages / fix mainland access" auto-invokes it. `tools/` and `examples/` ship with the package.
 
 ## Recommended toolchain
 

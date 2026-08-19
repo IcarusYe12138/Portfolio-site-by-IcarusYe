@@ -1,0 +1,45 @@
+{
+  "name": "portfolio-site-kit",
+  "version": "0.7.0",
+  "description": "Agent skill for building trilingual (EN / 简中 / 繁中) personal portfolio static sites: plain HTML/CSS/JS, zero frameworks, zero build, global + mainland-China friendly. A methodology, not a template.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe.git"
+  },
+  "homepage": "https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe#readme",
+  "bugs": "https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe/issues",
+  "keywords": [
+    "agent-skills",
+    "ai-agents",
+    "portfolio",
+    "personal-website",
+    "static-site",
+    "trilingual",
+    "i18n",
+    "html-css-javascript",
+    "cloudflare-pages",
+    "no-build"
+  ],
+  "bin": {
+    "portfolio-site-kit": "bin/portfolio-site-kit.js"
+  },
+  "files": [
+    "SKILL.md",
+    "references/",
+    "templates/",
+    "tools/",
+    "examples/",
+    "README.md",
+    "README.zh-CN.md",
+    "README.zh-HK.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=16.7"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -140,7 +140,15 @@ portfolio-site-kit/
 
 ## 安装
 
-一次装好（TRAE 或任意支持 skill 的 agent）：
+最快——npm（无需 git，GitHub 慢的地区也能顺畅装）：
+
+```bash
+npx portfolio-site-kit@latest
+```
+
+安装器会自动探测你的 agent skills 目录（TRAE / Claude Code / Codex / Cursor / OpenCode）；加 `--dir <路径>` 手动指定，`--force` 覆盖已有安装。
+
+其他方式：
 
 ```bash
 git clone https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe.git \
@@ -149,7 +157,7 @@ git clone https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe.git \
 npx skills add https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe
 ```
 
-（也可直接把仓库文件夹复制进你的 skills 目录。）之后你说「建作品集 / 改版 / 加语言 / 解决国内打不开」，agent 会自动调用。`tools/` 与 `examples/` 随仓库分发。
+（也可直接把仓库文件夹复制进你的 skills 目录。）之后你说「建作品集 / 改版 / 加语言 / 解决国内打不开」，agent 会自动调用。`tools/` 与 `examples/` 随包分发。
 
 ## 推荐工具链
 
