@@ -4,6 +4,16 @@
 
 > 版本节奏说明：v0.1.0–0.2.0 为发布前一次性补写的初始历史（同日批量打标）。**自 v0.3.0 起改为「一轮一版」**——每次实质改动严格递增小版本（0.6.x → 0.6.x+1），与 `06-iteration.md` 倡导的一轮一主题节奏对齐。
 
+## [0.6.1] — 2026-08-19
+
+### Changed
+- **英文 README 按 humanizer skill（[blader/humanizer](https://github.com/blader/humanizer)，基于 Wikipedia「Signs of AI writing」35 条模式）全文去 AI 化改写**，结构与事实零改动（链接、表格数据、代码块原样）：
+  - 清除全部 em/en dash（正文与表格约 30 处，改句号/冒号/分号或改写句式；`20–30`→under about 30、`1–3`→one to three）；
+  - 消除「not X, but Y」句式（"It's a methodology, not a template"→"Start here"、"a source, not a gate"、"from you, not the kit" 等全部改写为直陈）；
+  - 大幅削减装饰性加粗与「加粗小标题 + 冒号」列表（保留十条原则的功能性引导词）；斜体口号改为普通句；
+  - 修正目录中残留的中文注释（省 token/图标等 4 处→英文）；
+  - 句式自然化：is/are 直陈、拆掉堆叠从句、去 signpost。英式拼写保留（colour/licence/localised/optimise 等）。
+
 ## [0.6.0] — 2026-08-19
 
 ### Changed（面向所有用户的导航重构）
