@@ -150,13 +150,71 @@ function update(){ ticking = false; /* … */ }
 - 占位判断用 `Uint8Array` 网格（磁贴场 cols×rows），不用对象数组；
 - `resize` 重建一律防抖 ~220ms。
 
-## 六、上线前性能自查
+## 六、Resource Hints 与图片格式
+
+### Resource Hints 速查
+
+| Hint | 拉什么 | 成本 | 何时用 |
+|---|---|---|---|
+| `preload` | **当前页**关键资源 | 高（抢占带宽，用错反而拖慢 LCP） | 动态注入的 LCP 资源、CSS 内引用的关键字体 |
+| `prefetch` | **未来页**资源 | 低 | 下一页大概率访问的图/字体分片 |
+| `preconnect` | 跨域的 DNS + TCP + TLS | 中（占 socket/TLS） | 跨域字体 / 对象存储媒体源——**只给前 3 个关键域** |
+| `dns-prefetch` | 仅 DNS 解析 | 几乎免费 | 其余第三方域兜底 |
+
+```html
+<!-- 跨域媒体源：preconnect 主力 + dns-prefetch 兜底（老浏览器回落） -->
+<link rel="preconnect" href="https://cdn.example" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.example">
+```
+
+**决策要点**：
+- 静态 HTML 里本来就有的 `<img>` / `<script>`——**直接加 `fetchpriority="high"`**，不要再用 preload 包一层（浏览器的 preload scanner 本来就能提前发现它们）；
+- preload 用错是最常见的「加了提示反而 LCP 变差」事故——只 preload 当前页确定要用的，其余交给 prefetch；
+- 第三方域超过 ~4 个：preconnect 前 3、其余 dns-prefetch，别全 preconnect。
+
+```html
+<!-- 首屏 LCP 大图：元素级优先级即可 -->
+<img src="hero.webp" fetchpriority="high" alt="…">
+```
+
+### 图片格式：webp 为主，AVIF 可选
+
+- **webp**：基线格式，全浏览器支持，海报/卡图批量转换管线见 `tools/README.md`；
+- **AVIF**：比 webp 再省 30–50%，Safari 16+ 起完整支持——图片多、流量敏感的站值得上，用 `<picture>` 三级回落：
+
+```html
+<picture>
+  <source type="image/avif" srcset="hero.avif">
+  <source type="image/webp" srcset="hero.webp">
+  <img src="hero.jpg" alt="…">          <!-- 最终兜底 -->
+</picture>
+```
+
+- 个人站的正确顺序：先把所有图转 webp + lazy 矩阵做对，**再**考虑 AVIF 深化——不要跳级。
+
+### Critical CSS：本方法论不强制
+
+静态多页站的 HTML 本身就是「首屏文档」，CSS 单文件 + `?v=` 缓存纪律已够快；Critical CSS 内联（抽首屏样式进 `<style>`）适用于重单页应用，对本套「每页独立 HTML」架构收益小、维护成本高（改样式要同步两处）——**明确不做**，除非 Lighthouse 实测 FCP 不达标再个案处理。
+
+### CWV：实验室数据 vs 字段数据
+
+| | 实验室（Lighthouse） | 字段（CrUX / RUM） |
+|---|---|---|
+| 来源 | 固定网络/设备模拟 | 真实访客 |
+| 用途 | 开发期回归、本地对比 | **Google 排名依据** |
+| 看哪 | 每次 Lighthouse 移动档 | Search Console → Core Web Vitals 报告 |
+
+阈值与通过判据（LCP ≤ 2.5s / INP ≤ 200ms / CLS ≤ 0.1，75% 访问达标）见 `04-deploy-and-domain.md` 第九节。上线后有真实流量后，以 Search Console 报告为准复盘。
+
+## 七、上线前性能自查
 
 - [ ] 字体全部自托管；中文走了「子集→分片」管线；新文案后管线已重跑
 - [ ] EN 页 DevTools Network：零 CJK 字体分片请求
 - [ ] 首屏图片无 `loading="lazy"`；首屏以下图片全 lazy
 - [ ] iframe 全 lazy 或点击加载；BGM 未点击时零音频请求
 - [ ] Lighthouse（移动档）Performance ≥ 90、Accessibility ≥ 95
+- [ ] 跨域媒体源有 preconnect（≤3 个）；首屏 LCP 图带 `fetchpriority="high"`
+- [ ] 上线后（有流量时）Search Console CWV 报告无 Poor 页面
 - [ ] 长列表页滚动帧率稳定（Performance 面板无长期绿块/红条）
 - [ ] HTML 单页体量正常（无快照污染膨胀）
 - [ ] CSS/JS 改动已 bump `?v=`（→ `04-deploy-and-domain.md`）

@@ -74,3 +74,36 @@ grep -c 'hl-card' index.html
 - 作品清单以用户维护的**载体**（飞书多维表格 / Markdown / Excel，见 `00-onboarding.md`）为准；
 - 站点每次增删作品，先在载体里改，再照本清单同步站点——载体是账本，站点是投影；
 - 大版本内容变动后，在迭代日志里记一条（`06-iteration.md`），注明「作品 N→M」。
+
+## 八、周期性内容审计（上线后，防 link rot）
+
+增删改是「动一次查一次」；上线后还有三类**按日历轮转**的审计——作品集外链多（网盘 / 平台 / 云文档），链接烂掉是时间问题，烂了还挂在首页就是硬伤。
+
+### Link rot 检查工具
+
+| 工具 | 类型 | 用途 |
+|---|---|---|
+| **[lychee](https://github.com/lycheeverse/lychee)**（Rust） | CLI | 支持整站 HTML/Markdown 批量、限速、重试——本地跑全站外链首选 |
+| **[muffet](https://github.com/raviqqe/muffet)**（Go） | CLI | 并发快，适合 CI / 脚本化周期跑 |
+| broken-link-checker（npm） | CLI | Node 生态，可递归爬渲染后页面 |
+| [Dead Link Checker](https://www.deadlinkchecker.com/) 等 | 在线 | 不想装 CLI 时的轻量替代 |
+
+```bash
+# lychee 全站外链体检（跳过本地锚点，只查 http）
+lychee --no-progress '*.html' 'works/*.html'
+```
+
+### 审计节奏
+
+| 周期 | 动作 |
+|---|---|
+| **每次发布前** | `tools/audit.sh`（计数/版本号一致性六项） |
+| **每月** | link checker 全站外链一遍；[ITDOG](https://www.itdog.cn/http/) 抽测主域名两地可达性 |
+| **每季度** | 内容时效性复审：作品介绍里的「近期」「去年」类表述、署名/合作方链接是否变更、下架作品是否还挂着外链 |
+| **有真实流量后** | Search Console 看 404 命中与 CWV 报告（见 `04-deploy-and-domain.md` 九） |
+
+### 签名 URL 的 TTL 监控
+
+对象存储**带签名的临时直链有过期时间**（07 坑 #9 的根源）。若站内用了签名 URL：
+- 优先改用**公开读的桶 + 防盗链**，从根上消掉过期问题；
+- 必须签名时（私有桶），把过期窗口设长（如 1 年）并在内容载体里记录**每个签名链接的到期日**，到期前一个月续签——月度 link rot 检查会顺带抓到已失效的（403），这就是兜底。

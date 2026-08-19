@@ -6,7 +6,7 @@ The kit is distilled from the real-world experience of building [icarusye.site](
 
 **This is not a template to clone. It is a methodology**: an intake questionnaire, design rules, component specifications, dual-region media strategy, deployment discipline, a three-layer documentation system, and a pitfall list of 23 real-world failures, each recorded as *symptom → root cause → how to avoid*.
 
-[简体中文版](README.zh-CN.md)
+[简体中文版](README.zh-CN.md) · [繁體中文（港式粵語）](README.zh-HK.md)
 
 ---
 
@@ -37,10 +37,13 @@ The kit is distilled from the real-world experience of building [icarusye.site](
 | Static hosting | [Cloudflare Pages](https://pages.cloudflare.com/) | Direct upload, zero build, 25 MiB per-file limit |
 | Object storage (mainland) | [Tencent COS](https://cloud.tencent.com/product/cos) · [Aliyun OSS](https://cn.aliyun.com/product/oss) | For large media when mainland reach matters |
 | Object storage (global) | [Cloudflare R2](https://www.cloudflare.com/products/r2/) | Zero egress fees; same account as Pages |
+| Reachability check | [ITDOG HTTP](https://www.itdog.cn/http/) | Multi-province mainland + overseas nodes probe your live URL after every deploy |
 | Digital card (global) | [Popl](https://popl.co/) | Embeddable card iframe |
 | Digital card (mainland) | [muse link](https://muselink.cc/) | Mainland-reachable card iframe |
 | Works inventory carrier | [Feishu](https://www.feishu.cn/) | Structured base (one row per work, link columns) |
-| MCP (optional) | [github-mcp-server](https://github.com/github/github-mcp-server) · [mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare) | Let the agent drive GitHub / Cloudflare directly |
+| Logo generators (web, style exploration) | [Arknights: Endfield-style](https://ark.ncreeper.top/) · [TuxuAI](https://www.tuxuai.com/share/inspiration?shareId=880) | Shared for reference only, no endorsement — verify licence before commercial use |
+| MCP (optional) | [github-mcp-server](https://github.com/github/github-mcp-server) · [mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare) · [AnySearch](https://www.anysearch.com/home) | Let the agent drive GitHub / Cloudflare directly, or search the open web from the conversation |
+| Multimodal (optional) | [Qwen-MM-Plugins](https://github.com/QwenLM/Qwen-MM-Plugins) | Lets non-vision agents understand video / audio / images; requires your own Qwen API key |
 
 ## Repository layout
 
@@ -52,13 +55,13 @@ The kit is distilled from the real-world experience of building [icarusye.site](
 │   ├── 01-design-and-style.md    Design tokens + the "find your style" methodology + copy discipline
 │   ├── 02-components.md          Component specs: topbar, cards, filters, players, case pages, preloader, contact, embedded cards, colophon
 │   ├── 03-media-compat.md        Cross-region media compatibility (video / audio / web archives / four-layer regional diff)
-│   ├── 04-deploy-and-domain.md   Hosting, caching discipline, custom-domain binding walkthrough (routes + troubleshooting), domain-buying guide, privacy-friendly analytics, China reachability
+│   ├── 04-deploy-and-domain.md   Hosting, caching discipline, custom-domain binding walkthrough (routes + troubleshooting), domain-buying guide, SEO basics, privacy-friendly analytics & compliance, China reachability
 │   ├── 05-structure-i18n.md      Folder structure + trilingual engine + homepage architecture
 │   ├── 06-iteration.md           Three-layer documentation system (master plan / round logs / living archive)
 │   ├── 07-pitfalls.md            23 pitfalls, each as symptom → root cause → avoidance
-│   ├── 08-accessibility-motion.md  Accessibility patterns, reduced-motion strategy, photosensitivity guards
-│   ├── 09-performance.md         Performance: font subsetting pipeline, lazy loading, IO patterns
-│   ├── 10-content-ops.md         Content ops: works add/remove sync checklist + count automation
+│   ├── 08-accessibility-motion.md  WCAG 2.2 baseline & test tools, accessibility patterns, reduced-motion strategy, photosensitivity guards
+│   ├── 09-performance.md         Performance: font subsetting pipeline, lazy loading, IO patterns, resource hints & image formats
+│   ├── 10-content-ops.md         Content ops: works add/remove sync checklist, count automation, periodic content audits
 │   └── 11-preship-checklist.md   One-page pre-ship gate (hard limits + all checklists merged)
 ├── templates/                    Copy-paste component skeletons
 │   ├── trilingual.html           Trilingual engine (full attribute set: text/alt/title/href/scramble/cursor)
@@ -119,6 +122,8 @@ This kit owns the portfolio **lifecycle** (structure, dual-region media, triling
 
 Rule of thumb: ask first (the user may already have equivalents), keep the total skill budget ≤ 20–30, and when a companion skill pushes a React component stack, this kit's static-first principle wins.
 
+**Installation discipline (hard rule, applies to every MCP and skill): never install anything without the user's explicit consent.** The agent recommends, gives the command and the reasoning — the user executes it themselves, or explicitly authorises the agent to do so. Every optional tool above is just that: optional, and nothing in the workflow breaks without it.
+
 ### As plain reference documentation
 
 The `references/` folder reads as a standalone handbook (written in Chinese; this README is the English summary). Start with:
@@ -149,7 +154,7 @@ The `references/` folder reads as a standalone handbook (written in Chinese; thi
 - No design opinion beyond discipline: the visual identity comes from the author, not the kit.
 - No brand-specific links: every URL in the docs is a generic placeholder (`overseas.example`, `mainland.example`).
 
-## License
+## Licence
 
 [MIT](LICENSE) · Copyright (c) 2026 IcarusYe12138
 

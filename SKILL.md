@@ -51,13 +51,13 @@ portfolio-site-kit/
 │   ├── 01-design-and-style.md    设计规范与「找风格」方法论（含书面 Style Spec、文案纪律）
 │   ├── 02-components.md          组件规范（顶栏/卡片/筛选/播放器/磁贴场/详情页/预载器/Contact/嵌入名片/Colophon…）
 │   ├── 03-media-compat.md        ★ 音视频与图文的跨地域兼容（含区域差异四层清单）
-│   ├── 04-deploy-and-domain.md   部署、缓存、域名购买指南、隐私友好统计、内地可达
+│   ├── 04-deploy-and-domain.md   部署、缓存、域名购买指南、SEO 基础、隐私友好统计与合规、内地可达
 │   ├── 05-structure-i18n.md      文件夹结构 + 三语机制（属性级 i18n 全集 + 首页架构）
 │   ├── 06-iteration.md           三层迭代文档体系（总规/轮次日志/站根活档）
 │   ├── 07-pitfalls.md            ★ 避坑清单（现象→原因→怎么避免）
-│   ├── 08-accessibility-motion.md 无障碍模式 + reduced-motion 策略 + 光敏保护
-│   ├── 09-performance.md         性能：字体子集分片管线、懒加载、IO 模式
-│   ├── 10-content-ops.md         内容运维：作品增删改的同步清单与计数自动化
+│   ├── 08-accessibility-motion.md WCAG 2.2 基线与测试工具 + 无障碍模式 + reduced-motion 策略 + 光敏保护
+│   ├── 09-performance.md         性能：字体子集分片管线、懒加载、IO 模式、Resource Hints 与图片格式
+│   └── 10-content-ops.md         内容运维：作品增删改同步清单、计数自动化、周期性内容审计
 │   └── 11-preship-checklist.md   ★ 上线前总检单（硬约束 + 全 checklist 一页汇总）
 ├── templates/                    ← 可直接复制的组件模板
 │   ├── trilingual.html           三语引擎（完整属性集：i18n/alt/title/href/scramble/cursor）
@@ -89,8 +89,9 @@ portfolio-site-kit/
    - 问风格参考：代码参考 / 网站截图 / HTML 文件 / 图片或 Figma，有没有？
    - 问内容底子：简历、作品集、外链（海外+内地）齐不齐？不齐就先做风格 Demo、内容后补；
    - 引导作品清单进结构化载体（飞书 / Markdown / Excel）；
-   - 告知工具链：构建推荐 TRAE（多设备实时预览，https://www.trae.cn/ ），设计原型推荐 Kimi K3（审美在线，https://www.kimi.ai/blog/kimi-k3 ）——不强制；
+   - 告知工具链：构建推荐 TRAE（多设备实时预览，https://www.trae.cn/ ），设计原型推荐 Kimi K3（审美在线，https://www.kimi.ai/blog/kimi-k3 ）——不强制；可选 MCP（github / cloudflare / AnySearch）、多模态理解（Qwen-MM-Plugins）、网页版 logo 生成器见 `00-onboarding.md`；
    - **询问伴侣 skill**：审美与无障碍兜底建议装 frontend-design（Anthropic 官方）+ web-design-guidelines（Vercel）——先问用户是否已有同类，推荐分层表与话术见 `00-onboarding.md`；
+   - **绝不擅自安装任何 MCP 或 skill**——只推荐、给命令与理由，安装须用户明确许可；
    - **信息缺失就反问，不擅自代答**。
 1. **定性风格**（→ `01-design-and-style.md`）
    - 参考素材 + 作者专业方向 → 交给任意可用图片的 Agent（Kimi K3 推荐）产出一版属于作者自己的 Demo（配色、字体、母题、版式）；
@@ -98,7 +99,7 @@ portfolio-site-kit/
 2. **定结构**（→ `05-structure-i18n.md`）：页面清单、首页架构（单页锚点+索引页）、assets 拆分、语言机制先定型——后期改结构成本最高。
 3. **铺组件**（→ `02-components.md` + `templates/`）：从 templates 复制骨架，套入 Style Spec 的 token；`examples/minimal.html` 是最小组装参考；索引页与详情页用 `works-index.html` / `case-page.html` 骨架。
 4. **接媒体**（→ `03-media-compat.md`）：视频双链路、音频自托管、外链文章本地存档，一次配对配全。
-5. **部署上线**（→ `04-deploy-and-domain.md`）：直传托管、`_headers`、robots/sitemap/og:image、域名选购、（可选）隐私友好统计。
+5. **部署上线**（→ `04-deploy-and-domain.md`）：直传托管、`_headers`、robots/sitemap/og:image、JSON-LD 结构化数据、域名选购、（可选）隐私友好统计；部署后用 ITDOG（https://www.itdog.cn/http/ ）多地抽测海外+内地可达性，再真机过一遍。
 6. **迭代打磨**（→ `06-iteration.md` + `07-pitfalls.md`）：三层文档体系 + 书面迭代一轮一轮来，改动后跑一遍坑清单自查。
 7. **内容增删**（→ `10-content-ops.md`）：任何作品增删改，照同步清单执行 + `tools/audit.sh` 计数审计。
 8. **上线收尾**（→ `11-preship-checklist.md`）：跑 audit.sh + 过一页总检单，全部打勾再发布。

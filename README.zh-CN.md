@@ -6,7 +6,7 @@
 
 **这不是一套拿来即抄的模板，而是一套方法论**：接洽问卷、设计规范、组件规格、双地域媒体策略、部署纪律、三层文档体系，以及一份 23 条真实翻车记录的避坑清单，每条都按「现象 → 根因 → 怎么避免」格式沉淀。
 
-[English version](README.md)
+[English version](README.md) · [繁體中文（港式粵語）](README.zh-HK.md)
 
 ---
 
@@ -37,10 +37,13 @@
 | 静态托管 | [Cloudflare Pages](https://pages.cloudflare.com/) | 直传零构建；单文件 25 MiB 上限 |
 | 对象存储（内地向） | [腾讯云 COS](https://cloud.tencent.com/product/cos) · [阿里云 OSS](https://cn.aliyun.com/product/oss) | 大媒体外置，内地直连稳定 |
 | 对象存储（海外向） | [Cloudflare R2](https://www.cloudflare.com/products/r2/) | 零出口流量费；与 Pages 同账号 |
+| 两地可达性检测 | [ITDOG HTTP 检测](https://www.itdog.cn/http/) | 全国多省份 + 海外节点并发测线上 URL；每次部署后跑一遍 |
 | 电子名片（海外） | [Popl](https://popl.co/) | 可嵌入名片 iframe |
 | 电子名片（内地） | [muse link](https://muselink.cc/) | 内地可达的名片 iframe |
 | 作品清单载体 | [飞书](https://www.feishu.cn/) | 多维表格：一行一作品、链接分列 |
-| MCP（可选） | [github-mcp-server](https://github.com/github/github-mcp-server) · [mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare) | 让 agent 直接操作 GitHub / Cloudflare |
+| Logo 生成器（网页，风格探索用） | [明日方舟：终末地风格](https://ark.ncreeper.top/) · [图叙 TuxuAI](https://www.tuxuai.com/share/inspiration?shareId=880) | 仅作分享、不做保证——商用前自行确认版权 |
+| MCP（可选） | [github-mcp-server](https://github.com/github/github-mcp-server) · [mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare) · [AnySearch](https://www.anysearch.com/home) | 让 agent 直接操作 GitHub / Cloudflare，或在对话内搜索全网 |
+| 多模态（可选） | [Qwen-MM-Plugins](https://github.com/QwenLM/Qwen-MM-Plugins) | 让不具备视觉能力的 agent 也能理解视频 / 音频 / 图片；需自接千问 API key |
 
 ## 仓库结构
 
@@ -52,13 +55,13 @@
 │   ├── 01-design-and-style.md    设计 token + 「找风格」方法论 + 文案纪律
 │   ├── 02-components.md          组件规格：顶栏、卡片、筛选、播放器、详情页、预载器、Contact、嵌入名片、Colophon
 │   ├── 03-media-compat.md        跨地域媒体兼容（视频 / 音频 / 网页存档 / 区域差异四层清单）
-│   ├── 04-deploy-and-domain.md   托管、缓存纪律、自定义域名绑定实操（双路线+排障）、域名购买指南、隐私友好统计、内地可达性
+│   ├── 04-deploy-and-domain.md   托管、缓存纪律、自定义域名绑定实操（双路线+排障）、域名购买指南、SEO 基础、隐私友好统计与合规、内地可达性
 │   ├── 05-structure-i18n.md      文件夹结构 + 三语引擎 + 首页架构
 │   ├── 06-iteration.md           三层文档体系（总规 / 轮次日志 / 站根活档）
 │   ├── 07-pitfalls.md            23 条坑，每条按「现象 → 根因 → 怎么避免」
-│   ├── 08-accessibility-motion.md 无障碍模式 + reduced-motion 策略 + 光敏保护
-│   ├── 09-performance.md         性能：字体子集分片管线、懒加载、IO 模式
-│   ├── 10-content-ops.md         内容运维：作品增删同步清单 + 计数自动化
+│   ├── 08-accessibility-motion.md WCAG 2.2 基线与测试工具 + 无障碍模式 + reduced-motion 策略 + 光敏保护
+│   ├── 09-performance.md         性能：字体子集分片管线、懒加载、IO 模式、Resource Hints 与图片格式
+│   ├── 10-content-ops.md         内容运维：作品增删同步清单、计数自动化、周期性内容审计
 │   └── 11-preship-checklist.md   上线前总检单（硬约束 + 全部 checklist 一页汇总）
 ├── templates/                    可直接复制的组件骨架
 │   ├── trilingual.html           三语引擎（完整属性集：文本/alt/title/href/解码/光标）
@@ -118,6 +121,8 @@ npx skills add https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe
 | 推荐 | [impeccable](https://impeccable.style/) | brand 模式精修命令（typeset / colorize / bolder / quieter） |
 
 纪律：先问再推（用户可能已有同类）；skill 总量控制在 20–30 个内；伴侣 skill 若推 React 组件库，以本 skill 的「静态优先」原则为准。
+
+**安装纪律（硬规则，适用于一切 MCP 与 skill）：绝不未经用户明确许可就安装任何东西。** agent 只负责推荐——给出命令、理由与影响，由用户自己执行，或明确授权后代为执行。上表所有可选工具都是「不装不碍事」：没有任何流程环节依赖它们。
 
 ### 当作纯参考文档
 

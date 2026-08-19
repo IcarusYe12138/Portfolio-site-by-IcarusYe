@@ -2,6 +2,32 @@
 
 本 skill 自身的迭代记录（践行 `references/06-iteration.md` 的方法论）。格式参考 Keep a Changelog；版本号语义化。
 
+## [0.4.0] — 2026-08-19
+
+### Added
+- **港式粤语 README**（`README.zh-HK.md`）：第三份面向文；三份 README 顶部互链改为双向三选一。英文仍为英式英语，简体为白话，繁中采用港式粤语口吻。
+
+## [0.3.0] — 2026-08-19
+
+### Added
+- **五个主题章节补全**（市场对标调研确认的空白，来源含 AnySearch 2026-08 检索验证）：
+  - `04` 新增「九、SEO 基础」：Core Web Vitals 阈值表（LCP ≤2.5s / INP ≤200ms / CLS ≤0.1，CrUX 75% 判据）+ JSON-LD 结构化数据（Person / CreativeWork / SoftwareApplication 示例与 Rich Results Test 验证）+ canonical 指裸 URL + 存档页 noindex；
+  - `08` 新增「一、基线：WCAG 2.2 一致性级别与测试工具」（原一~七顺延为二~八）：86 条三级构成、本 skill 基线定为 AA、4.1.1 已移除说明；NVDA / VoiceOver / 键盘 / 200% 缩放测试栈；landmarks 语义要求；**富媒体无障碍**（视频字幕、音频 transcript——作品集站最常见硬伤）；
+  - `09` 新增「六、Resource Hints 与图片格式」（原六顺延为七）：preload / prefetch / preconnect / dns-prefetch 决策表与「fetchpriority 优先于 preload」要点；AVIF + picture 三级回落；Critical CSS 明确不做及理由；CWV 实验室 vs 字段数据对照；
+  - `10` 新增「八、周期性内容审计」：link rot 工具表（lychee / muffet / broken-link-checker / Dead Link Checker）+ 月/季/发布前审计节奏 + 签名 URL TTL 监控方案（07 坑 #9 的对策）；
+  - `04` 统计节扩展「隐私合规要点（GDPR / PIPL）」：cookieless 免横幅判据、IP 匿名化、数据留存 ≤14 个月、SaaS 路线补 Plausible / Umami 链接。
+- **新工具推荐**（均落位 00 工具链 + README 双语推荐表）：
+  - [ITDOG HTTP 检测](https://www.itdog.cn/http/)——部署后海外+内地多省份节点可达性批量验证（04 五/十、SKILL.md 工作流第 5 步、10 月度审计、11 E 段、README 双语）；
+  - 网页版 Logo 生成器（[明日方舟：终末地风格](https://ark.ncreeper.top/) / [图叙 TuxuAI](https://www.tuxuai.com/share/inspiration?shareId=880)，标注「仅作分享，不做保证」）——风格探索期发散用（00 工具链 + 01 三步法旁注）；
+  - [Qwen-MM-Plugins](https://github.com/QwenLM/Qwen-MM-Plugins)——让不具备视觉能力的 agent 理解视频/音频/图片，需自接千问 API（00 新小节 + README）；
+  - [AnySearch](https://www.anysearch.com/home) MCP——对话内全网检索（00 MCP 小节 + README）。
+- **安装纪律（硬规则）**：绝不未经用户明确许可安装任何 MCP / skill——只推荐、给命令与理由，由用户执行或明确授权（00 通用纪律节 + 伴侣 skill 纪律 + SKILL.md 工作流第 0 步 + 开工判据 + README 双语）。
+
+### Changed
+- `08` 全文章节重编号（一~七 → 二~八）；`09` 六→七；`04` 八/九→九/十（SEO 插入）；
+- `11` 总检单补 7 项：landmarks / 字幕 transcript / 屏幕阅读器抽测 / preconnect+fetchpriority / CWV 报告 / JSON-LD+canonical / ITDOG 抽样；
+- 英文 README 贯彻英式拼写（Licence 等；已有 colour / personalised / honours 全数保留）。
+
 ## [0.2.0] — 2026-08-19
 
 ### Added

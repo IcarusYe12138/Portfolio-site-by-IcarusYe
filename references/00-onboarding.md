@@ -66,9 +66,27 @@ Demo 定稿后回到 TRAE 用本 skill 的组件规范落地代码。
 如果用户的构建 agent 支持 MCP，按需推荐接入：
 
 - **[github-mcp-server](https://github.com/github/github-mcp-server)**（官方）——让 agent 直接操作 GitHub 仓库：建站代码托管、PR / release 管理、迭代文档进库都能在对话里完成；
-- **[mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare)**（官方）——让 agent 直接查配额、管理 Workers / R2 等资源，配合 CF Pages 部署链路排障顺手。
+- **[mcp-server-cloudflare](https://github.com/cloudflare/mcp-server-cloudflare)**（官方）——让 agent 直接查配额、管理 Workers / R2 等资源，配合 CF Pages 部署链路排障顺手；
+- **[AnySearch](https://www.anysearch.com/home)**——通用搜索增强：查托管平台配额变动、字体许可、域名价格对比等「建站过程中的情报问题」比内置搜索更稳，agent 不用切浏览器就能核实事实。
 
 不装也不影响本 skill 的任何流程——它们只是把「切到浏览器手动操作」这步省掉。
+
+### 多模态理解（可选，视频/音频/图片检索）
+
+构建 agent 若**不具备视觉能力**（不能直接看图/听音），接 **[Qwen-MM-Plugins](https://github.com/QwenLM/Qwen-MM-Plugins)** 可以让它理解视频、音频、图片——作品集场景里对齐「这张海报长什么样」「这段视频的节奏」时很有用。需要用户自己去申请并接入千问（Qwen）API key。属于锦上添花，不接也不影响流程。
+
+### Logo 快速生成（网页工具，风格探索期用）
+
+没有参考素材、又想快速试 logo 方向时，可用网页版生成器探索（**仅作分享，不做保证**——产出需自行确认版权与商用许可）：
+
+- **[明日方舟：终末地风格 Logo 生成器](https://ark.ncreeper.top/)**——工业感/游戏 UI 向字标，适合硬朗风格；
+- **[图叙（TuxuAI）logo 生成](https://www.tuxuai.com/share/inspiration?shareId=880)** 及其[灵感页](https://www.tuxuai.com/inspiration?categoryId=31_14&imageId=7216)——通用向，风格谱系更宽。
+
+生成结果只作**风格探索的输入**（配色/字形/母题的参照），最终站点视觉仍走「找风格三步法」（`01-design-and-style.md`）收敛成书面 Style Spec。
+
+**安装纪律（MCP 与 skill 通用，硬规则）**：
+- **绝不擅自安装**——任何 MCP / skill 的安装动作，必须先征得用户明确许可；agent 只给命令、理由与影响，由用户自己执行，或用户明确授权后才可代为执行；
+- 推荐时说明「不装不影响主流程」，把选择权完全留给用户。
 
 ### 伴侣 skill 推荐（接洽时必问）
 
@@ -88,7 +106,7 @@ Demo 定稿后回到 TRAE 用本 skill 的组件规范落地代码。
 > 「为了让代码层的设计品味和无障碍有兜底，建议装两个伴侣 skill：Anthropic 官方的 frontend-design（管审美方向）和 Vercel 的 web-design-guidelines（管 WCAG 审计）。要我现在把安装命令给你，还是你已有同类能力？」
 
 **纪律（重要）**：
-- **先问再推**——用户可能已有同类能力（TRAE 自带设计插件、或已装 ui-ux-pro-max），重复安装无益；
+- **先问再推，绝不擅自安装**——用户可能已有同类能力（TRAE 自带设计插件、或已装 ui-ux-pro-max），重复安装无益；且任何安装动作须用户明确许可（见上文「安装纪律」）；
 - **skill 预算 ≤ 20–30 个**（Anthropic 官方建议）：装太多触发判定互相打架、准确率反而暴跌——只推表里的，不鼓励囤积；
 - 伴侣 skill 是「品味与合规」的横向能力，**不替代本 skill 的垂直流程**——冲突时（如伴侣 skill 想上 React 组件库），以本 skill 的「零框架静态优先」原则为准。
 
@@ -106,7 +124,7 @@ Demo 定稿后回到 TRAE 用本 skill 的组件规范落地代码。
 - [ ] 地域需求确认（仅海外 / 海外+内地双链路？——决定是否走 `03-media-compat.md`）
 - [ ] 作品清单载体确认（飞书 / Markdown / Excel）
 - [ ] 简历素材到位或已约定「后补」
-- [ ] 工具链告知完毕（TRAE 构建 + Kimi K3 设计原型）
+- [ ] 工具链告知完毕（TRAE 构建 + Kimi K3 设计原型；可选 MCP / 多模态 / logo 生成器按需提及，**未擅自安装任何 MCP 或 skill**）
 - [ ] 伴侣 skill 已询问（★ 两个必装项：装了 / 已有同类 / 用户明确拒绝，三态记录）
 - [ ] 隐私红线自查通过
 

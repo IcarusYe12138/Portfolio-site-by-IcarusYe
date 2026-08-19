@@ -132,6 +132,8 @@
 - [ ] 第三方统计/分析脚本：要么不上，要么接受内地加载失败不影响主体（`async` + 不阻塞）
 - [ ] 上线后用「无梯子的内地网络 + 手机流量」实测一遍全站
 
+**两地可达性批量验证工具**：[ITDOG HTTP 检测](https://www.itdog.cn/http/)——输入线上 URL，从全国多省份节点 + 海外节点并发测 http/https 可用性，一眼看出「哪些省份红、哪些绿」。部署完成后、以及每次大版本上线后跑一遍（内网渗透测试不必，纯可达性抽样足够）；比手工找两地朋友实测快得多，**但它不能完全替代真实设备实测**——手机流量 + 无痕窗口过一遍仍是最终判据。
+
 ## 六、域名购买指南
 
 ### 注册商怎么选
@@ -188,8 +190,17 @@ Direct Upload 每次上传的是**整个站点目录快照**——这次少传�
 | 路线 | 代表 | 取舍 |
 |---|---|---|
 | **托管平台自带** | 如 Cloudflare Web Analytics | 无 cookie、免费、与 Pages 原生集成——个人站首选；数据粒度有限（够用） |
-| **自托管开源** | Umami / GoatCounter | 数据完全自主、无 cookie 可配；需要一个常驻服务（一台小主机/容器） |
-| **第三方 SaaS** | 各类免费统计 | 看清数据政策与脚本体积；个人作品集一般用不上重 tracker |
+| **自托管开源** | [Umami](https://umami.is/) / GoatCounter | 数据完全自主、无 cookie 可配；需要一个常驻服务（一台小主机/容器） |
+| **第三方 SaaS** | [Plausible](https://plausible.io/) / Fathom 等 | 免运维、无 cookie；订阅费；内地端点可达性需自测 |
+
+### 隐私合规要点（GDPR / PIPL）
+
+选型时只看功能不够，跨境个人数据处理有法定义务：
+
+- **cookieless 优先**：上表三条路线均可无 cookie 运行——不写 cookie、不收集可识别个人身份的信息（PII），多数场景**无需 cookie 同意横幅**；一旦上 cookie 或指纹类统计（如 GA），欧盟访客需同意机制（CMP），复杂度陡增；
+- **PIPL（内地）**：若明确服务内地用户，统计行为需在隐私声明中披露；数据尽量留在境内或匿名化（Cloudflare Web Analytics 不落个人数据，负担最小）；
+- **GDPR（欧盟）**：IP 匿名化（`anonymize_ip` 类配置或选无 IP 收集的工具）+ 明确数据留存期限（建议 ≤ 14 个月，CrUX 窗口同量级）；
+- **纪律不变**：统计脚本一律 `defer`/`async` 或无脚本 beacon，不阻塞页面；内地丢样本就丢——作品集统计只为回答「哪些作品被看」，不为精确计量。
 
 **纪律**：
 - 不上任何阻塞加载的统计脚本（`defer`/`async`，或平台的无脚本 beacon 方案）；
@@ -197,7 +208,67 @@ Direct Upload 每次上传的是**整个站点目录快照**——这次少传�
 - **内地可达性自测**：境外统计端点在内地可能丢数据（请求发不出去）——要么接受样本偏差，要么自托管在两地可达的位置；
 - 统计域名若被拦，不影响站点主体功能（本就异步加载，天然降级）。
 
-## 九、上线前总检（deploy checklist 汇总）
+## 九、SEO 基础：结构化数据、canonical 与 Core Web Vitals
+
+静态多语言站的 SEO 三件事：让搜索引擎**读懂**（结构化数据）、**去重**（canonical）、**排名不拖后腿**（CWV）。
+
+### 1. Core Web Vitals 阈值（Google 排名信号）
+
+| 指标 | 含义 | Good | 需改进 | Poor |
+|---|---|---|---|---|
+| **LCP** | 最大内容绘制（加载速度） | ≤ 2.5s | 2.5–4.0s | > 4.0s |
+| **INP** | 交互到下一帧（响应性） | ≤ 200ms | 200–500ms | > 500ms |
+| **CLS** | 累积布局偏移（视觉稳定） | ≤ 0.1 | 0.1–0.25 | > 0.25 |
+
+通过判据：CrUX 真实用户数据中至少 **75% 的访问达到 Good**。实验室数据（Lighthouse）用于开发期回归，字段数据（Search Console → Core Web Vitals 报告）才是排名依据——两者都要看，以后者为准。性能侧的落地手段（首屏图不 lazy、字体 swap、懒加载矩阵）见 `09-performance.md`。
+
+### 2. 结构化数据（JSON-LD）
+
+Portfolio 站三类页面各配一种 schema，帮助搜索引擎理解「这是谁 / 这是什么作品」：
+
+```html
+<!-- 首页：Person -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Your Name",
+  "url": "https://yoursite.example/",
+  "jobTitle": "Your Title",
+  "sameAs": ["https://github.com/you", "https://www.linkedin.com/in/you"]
+}
+</script>
+
+<!-- 作品详情页：CreativeWork（datePublished / creator 指回 Person） -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": "Work Title",
+  "description": "One-line description.",
+  "url": "https://yoursite.example/works/slug.html",
+  "creator": { "@type": "Person", "name": "Your Name" }
+}
+</script>
+```
+
+- 涉及软件项目可加 `SoftwareApplication`（keywords 填技术栈）；
+- 验证：部署后用 Google [Rich Results Test](https://search.google.com/test/rich-results) 或 [Schema Markup Validator](https://validator.schema.org/) 过一遍；
+- JSON-LD 是静态文本，随页面直出，无性能代价。
+
+### 3. canonical 与多语言去重
+
+`?lang=` 切换会产生同内容多 URL，需声明规范版本避免重复收录：
+
+```html
+<link rel="canonical" href="https://yoursite.example/works/slug.html">
+```
+
+- canonical 指向**不带 `?lang=` 的裸 URL**（语言变体由 hreflang 体系表达，见 `05-structure-i18n.md`）；
+- `<title>` 模式统一：「页面名 — 站名」，总长 ≤ 60 字符左右；
+- archive / 本地存档页**不参与收录**：`<meta name="robots" content="noindex,follow">`，并在 robots.txt 里 Disallow——存档是给访客的备胎，不是给搜索引擎的内容。
+
+## 十、上线前总检（deploy checklist 汇总）
 
 - [ ] `_headers` 在产物根目录；安全头生效（curl -I 验证）
 - [ ] robots.txt + sitemap.xml；sitemap 内全部 URL 可达
@@ -207,4 +278,5 @@ Direct Upload 每次上传的是**整个站点目录快照**——这次少传�
 - [ ] 自定义域名解析 + HTTPS 正常；裸域与 www 只留一个规范域
 - [ ] 大文件全在对象存储（无超限文件进部署目录）
 - [ ] （如启用）统计脚本异步加载、不阻塞；内地端点可达性已知
-- [ ] 两地实测：海外直连 + 内地无梯子网络各过一遍全站
+- [ ] JSON-LD 过 Rich Results Test；canonical 指向裸 URL；存档页 noindex
+- [ ] 两地可达性：ITDOG（https://www.itdog.cn/http/）多地抽样全绿 + 真机实测（海外直连 + 内地无梯子网络各过一遍全站）

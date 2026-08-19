@@ -29,6 +29,8 @@
 - [ ] Tab 全程可走：skip 链接 → 焦点顺序合理 → 无焦点黑洞
 - [ ] 焦点环统一（`:focus-visible`）；图标按钮有 i18n `aria-label`
 - [ ] 装饰层 `aria-hidden`；iframe 有 i18n `title`；marquee 有 sr-only 镜像
+- [ ] landmarks 齐备（header/nav/main/footer）；视频有字幕、音频作品有 transcript
+- [ ] 屏幕阅读器抽测一页（NVDA / VoiceOver）+ 200% 缩放不散架
 - [ ] 系统开启「减弱动态效果」逐页过：解码直出、磁贴静止、marquee 可手动滚
 - [ ] 转场 700ms 防抖生效；语言连点 1000ms 节流生效
 - [ ] 触屏设备：图片非灰、无光标残留、拖拽区可原生滚动
@@ -39,16 +41,20 @@
 - [ ] EN 页 Network 面板：零 CJK 字体分片请求
 - [ ] 首屏图无 `loading="lazy"`；首屏以下全 lazy；iframe lazy 或点击加载
 - [ ] BGM 未点击时零音频请求
+- [ ] 跨域媒体源有 preconnect（≤3）；首屏 LCP 图带 `fetchpriority="high"`
 - [ ] Lighthouse 移动档 Performance ≥ 90 / Accessibility ≥ 95
+- [ ] （上线后）Search Console CWV 报告无 Poor 页面（LCP ≤2.5s / INP ≤200ms / CLS ≤0.1）
 
 ## E. 部署与跨地域（04）
 
 - [ ] `_headers` 在产物根目录；`curl -I` 验证安全头
 - [ ] robots.txt（禁 404、指 sitemap 绝对 URL）+ sitemap 全 URL 可达
 - [ ] og:image 绝对 URL；微信/Telegram/X 实测分享卡片
+- [ ] JSON-LD 过 Rich Results Test；canonical 指裸 URL；存档页 noindex
 - [ ] 404.html 就位、文案语义化、返回按钮带语言参数
 - [ ] 自定义域名解析 + HTTPS；裸域/www 单一规范域
 - [ ] 部署目录完整（直传 = 全量快照，勿只传改动文件）
+- [ ] ITDOG（https://www.itdog.cn/http/ ）多地抽样全绿（海外+内地）
 - [ ] 两地实测：海外直连 + 内地无梯子网络各过一遍全站（含每个媒体链接）
 
 ## F. 收尾（06/07）
