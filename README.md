@@ -140,6 +140,8 @@ portfolio-site-kit/
 
 ## Install
 
+**npm package**: [`@icaruye/portfolio-site-kit`](https://www.npmjs.com/package/@icaruye/portfolio-site-kit)
+
 Fastest — npm (no git needed, works well where GitHub is slow):
 
 ```bash
@@ -151,9 +153,11 @@ The installer auto-detects your agent's skills directory (TRAE / Claude Code / C
 Alternatives:
 
 ```bash
+# Git clone
 git clone https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe.git \
   ~/.trae-cn/skills/portfolio-site-kit
-# or, with the vercel-labs skills CLI:
+
+# vercel-labs skills CLI
 npx skills add https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe
 ```
 

@@ -140,6 +140,8 @@ portfolio-site-kit/
 
 ## 安装
 
+**npm 包**：[`@icaruye/portfolio-site-kit`](https://www.npmjs.com/package/@icaruye/portfolio-site-kit)
+
 最快——npm（无需 git，GitHub 慢的地区也能顺畅装）：
 
 ```bash
@@ -151,9 +153,11 @@ npx @icaruye/portfolio-site-kit@latest
 其他方式：
 
 ```bash
+# Git clone
 git clone https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe.git \
   ~/.trae-cn/skills/portfolio-site-kit
-# 或用 vercel-labs 的 skills CLI：
+
+# vercel-labs skills CLI
 npx skills add https://github.com/IcarusYe12138/Portfolio-site-by-IcarusYe
 ```
 
